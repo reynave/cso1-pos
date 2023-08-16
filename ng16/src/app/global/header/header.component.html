@@ -1,0 +1,13 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-4 align-content-center">
+          Name Cashier :   {{account['account']['name']}}
+        </div>
+        <div class="col-4 text-center">
+           Terminal : {{terminalId}}  - Cart : {{item}}
+        </div>
+        <div class="col-4 text-end align-content-center">
+            <button type="button" class="btn btn-dark" (click)="logout();">Logout</button>
+        </div>
+    </div>
+</div>

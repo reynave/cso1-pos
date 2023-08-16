@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12 m-5 ">
+            <div class="border p-5 rounded">
+                <div class="row">
+                    <div class="col-4 text-end align-self-center">
+                        Input Termnial ID :
+                    </div>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-lg" [(ngModel)]="terminalId" #formRow name="terminalId" autofocus id="terminalId" 
+                            (change)="fnSave();"   (keyup.enter)="formRow.blur()">  
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 offset-4">
+                        <div *ngIf="terminalId" class="p-3">
+                            Saved <button type="button" class="btn btn-primary" (click)="back()">Back</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

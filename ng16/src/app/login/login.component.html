@@ -1,0 +1,18 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h4>POS System</h4>
+            <h1>Welcome Back</h1>
+            <div class="mb-2">
+                <input type="text" class="form-control" [(ngModel)]="cashierId" name="cashierId" autofocus  #formRow id="cashierId" 
+                (change)="scanner();"   (keyup.enter)="formRow.blur()" >
+            </div>
+            <div *ngIf="note != '' " class="mb-2 alert bg-warning">
+                {{note}}
+            </div>
+            <div class="mb-2">
+                <button type="button" class="btn btn-primary" (click)="scanner();">Login</button>
+            </div>
+        </div> 
+    </div>
+</div>

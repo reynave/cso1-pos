@@ -1,16 +1,15 @@
+<app-header></app-header>
 <div class="container">
-    <div class="row">
+    <div class="row g-2">
         <div class="col-12">
-            Parking 1
+            <h4>Select Parking</h4>
         </div>
-        <div class="col-12">
-            Parking 1
+        <div class="col-4" *ngFor="let x of items; let i = index" (click)="setCart(x)">
+            <div class="border p-2 text-center alert alert-primary pointer">
+                <h4>Parking {{i+1}}</h4>
+                <div><code>{{x.kioskUuid}}</code></div>
+            </div>
         </div>
-        <div class="col-12">
-            Parking 1
-        </div>
-        <div class="col-12">
-            Parking 1
-        </div>
+        
     </div>
 </div>

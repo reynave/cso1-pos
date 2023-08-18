@@ -55,18 +55,30 @@ export class ConfigService {
     }
   }
 
+  kioskUuid(){
+    return localStorage.getItem("kioskUuid");
+  }
   getKioskUuid() {
-    let kiosUuid = localStorage.getItem("kiosUuid");
+    let kioskUuid = localStorage.getItem("kioskUuid");
 
     const body = {
       terminalId: localStorage.getItem("terminalId"),
-      kiosUuid : kiosUuid,
+      kioskUuid : kioskUuid,
     }
     return this.http.post<any>(environment.api+"KioskUuid/getId", body, {
       headers: this.headers(),
     })
-    // kiosUuid = "123HAHAHA";
-    // localStorage.setItem("kiosUuid",   kiosUuid );
+    // kioskUuid = "123HAHAHA";
+    // localStorage.setItem("kioskUuid",   kioskUuid );
+  }
+
+  setKioskUuid(kioskUuid: string): Observable<boolean> {
+    try {
+      localStorage.setItem("kioskUuid", kioskUuid);
+      return of(true); // Mengembalikan Observable yang mengirimkan nilai boolean true
+    } catch (error) {
+      return of(false); // Mengembalikan Observable yang mengirimkan nilai boolean false jika terjadi kesalahan
+    }
   }
 
 }

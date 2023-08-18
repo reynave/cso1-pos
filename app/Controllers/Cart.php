@@ -31,7 +31,10 @@ class Cart extends BaseController
     function addToCart()
     {
         $i = 1;
+        $isItem = true;
+        $item = [];
         $data = [];
+        $result = "";
         $post = json_decode(file_get_contents('php://input'), true);
         $data = array(
             "error" => true,
@@ -40,6 +43,11 @@ class Cart extends BaseController
         if ($post) {
             $barcode = str_replace(["'", "\"",], "", $post['barcode']);
 
+            $cashierId = model("Core")->select("id", "cso2_cashier", "id = '$barcode' AND supervisor  = 1 ");
+            if($cashierId != ""){
+                $isItem = false;
+                $result  = "SUPERVISOR";
+            }
             /** 
             // CHECK BARCODE 
             $barcode = str_split($post['barcode']); 
@@ -62,7 +70,8 @@ class Cart extends BaseController
 
             $itemId = model("Core")->select("itemId", "cso1_item_barcode", "barcode = '$barcode' ");
 
-            if ($itemId) {
+            if ($itemId && $isItem == true) {
+                $result  = "ITEMS";
                 $this->db->table("cso1_kiosk_cart")->insert([
                     "kioskUuid" => $post['kioskUuid'],
                     "itemId" => $itemId,
@@ -72,18 +81,19 @@ class Cart extends BaseController
                     "discount" => 0,
                     "input_date" => date("Y-m-d H:i:s")
                 ]);
+                $q1 = "SELECT *
+                FROM cso1_item
+                WHERE id = '$itemId' ";
+                $item = $this->db->query($q1)->getResultArray()[0];
+                $item['barcode'] = $barcode;
             }
 
-            $q1 = "SELECT *
-            FROM cso1_item
-            WHERE id = '$itemId' ";
-            $item = $this->db->query($q1)->getResultArray()[0];
-            $item['barcode'] = $barcode;
-
             $data = array(
-                "error" => true,
+                "error" => false,
                 "post" => $post,
+                "cashierId" => $cashierId,
                 "item" => $item,
+                "result" => $result,
             );
         }
 

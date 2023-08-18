@@ -3,6 +3,7 @@ import { ConfigService } from '../service/config.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment.development';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ItemsComponent } from '../items/items.component';
 
 @Component({
   selector: 'app-cart',
@@ -15,9 +16,11 @@ export class CartComponent implements OnInit {
   callServer: any;
   varkioskUuid: string = "kioskUuid";
   kioskUuid: any;
+  supervisorMode : boolean = false;
   items: any = [];
   cart: any = [];
   newItem: any = [];
+  alert : boolean = false;
   func: any = [
     { id: 1 },
     { id: 2 },
@@ -54,10 +57,8 @@ export class CartComponent implements OnInit {
         kioskUuid: this.kioskUuid,
       }
     }).subscribe(
-      data => {
-        console.log(data);
-        this.items = data['items'];
-        console.log(this.cart);
+      data => { 
+        this.items = data['items']; 
       },
       error => {
         console.log(error);
@@ -98,6 +99,7 @@ export class CartComponent implements OnInit {
   }
 
   addToCart() {
+    this.alert =  false;
     const body = {
       barcode: this.barcode,
       kioskUuid: this.kioskUuid,
@@ -109,15 +111,37 @@ export class CartComponent implements OnInit {
       data => {
         console.log(data);
         this.barcode = "";
-        this.newItem = data['item'];
-        this.httpCart();
+        this.newItem = data['item']; 
+      
+        if(data['error'] == false ){
+          if(data['result'] == 'SUPERVISOR'){
+            alert("Superviro mode");
+          }
+          if(data['result'] == 'ITEMS'){
+            this.alert =  true;
+            this.httpCart();
+          }else{
+            this.alert =  true;
+            this.newItem = {
+              barcode : this.barcode,
+              description : "ITEM TIDAK DI TEMUKAN!",
+            } 
+          }
+        }
+     
       },
       error => {
+        this.newItem = {
+          barcode : this.barcode,
+          description : "ITEM TIDAK DI TEMUKAN!",
+        }
+        this.barcode = "";
         console.log(error);
       }
     )
     console.log(this.barcode);
   }
+
   item: any = [];
   open(content: any, item: any) {
     this.addQty = '0';
@@ -161,4 +185,15 @@ export class CartComponent implements OnInit {
       }
     )
   }
+
+  openComponent(comp : any ) {
+		const modalRef = this.modalService.open(ItemsComponent, {size:'lg'});
+		modalRef.componentInstance.name = 'World';
+    console.log(modalRef);
+    modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
+      console.log('modalRef.componentInstance.newItemEvent',data); 
+      this.httpCart();
+    });
+ 
+	}
 }

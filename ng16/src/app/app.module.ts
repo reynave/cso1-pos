@@ -15,6 +15,7 @@ import { HeaderComponent } from './global/header/header.component';
 import { SetupComponent } from './setup/setup.component';
 import { ParkingComponent } from './parking/parking.component';
 import { Widget1Component } from './global/widget1/widget1.component';
+import { ItemsComponent } from './items/items.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { Widget1Component } from './global/widget1/widget1.component';
     HeaderComponent,
     SetupComponent,
     ParkingComponent,
-    Widget1Component
+    Widget1Component,
+    ItemsComponent
   ],
   imports: [
     BrowserModule,

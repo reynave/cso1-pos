@@ -1,13 +1,15 @@
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-4 align-content-center">
-          Name Cashier :   {{account['account']['name']}}
-        </div>
-        <div class="col-4 text-center">
-           Terminal : {{terminalId}}  - Cart : {{item}}
-        </div>
-        <div class="col-4 text-end align-content-center">
-            <button type="button" class="btn btn-dark" (click)="logout();">Logout</button>
+<div class="bg-light py-1 border-bottom shadow-sm mb-2">
+    <div class="container-fluid">
+        <div class="row g-0">
+            <div class="col-3 align-content-center">
+              Cashier : {{account['account']['name']}}
+            </div>
+            <div class="col-6 text-center">
+               Terminal : {{terminalId}}  {{item ? " - Cart :"+item:""}}
+            </div>
+            <div class="col-3 text-end align-content-center">
+                <button type="button" class="btn btn-dark py-0" (click)="logout();">Logout</button>
+            </div>
         </div>
     </div>
 </div>

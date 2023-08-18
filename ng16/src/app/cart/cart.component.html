@@ -11,9 +11,12 @@
                 <div class="col-9">
                     <div class="border">
 
-                        <div class="alert alert-warning">
-                            {{newItem.description}} {{newItem.barcode}}
+                        <div class="alert alert-warning text-center" *ngIf="alert">
+                            {{newItem.description}} {{newItem.barcode}} 
                         </div>
+
+                       
+                        
 
                         <input type="text" class="form-control form-control-lg" [(ngModel)]="barcode" name="barcode"
                             autofocus #formRow id="cashierId" (change)="addToCart();" (keyup.enter)="formRow.blur()">
@@ -52,10 +55,13 @@
                 <div class="col-3">
                     <div class="border">
                         <div class="row g-1">
-                            <div class="col-6 text-center" *ngFor="let x of func">
-                                <div class="border py-4">
-                                    F{{x.id}}
+                            <div class="col-12">
+                                <div class=" d-grid">
+                                    <button type="button" class="btn btn-lg btn-info  rounded-0" (click)="openComponent('items')">ADD BY ITEMS</button>
                                 </div>
+                            </div>
+                            <div class="col-6 text-center" *ngFor="let x of func">
+                                <div class="border py-4">  F{{x.id}}  </div>
                             </div>
 
 
@@ -66,9 +72,15 @@
             </div>
         </div>
         <div class="col-2">
-            <div class="border">
+            <div class="border mb-1">
                 <div class="d-grid">
                     <button type="button" class="btn btn-lg btn-primary rounded-0">PAYMENT</button>
+                </div>
+            </div>
+
+            <div class="border  mb-1">
+                <div class="d-grid">
+                    <button type="button" class="btn btn-lg btn-danger rounded-0">DELETE CART</button>
                 </div>
             </div>
 

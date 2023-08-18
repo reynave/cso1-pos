@@ -1,0 +1,45 @@
+<div class="modal-header">
+    <div class="modal-title" id="modal-basic-title">Items</div>
+    <a class="btn-close" (click)="close()"></a>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-12 mb-3">
+            <div class="input-group">
+                <input type="text" class="form-control form-control-lg" autofocus placeholder="Search by DESCRIPTION"
+                    [(ngModel)]="search" (keyup.enter)="httpSearchItem()">
+                <button class="btn btn-info" (click)="httpSearchItem()" type="button">Search</button>
+            </div>
+        </div>
+
+        <div class="col-12 mb-3">
+            <div class="border p-1 maxHeight">  
+                <table class="table table-sm table-hover" *ngIf="loading != true">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>DESCRIPTION</th>
+                            <th>BARCODE</th>
+                            <th class="text-end">PRICE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let x of items; let i = index" (click)="addToCart(x)">
+                            <td>{{i+1}}</td>
+                            <td>{{x.description}}</td>
+                            <td><code>{{x.barcode}}</code></td>
+                            <td class="text-end">{{x.price1 |number}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-center" *ngIf="loading == true">
+                    loading
+                </div>
+                <div class="text-center py-3" *ngIf="items.length < 1 && isSearch === true ">
+                    "{{search}}" NOT FOUND
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

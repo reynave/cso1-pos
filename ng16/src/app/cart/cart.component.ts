@@ -115,9 +115,10 @@ export class CartComponent implements OnInit {
       
         if(data['error'] == false ){
           if(data['result'] == 'SUPERVISOR'){
-            alert("Superviro mode");
+            alert("SUPERVISOR MODE ON");
+            this.supervisorMode = true;
           }
-          if(data['result'] == 'ITEMS'){
+          else if(data['result'] == 'ITEMS'){
             this.alert =  true;
             this.httpCart();
           }else{

@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ConfigService } from '../service/config.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment.development';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ItemsComponent } from '../items/items.component';
 
 @Component({
@@ -45,8 +45,12 @@ export class CartComponent implements OnInit {
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
-    private modalService: NgbModal
-  ) { }
+    private modalService: NgbModal,
+    config: NgbModalConfig,
+  ) { 
+    config.backdrop = 'static';
+		config.keyboard = false;
+  }
 
   ngOnInit(): void {
     this.supervisorMode = false;
@@ -123,7 +127,15 @@ export class CartComponent implements OnInit {
         if(data['error'] == false ){
           if(data['result'] == 'SUPERVISOR'){ 
        
-            this.modalService.open(this.contentPassword,{size:'md'});
+            this.modalService.open(this.contentPassword,{size:'md'}).result.then(
+              (result) => {
+                
+              },
+              (reason) => {
+                this.barcode = "";
+              },
+            );
+        
        
           }
           else if(data['result'] == 'ITEMS'){
@@ -228,7 +240,7 @@ export class CartComponent implements OnInit {
           alert("WRONG PASSWORD!");
      
         }
-        this.password = "";
+        this.password = "";123456789
 
       },
       error => { 
@@ -236,4 +248,6 @@ export class CartComponent implements OnInit {
       }
     )
   }
+
+ 
 }

@@ -16,11 +16,13 @@
                             {{newItem.description}} {{newItem.barcode}}
                         </div>
  
-                        <input type="text" class="form-control form-control-lg" [(ngModel)]="barcode" name="barcode"
-                            autofocus #formRow id="cashierId" (change)="addToCart();" (keyup.enter)="formRow.blur()">
+                       <div class="p-2 mb-2">
+                            <input type="text" class="form-control form-control-lg" [(ngModel)]="barcode" 
+                            autofocus #formRow  (change)="addToCart();" (keyup.enter)="formRow.blur()">
+                       </div>
 
                         <div>
-                            <table class="table">
+                            <table class="table table-hover">
                                 <thead>
                                     <tr>
                                         <th>QTY</th>
@@ -88,7 +90,7 @@
     </div>
 </div>
 
-<ng-template #contentPassword let-modal>
+<ng-template #contentPassword let-modal  let-c="close" let-d="dismiss">
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Supervisor Mode</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
@@ -111,13 +113,12 @@
 </ng-template>
 
 
-<ng-template #contentAddQty let-modal>
+<ng-template #contentAddQty let-modal  let-c="close" let-d="dismiss">
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Add Qty</h4>
+        <strong class="modal-title" id="modal-basic-title">Add Qty</strong>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
-    <div class="modal-body">
-        {{item |json}}
+    <div class="modal-body"> 
         <input type="text" class="form-control form-control-lg text-end" maxlength="4" [(ngModel)]="addQty"
             (change)="checkNumber();" (keypress)="checkNumber();" (keyup)="checkNumber();" placeholder="0">
 

@@ -1,10 +1,11 @@
-<app-header [item]="kioskUuid"></app-header>
+<app-header [item]="kioskUuid+(supervisorMode ? ' - SUPERVISOR MODE ':'')"></app-header>
 
 <div class="container-fluid">
     <div class="row g-1">
         <div class="col-1">
             <app-widget1></app-widget1>
         </div>
+
         <div class="col-9">
             <div class="row g-1">
 
@@ -12,12 +13,9 @@
                     <div class="border">
 
                         <div class="alert alert-warning text-center" *ngIf="alert">
-                            {{newItem.description}} {{newItem.barcode}} 
+                            {{newItem.description}} {{newItem.barcode}}
                         </div>
-
-                       
-                        
-
+ 
                         <input type="text" class="form-control form-control-lg" [(ngModel)]="barcode" name="barcode"
                             autofocus #formRow id="cashierId" (change)="addToCart();" (keyup.enter)="formRow.blur()">
 
@@ -57,11 +55,12 @@
                         <div class="row g-1">
                             <div class="col-12">
                                 <div class=" d-grid">
-                                    <button type="button" class="btn btn-lg btn-info  rounded-0" (click)="openComponent('items')">ADD BY ITEMS</button>
+                                    <button type="button" class="btn btn-lg btn-info  rounded-0"
+                                        (click)="openComponent('items')">ADD BY ITEMS</button>
                                 </div>
                             </div>
                             <div class="col-6 text-center" *ngFor="let x of func">
-                                <div class="border py-4">  F{{x.id}}  </div>
+                                <div class="border py-4"> F{{x.id}} </div>
                             </div>
 
 
@@ -71,6 +70,7 @@
 
             </div>
         </div>
+
         <div class="col-2">
             <div class="border mb-1">
                 <div class="d-grid">
@@ -88,6 +88,29 @@
     </div>
 </div>
 
+<ng-template #contentPassword let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Supervisor Mode</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+
+        <div class="mb-5 text-center">
+            <label for="pa01" class="my-3 h4">Required Password</label>
+            <input type="password" minlength="6" name="pa01" #formPassword autofocus autocomplete="off"
+                class="form-control form-control-lg pass text-center" [(ngModel)]="password" id="pa01">
+       
+        </div>
+       
+        <div class="mb-3 text-center">
+            <button type="button"  class="btn btn-lg btn-outline-dark mx-1" (click)="modal.dismiss('Cross click')"> CANCEL </button>
+            <button type="button" class="btn btn-lg btn-dark mx-1" (click)="fnAdminSubmit()"> SUBMIT </button>
+        </div>
+    </div>
+
+</ng-template>
+
+
 <ng-template #contentAddQty let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Add Qty</h4>
@@ -95,12 +118,12 @@
     </div>
     <div class="modal-body">
         {{item |json}}
-        <input type="text" class="form-control form-control-lg text-end" maxlength="4" [(ngModel)]="addQty" (change)="checkNumber();"
-            (keypress)="checkNumber();" (keyup)="checkNumber();" placeholder="0">
+        <input type="text" class="form-control form-control-lg text-end" maxlength="4" [(ngModel)]="addQty"
+            (change)="checkNumber();" (keypress)="checkNumber();" (keyup)="checkNumber();" placeholder="0">
 
         <div class="row g-2 my-3">
             <div class="col-4 d-grid" *ngFor="let x of listNumber">
-                <button type="button" class="btn btn-lg btn-primary" (click)="fnAddQty(x)">{{x}}</button> 
+                <button type="button" class="btn btn-lg btn-primary" (click)="fnAddQty(x)">{{x}}</button>
             </div>
             <div class="col-4 d-grid">
                 <button type="button" class="btn btn-lg btn-warning" (click)="onSubmitQty()">ENTER</button>

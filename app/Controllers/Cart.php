@@ -129,4 +129,25 @@ class Cart extends BaseController
 
         return $this->response->setJSON($data);
     }
+
+    function fnAdminSubmit(){
+        $i = 1;
+        $post = json_decode(file_get_contents('php://input'), true);
+        $data = array(
+            "error" => true,
+            "post" => $post,
+        );
+        if ($post) {
+            $id = model("Core")->select("id","cso2_cashier","supervisor  = 1 and password = '".md5($post['password'])."' and id = '".$post['barcode']."' ");
+             
+            $data = array(
+                "error" => false,
+                "post" => $post,
+                "id"=> $id,
+                "pass" => md5($post['password']),
+            );
+        }
+
+        return $this->response->setJSON($data);
+    }
 }

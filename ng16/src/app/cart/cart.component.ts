@@ -12,6 +12,10 @@ import { ItemsComponent } from '../items/items.component';
 })
 export class CartComponent implements OnInit {
   @ViewChild('formRow') rows: ElementRef | any;
+  @ViewChild('formPassword') formPassword: ElementRef | any;
+  
+  @ViewChild('contentPassword') contentPassword : any;
+  password : string = "";
   barcode: string = "";
   callServer: any;
   varkioskUuid: string = "kioskUuid";
@@ -35,7 +39,9 @@ export class CartComponent implements OnInit {
     { id: 11 },
     { id: 12 },
   ]
-
+  listNumber = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '00'];
+  addQty: string = "";
+  item: any = [];
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
@@ -43,6 +49,7 @@ export class CartComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.supervisorMode = false;
     this.newItem = [];
     //this.callHttpServer();
     this.checkKioskUuid();
@@ -110,18 +117,21 @@ export class CartComponent implements OnInit {
     }).subscribe(
       data => {
         console.log(data);
-        this.barcode = "";
+        
         this.newItem = data['item']; 
       
         if(data['error'] == false ){
-          if(data['result'] == 'SUPERVISOR'){
-            alert("SUPERVISOR MODE ON");
-            this.supervisorMode = true;
+          if(data['result'] == 'SUPERVISOR'){ 
+       
+            this.modalService.open(this.contentPassword,{size:'md'});
+       
           }
           else if(data['result'] == 'ITEMS'){
             this.alert =  true;
             this.httpCart();
+            this.barcode = "";
           }else{
+            this.barcode = "";
             this.alert =  true;
             this.newItem = {
               barcode : this.barcode,
@@ -140,17 +150,15 @@ export class CartComponent implements OnInit {
         console.log(error);
       }
     )
-    console.log(this.barcode);
+ 
   }
 
-  item: any = [];
   open(content: any, item: any) {
     this.addQty = '0';
     this.item = item;
     this.modalService.open(content);
   }
 
-  addQty: string = "";
   checkNumber() {
     this.addQty = parseInt(this.addQty).toString();
     if (parseInt(this.addQty) < 1) {
@@ -158,7 +166,7 @@ export class CartComponent implements OnInit {
     }
 
   }
-  listNumber = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '00'];
+ 
   fnAddQty(number: string) {
 
     this.addQty += number;
@@ -197,4 +205,35 @@ export class CartComponent implements OnInit {
     });
  
 	}
+
+
+  fnAdminSubmit(){
+    this.supervisorMode = false;
+    this.alert =  false;
+    const body = {
+      barcode: this.barcode,
+      kioskUuid: this.kioskUuid, 
+      password : this.password
+    }
+    this.http.post<any>(environment.api + "Cart/fnAdminSubmit", body, {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => {
+        console.log(data);  
+        if(data['id'] == this.barcode){
+          this.supervisorMode = true;
+          this.barcode = "";
+          this.modalService.dismissAll();
+        }else{
+          alert("WRONG PASSWORD!");
+     
+        }
+        this.password = "";
+
+      },
+      error => { 
+        console.log(error);
+      }
+    )
+  }
 }

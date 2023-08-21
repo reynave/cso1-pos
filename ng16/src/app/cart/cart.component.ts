@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment.development';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ItemsComponent } from '../items/items.component';
+import { CartDetailComponent } from './cart-detail/cart-detail.component';
 
 @Component({
   selector: 'app-cart',
@@ -13,18 +14,18 @@ import { ItemsComponent } from '../items/items.component';
 export class CartComponent implements OnInit {
   @ViewChild('formRow') rows: ElementRef | any;
   @ViewChild('formPassword') formPassword: ElementRef | any;
-  
-  @ViewChild('contentPassword') contentPassword : any;
-  password : string = "";
+
+  @ViewChild('contentPassword') contentPassword: any;
+  password: string = "";
   barcode: string = "";
   callServer: any;
   varkioskUuid: string = "kioskUuid";
   kioskUuid: any;
-  supervisorMode : boolean = false;
+  supervisorMode: boolean = false;
   items: any = [];
   cart: any = [];
   newItem: any = [];
-  alert : boolean = false;
+  alert: boolean = false;
   func: any = [
     { id: 1 },
     { id: 2 },
@@ -39,26 +40,30 @@ export class CartComponent implements OnInit {
     { id: 11 },
     { id: 12 },
   ]
-  listNumber = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '00'];
-  addQty: string = "";
+  ilock : number = 0;
+  addQty: number = 1;
   item: any = [];
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
     private modalService: NgbModal,
     config: NgbModalConfig,
-  ) { 
+  ) {
     config.backdrop = 'static';
-		config.keyboard = false;
+    config.keyboard = false;
   }
 
   ngOnInit(): void {
-    this.supervisorMode = false;
-    this.newItem = [];
-    //this.callHttpServer();
-    this.checkKioskUuid();
-    this.httpCart();
-    //console.log(this.configService.account()); 
+    this.supervisorMode = true;
+    this.newItem = []; 
+    if(this.configService.getVarkioskUuid() ){
+      this.checkKioskUuid();
+      this.httpCart();
+    }else{
+      history.back();
+    }
+  
+    
   }
 
   httpCart() {
@@ -68,8 +73,10 @@ export class CartComponent implements OnInit {
         kioskUuid: this.kioskUuid,
       }
     }).subscribe(
-      data => { 
-        this.items = data['items']; 
+      data => {
+        this.items = data['items'];
+        this.ilock = data['ilock'];
+        console.log(data);
       },
       error => {
         console.log(error);
@@ -110,7 +117,7 @@ export class CartComponent implements OnInit {
   }
 
   addToCart() {
-    this.alert =  false;
+    this.alert = false;
     const body = {
       barcode: this.barcode,
       kioskUuid: this.kioskUuid,
@@ -121,83 +128,83 @@ export class CartComponent implements OnInit {
     }).subscribe(
       data => {
         console.log(data);
-        
-        this.newItem = data['item']; 
-      
-        if(data['error'] == false ){
-          if(data['result'] == 'SUPERVISOR'){ 
-       
-            this.modalService.open(this.contentPassword,{size:'md'}).result.then(
+
+        this.newItem = data['item'];
+
+        if (data['error'] == false) {
+          if (data['result'] == 'SUPERVISOR') {
+
+            this.modalService.open(this.contentPassword, { size: 'md' }).result.then(
               (result) => {
-                
+
               },
               (reason) => {
                 this.barcode = "";
               },
             );
-        
-       
+
+
           }
-          else if(data['result'] == 'ITEMS'){
-            this.alert =  true;
+          else if (data['result'] == 'ITEMS') {
+            this.alert = true;
             this.httpCart();
             this.barcode = "";
-          }else{
+          } else {
             this.barcode = "";
-            this.alert =  true;
+            this.alert = true;
             this.newItem = {
-              barcode : this.barcode,
-              description : "ITEM TIDAK DI TEMUKAN!",
-            } 
+              barcode: this.barcode,
+              description: "ITEM TIDAK DI TEMUKAN!",
+            }
           }
         }
-     
+
       },
       error => {
         this.newItem = {
-          barcode : this.barcode,
-          description : "ITEM TIDAK DI TEMUKAN!",
+          barcode: this.barcode,
+          description: "ITEM TIDAK DI TEMUKAN!",
         }
         this.barcode = "";
         console.log(error);
       }
     )
- 
+
   }
 
   open(content: any, item: any) {
-    this.addQty = '0';
+    this.addQty = 1;
     this.item = item;
     this.modalService.open(content);
   }
 
   checkNumber() {
-    this.addQty = parseInt(this.addQty).toString();
-    if (parseInt(this.addQty) < 1) {
-      this.addQty = "";
+
+    if (this.addQty < 1) {
+      this.addQty = 1;
     }
 
   }
- 
-  fnAddQty(number: string) {
 
-    this.addQty += number;
-    this.checkNumber();
-  }
+  // fnAddQty(number: string) {
 
-  onSubmitQty(){
-    const body ={
+  //   this.addQty += number;
+  //   this.checkNumber();
+  // }
+
+  onSubmitQty() {
+    const body = {
       kioskUuid: this.kioskUuid,
-      item : this.item,
-      addQty : this.addQty
+      item: this.item,
+      addQty: this.addQty
     }
- 
+
     this.http.post<any>(environment.api + "Cart/onSubmitQty", body, {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        this.addQty  = '0'; 
-        console.log(data); 
+        this.addQty = 0;
+        console.log(data);
         this.modalService.dismissAll();
         this.httpCart();
       },
@@ -207,47 +214,102 @@ export class CartComponent implements OnInit {
     )
   }
 
-  openComponent(comp : any ) {
-		const modalRef = this.modalService.open(ItemsComponent, {size:'lg'});
-		modalRef.componentInstance.name = 'World';
-    console.log(modalRef);
-    modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
-      console.log('modalRef.componentInstance.newItemEvent',data); 
-      this.httpCart();
-    });
- 
-	}
+  openComponent(comp: any, item: any = []) {
+
+    if (comp == 'items') {
+      const modalRef = this.modalService.open(ItemsComponent, { size: 'lg' });
+      modalRef.componentInstance.name = 'World';
+
+      modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
+        console.log('modalRef.componentInstance.newItemEvent', data);
+        this.httpCart();
+      });
+    }
+    if (comp == 'cartDetail') {
+      const modalRef = this.modalService.open(CartDetailComponent, { size: 'lg' });
+      modalRef.componentInstance.item = item;
+      modalRef.componentInstance.kioskUuid = this.kioskUuid;
 
 
-  fnAdminSubmit(){
+      modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
+        console.log('modalRef.componentInstance.newItemEvent', data);
+        this.httpCart();
+      });
+    }
+
+
+  }
+
+
+  fnAdminSubmit() {
     this.supervisorMode = false;
-    this.alert =  false;
+    this.alert = false;
     const body = {
       barcode: this.barcode,
-      kioskUuid: this.kioskUuid, 
-      password : this.password
+      kioskUuid: this.kioskUuid,
+      password: this.password
     }
     this.http.post<any>(environment.api + "Cart/fnAdminSubmit", body, {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        console.log(data);  
-        if(data['id'] == this.barcode){
+        console.log(data);
+        if (data['id'] == this.barcode) {
           this.supervisorMode = true;
           this.barcode = "";
           this.modalService.dismissAll();
-        }else{
+        } else {
           alert("WRONG PASSWORD!");
-     
+
         }
-        this.password = "";123456789
+        this.password = ""; 123456789
 
       },
-      error => { 
+      error => {
         console.log(error);
       }
     )
   }
 
+
+  cancelTrans() {
+    const body = {
+      kioskUuid: this.kioskUuid,
+    }
+    if (confirm("Cancel this transaction ?")) {
  
+      this.http.post<any>(environment.api + "Cart/cancelTrans", body, {
+        headers: this.configService.headers(),
+      }).subscribe(
+        data => {
+          localStorage.removeItem("kioskUuid");
+          history.back();
+        },
+        error => {
+          console.log(error);
+        }
+      )
+    }
+  }
+
+
+  goToPayment(){
+    const body = {
+      kioskUuid : this.kioskUuid,
+    }
+    this.http.post<any>(environment.api + "cart/goToPayment", body, {
+      headers: this.configService.headers(),
+      params: {
+        kioskUuid: this.kioskUuid,
+      }
+    }).subscribe(
+      data => {
+         console.log(data);
+      },
+      error => {
+        console.log(error);
+      }
+    )
+  }
+
 }

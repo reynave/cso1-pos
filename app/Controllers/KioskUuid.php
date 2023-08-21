@@ -32,18 +32,18 @@ class KioskUuid extends BaseController
         ];
         if ($post) {
             $insert = false;
-            if ($post['kiosUuid'] == '') { 
+            if ($post['kiosUuid'] == '') {
                 $id = $post['terminalId'] . model("Core")->number("kiosk");
-                $insert=true;
-            }else{
+                $insert = true;
+            } else {
                 $id = $post['kiosUuid'];
             }
 
-            if($insert == true){
+            if ($insert == true) {
                 $this->db->table("cso2_parking")->insert([
-                    "terminalId" =>  $post['terminalId'],
+                    "terminalId" => $post['terminalId'],
                     "cashierId" => model("Core")->accountId(),
-                    "kioskUuid" => $id ,
+                    "kioskUuid" => $id,
                     "update_date" => date("Y-m-d H:i:s"),
                     "input_date" => date("Y-m-d H:i:s")
                 ]);
@@ -54,6 +54,36 @@ class KioskUuid extends BaseController
                 "id" => $id,
                 "post" => $post,
                 "insert" => $insert,
+            );
+        }
+        return $this->response->setJSON($data);
+    }
+    function getKioskUuid()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+
+            $id = $post['terminalId'] . model("Core")->number("kiosk");
+
+
+            $this->db->table("cso1_kiosk_uuid")->insert([
+                "kioskUuid" => $id,
+                "terminalId" => $post['terminalId'],
+                "cashierId" => model("Core")->accountId(), 
+                "update_date" => date("Y-m-d H:i:s"),
+                "input_date" => date("Y-m-d H:i:s")
+            ]);
+
+
+            $data = array(
+                "error" => false,
+                "id" => $id,
+                "post" => $post, 
             );
         }
         return $this->response->setJSON($data);

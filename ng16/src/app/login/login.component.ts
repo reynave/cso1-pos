@@ -17,10 +17,15 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
-    private router: Router,
-    
+    private router: Router, 
   ) { }
   ngOnInit(): void {
+   
+    if( this.configService.getToken() != null ){
+       this.router.navigate(['home'])
+    } 
+
+    console.log( this.configService.getToken() )
     this.callHttpServer();
   }
   callServer: any;
@@ -46,7 +51,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         if(data['error'] === false){
           this.configService.setToken(data['jwtToken']).subscribe(
             ()=>{
-              this.router.navigate(['cart']);
+              this.router.navigate(['home']);
             }
           )
         }else{

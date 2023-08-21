@@ -16,6 +16,8 @@ import { SetupComponent } from './setup/setup.component';
 import { ParkingComponent } from './parking/parking.component';
 import { Widget1Component } from './global/widget1/widget1.component';
 import { ItemsComponent } from './items/items.component';
+import { CartDetailComponent } from './cart/cart-detail/cart-detail.component';
+import { PaymentComponent } from './payment/payment.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { ItemsComponent } from './items/items.component';
     SetupComponent,
     ParkingComponent,
     Widget1Component,
-    ItemsComponent
+    ItemsComponent,
+    CartDetailComponent,
+    PaymentComponent
   ],
   imports: [
     BrowserModule,

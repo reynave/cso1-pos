@@ -15,7 +15,7 @@ class Cart extends BaseController
         SELECT k.barcode, k.itemId , COUNT(k.barcode) AS 'qty', 
         sum(k.originPrice) AS 'total', sum(k.discount) AS 'discount', k.price
         FROM cso1_kiosk_cart AS k 
-        WHERE k.kioskUuid = '$kioskUuid'  AND k.void = 0 
+        WHERE k.kioskUuid = '$kioskUuid'  AND k.void = 0 and k.presence = 1
         GROUP BY k.price, k.barcode, k.discount) AS c
         LEFT JOIN cso1_item AS i ON  i.id = c.itemId";
         $items = $this->db->query($q1)->getResultArray();
@@ -24,6 +24,7 @@ class Cart extends BaseController
         $data = array(
             "error" => false,
             "items" => $items,
+            "ilock" => (int)model("Core")->select("ilock","cso1_kiosk_uuid","kioskUuid = '$kioskUuid' "),
         );
         return $this->response->setJSON($data);
     }
@@ -44,9 +45,9 @@ class Cart extends BaseController
             $barcode = str_replace(["'", "\"",], "", $post['barcode']);
 
             $cashierId = model("Core")->select("id", "cso2_cashier", "id = '$barcode' AND supervisor  = 1 ");
-            if($cashierId != ""){
+            if ($cashierId != "") {
                 $isItem = false;
-                $result  = "SUPERVISOR";
+                $result = "SUPERVISOR";
             }
             /** 
             // CHECK BARCODE 
@@ -71,7 +72,7 @@ class Cart extends BaseController
             $itemId = model("Core")->select("itemId", "cso1_item_barcode", "barcode = '$barcode' ");
 
             if ($itemId && $isItem == true) {
-                $result  = "ITEMS";
+                $result = "ITEMS";
                 $this->db->table("cso1_kiosk_cart")->insert([
                     "kioskUuid" => $post['kioskUuid'],
                     "itemId" => $itemId,
@@ -110,7 +111,7 @@ class Cart extends BaseController
         );
         if ($post) {
             $itemid = $post['item']['itemId'];
-            for ($n = 0; $n < (int)$post['addQty']; $n++) { 
+            for ($n = 0; $n < (int) $post['addQty']; $n++) {
                 $this->db->table("cso1_kiosk_cart")->insert([
                     "kioskUuid" => $post['kioskUuid'],
                     "itemId" => $itemid,
@@ -130,7 +131,8 @@ class Cart extends BaseController
         return $this->response->setJSON($data);
     }
 
-    function fnAdminSubmit(){
+    function fnAdminSubmit()
+    {
         $i = 1;
         $post = json_decode(file_get_contents('php://input'), true);
         $data = array(
@@ -138,16 +140,168 @@ class Cart extends BaseController
             "post" => $post,
         );
         if ($post) {
-            $id = model("Core")->select("id","cso2_cashier","supervisor  = 1 and password = '".md5($post['password'])."' and id = '".$post['barcode']."' ");
-             
+            $id = model("Core")->select("id", "cso2_cashier", "supervisor  = 1 and password = '" . md5($post['password']) . "' and id = '" . $post['barcode'] . "' ");
+
             $data = array(
                 "error" => false,
                 "post" => $post,
-                "id"=> $id,
+                "id" => $id,
                 "pass" => md5($post['password']),
             );
         }
 
         return $this->response->setJSON($data);
+    }
+
+    function detail()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $data = array(
+            "error" => true,
+            "post" => $post,
+        );
+        if ($post) {
+            $kioskUuid = $post['kioskUuid'];
+            $q1 = "SELECT c.*, i.description, i.shortDesc FROM cso1_kiosk_cart as c 
+            left join cso1_item as i on c.itemId = i.id
+            where c.presence = 1 AND c.kioskUuid = '$kioskUuid' AND c.void = 0 AND c.barcode = '".$post['item']['barcode']."'
+            ";
+            $item = $this->db->query($q1)->getResultArray();
+
+            $data = array(
+                "error" => false,
+                "items" => $item,
+                "post" =>  $post,
+                "detail" => array(
+                    "price"         => (int)$item[0]['price'],
+                    "discount"      => (float)$item[0]['discount'],
+                    "barcode"       => (float)$item[0]['barcode'],
+                    "originPrice"   => (int)$item[0]['originPrice'], 
+                )
+            );
+        }
+        return $this->response->setJSON($data);
+    }
+
+    function voidCart() {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $data = array(
+            "error" => true,
+            "post" => $post,
+        );
+        if ($post) {
+
+            $this->db->table("cso1_kiosk_cart")->update([
+                "void" => 1,
+                "presence" => 0,
+                "updateDate" => time(),
+                "update_date" => date("Y-m-d H:i:s"),
+                "updateBy" => "",
+                
+            ],"id = ".$post['item']['id']);
+
+            $data = array(
+                "error" => false,
+                "post" => $post, 
+            );
+        }
+        return $this->response->setJSON($data);
+    }
+
+    function updatePrice(){
+        $post = json_decode(file_get_contents('php://input'), true);
+        $data = array(
+            "error" => true,
+            "post" => $post,
+        );
+        if ($post) {
+            $this->db->table("cso1_kiosk_cart")->update([
+                "price" => $post['detail']['price'] - $post['detail']['discount'],  
+                "discount" => $post['detail']['discount'],   
+                "isPriceEdit" => 1,
+                "updateDate" => time(),
+                "update_date" => date("Y-m-d H:i:s"),
+                "updateBy" => "",
+                
+            ],"barcode = ".$post['detail']['barcode']." and kioskUuid =  '".$post['kioskUuid']."' ");
+
+
+            $data = array(
+                "error" => false, 
+                "post" => $post,
+            );
+        }
+        return $this->response->setJSON($data);
+    }
+
+    function fnVoidAllCartItems(){
+        $post = json_decode(file_get_contents('php://input'), true);
+        $data = array(
+            "error" => true,
+            "post" => $post,
+        );
+        if ($post) {
+            $this->db->table("cso1_kiosk_cart")->update([
+                "void" => 1,
+                "presence" => 0,
+                "updateDate" => time(),
+                "update_date" => date("Y-m-d H:i:s"),
+                "updateBy" => "", 
+            ],"barcode = ".$post['detail']['barcode']." and kioskUuid =  '".$post['kioskUuid']."' "); 
+
+            $data = array(
+                "error" => false, 
+                "post" => $post,
+            );
+        }
+        return $this->response->setJSON($data);
+    }
+
+    function cancelTrans(){
+        $post = json_decode(file_get_contents('php://input'), true);
+        $data = array(
+            "error" => true,
+            "post" => $post,
+        );
+        if ($post) {
+            $this->db->table("cso1_kiosk_uuid")->update([ 
+                "presence" => 0, 
+                "update_date" => date("Y-m-d H:i:s"), 
+            ],"  kioskUuid =  '".$post['kioskUuid']."' "); 
+
+            $this->db->table("cso1_kiosk_cart")->update([
+                "void" => 0,
+                "presence" => 0,
+                "updateDate" => time(),
+                "update_date" => date("Y-m-d H:i:s"), 
+            ],"  kioskUuid =  '".$post['kioskUuid']."' "); 
+
+            $data = array(
+                "error" => false, 
+                "post" => $post,
+            );
+        }
+        return $this->response->setJSON($data); 
+    }
+
+
+    function goToPayment(){
+        $post = json_decode(file_get_contents('php://input'), true);
+        $data = array(
+            "error" => true,
+            "post" => $post,
+        );
+        if ($post) {
+            $this->db->table("cso1_kiosk_uuid")->update([ 
+                "ilock" => 1, 
+                "update_date" => date("Y-m-d H:i:s"), 
+            ],"  kioskUuid =  '".$post['kioskUuid']."' "); 
+ 
+            $data = array(
+                "error" => false, 
+                "post" => $post,
+            );
+        }
+        return $this->response->setJSON($data); 
     }
 }

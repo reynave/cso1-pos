@@ -1,6 +1,6 @@
 <app-header [item]="kioskUuid+(supervisorMode ? ' - SUPERVISOR MODE ':'')"></app-header>
 
-<div class="container-fluid">
+<div class="container" *ngIf="ilock != 1">
     <div class="row g-1">
         <div class="col-1">
             <app-widget1></app-widget1>
@@ -30,11 +30,12 @@
                                         <th>PRICE</th>
                                         <th>DISC</th>
                                         <th>TOTAL</th>
-
+                                        <th></th>
+                                        <th *ngIf="supervisorMode == true"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let x of items" (click)="open(contentAddQty,x)">
+                                    <tr *ngFor="let x of items" >
                                         <td>{{x.qty}}</td>
                                         <td>
                                             <div>
@@ -45,6 +46,12 @@
                                         <td>{{x.price | number}}</td>
                                         <td>{{x.discount | number}}</td>
                                         <td>{{x.total | number}}</td>
+                                        <td>
+                                            <button type="text" class="btn btn-warning" (click)="open(contentAddQty,x)">Add Qty</button>
+                                        </td>
+                                        <td *ngIf="supervisorMode == true">
+                                            <button type="text" class="btn btn-danger" (click)="openComponent('cartDetail',x)">Edit Qty</button>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -76,16 +83,27 @@
         <div class="col-2">
             <div class="border mb-1">
                 <div class="d-grid">
-                    <button type="button" class="btn btn-lg btn-primary rounded-0">PAYMENT</button>
+                    <button type="button" (click)="goToPayment()" class="btn btn-lg btn-primary rounded-0">PAYMENT</button>
                 </div>
             </div>
 
-            <div class="border  mb-1">
+            <div class="border  mb-1" *ngIf="supervisorMode == true">
                 <div class="d-grid">
-                    <button type="button" class="btn btn-lg btn-danger rounded-0">DELETE CART</button>
+                    <button type="button" (click)="cancelTrans();"  class="btn btn-lg btn-danger rounded-0">CANCEL TRANS</button>
                 </div>
             </div>
 
+        </div>
+    </div>
+</div>
+
+<div class="container" *ngIf="ilock == 1">
+    <div class="row">
+        <div class="col-12 text-center my-5">
+            <p>
+                Tansaksi sudah ditutup, silakan lajutkan ke pembayaran
+            </p>
+            <a [routerLink]="[ '/payment' ]">payment</a>
         </div>
     </div>
 </div>
@@ -119,9 +137,9 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body"> 
-        <input type="text" class="form-control form-control-lg text-end" maxlength="4" [(ngModel)]="addQty"
-            (change)="checkNumber();" (keypress)="checkNumber();" (keyup)="checkNumber();" placeholder="0">
-
+        <input type="number" class="form-control form-control-lg text-center" maxlength="4" [(ngModel)]="addQty"
+           placeholder="0">
+<!--  
         <div class="row g-2 my-3">
             <div class="col-4 d-grid" *ngFor="let x of listNumber">
                 <button type="button" class="btn btn-lg btn-primary" (click)="fnAddQty(x)">{{x}}</button>
@@ -129,9 +147,10 @@
             <div class="col-4 d-grid">
                 <button type="button" class="btn btn-lg btn-warning" (click)="onSubmitQty()">ENTER</button>
             </div>
-        </div>
+        </div> -->
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Close</button>
+        <button type="button" class="btn btn-lg btn-outline-dark mx-2" (click)="modal.close('Save click')">Close</button>
+        <button type="button" class="btn btn-lg btn-warning" (click)="onSubmitQty()">ENTER</button>
     </div>
 </ng-template>

@@ -1,0 +1,65 @@
+<div class="modal-header">
+    <strong class="modal-title" id="modal-basic-title">SUPERVISOR MODE, Cart {{kioskUuid}}</strong>
+    <a class="btn-close" (click)="close()"></a>
+</div>
+<div class="modal-body">
+    <div class="row g-1 mb-3">
+        <div class="col">
+            <div class="mb-1">Barcode</div>
+            <div class="form-control form-control-lg"> {{detail.barcode}} </div>
+        </div>
+        <div class="col">
+            <div class="mb-1">Qty</div>
+            <div class="form-control form-control-lg">{{items.length}}</div>
+        </div>
+        <div class="col">
+            <div class="mb-1">Original Price</div>
+            <div class="form-control form-control-lg">{{detail.originPrice}}</div>
+        </div>
+        <div class="col">
+            <div class="mb-1">Price</div>
+            <input type="number" class="form-control form-control-lg text-end" (change)="updatePrice()"
+                (keyup.enter)="updatePrice()" [(ngModel)]="detail.price">
+        </div>
+        <div class="col">
+            <div class="mb-1">Discount</div>
+            <input type="number" class="form-control form-control-lg text-end" (change)="updatePrice()"
+                (keyup.enter)="updatePrice()" [(ngModel)]="detail.discount">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <a href="javascript:;" (click)="fnVoidAllCartItems()"> Delete all items</a> 
+        </div>
+        <div class="col-12 mb-3">
+            <div class="border p-1 maxHeight">
+                <table class="table table-sm table-hover" *ngIf="loading != true">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>DESCRIPTION</th>
+
+                            <th class="text-end">FINAL PRICE</th>
+                            <th class="text-center">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let x of items; let i = index">
+                            <td>{{x.id}}</td>
+                            <td>{{x.description}}</td>
+                            <td class="text-end">{{x.price |number}}</td>
+                            <td class="text-center">
+                                <button type="button" (click)="voidCart(x);"
+                                    class="btn btn-danger btn-sm">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-center" *ngIf="loading == true">
+                    loading
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

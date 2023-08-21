@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./widget1.component.css']
 })
 export class Widget1Component {
-
+  back(){
+    history.back();
+  }
 }

@@ -1,1 +1,32 @@
-<p>home works!</p>
+<app-header></app-header>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            WELCOME BACK
+        </div>
+        <div class="col-12 text-center mb-2">
+            <button type="button" class="btn btn-lg btn-primary" (click)="getKioskUuid();">OPEN CART</button>
+        </div>
+
+        <table class="table table-hover border table-bordered">
+            <thead>
+                <tr>
+                    <th>NO</th>
+                    <th>TRANSACTION ID</th>
+                    <th></th> 
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let x of parking; let i = index">
+                    <td> {{i+1}} </td>
+                    <td> {{x.kioskUuid}} </td>
+                    <td>
+                        <button type="button" (click)="setCart(x)" class="btn btn-sm btn-primary">SELECT</button>
+                    </td> 
+                </tr>
+                
+            </tbody>
+           
+        </table>
+    </div>
+</div>

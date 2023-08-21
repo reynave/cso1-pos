@@ -53,8 +53,7 @@ export class ConfigService {
     } catch (error) {
       return of(false); // Mengembalikan Observable yang mengirimkan nilai boolean false jika terjadi kesalahan
     }
-  }
-
+  } 
   kioskUuid(){
     return localStorage.getItem("kioskUuid");
   }

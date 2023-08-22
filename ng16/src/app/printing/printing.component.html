@@ -1,0 +1,30 @@
+<app-header></app-header>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-1">
+            <app-widget1></app-widget1>
+        </div>
+
+        <div class="col-6">
+            <div class="p-1">
+                Total Copy : {{copy}}
+            </div>
+
+            <div class="border p-1 shadow-sm">
+                <pre>{{outputPrint}}</pre>
+            </div> 
+        </div>
+
+        <div class="col-2">
+            <div class="d-grid">
+                <button type="button" (click)="fnPrinting()" class="btn btn-lg btn-success rounded-0">PRINT</button>
+            </div>
+        </div>
+        <div class="col-3">
+             
+        </div>
+    </div>
+</div>
+
+ 

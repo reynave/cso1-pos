@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment.development';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ItemsComponent } from '../items/items.component';
 import { CartDetailComponent } from './cart-detail/cart-detail.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -42,10 +43,12 @@ export class CartComponent implements OnInit {
   ]
   ilock : number = 0;
   addQty: number = 1;
-  item: any = [];
+  item: any = []; 
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
+    private router : Router,
+    private activatedRoute : ActivatedRoute,
     private modalService: NgbModal,
     config: NgbModalConfig,
   ) {
@@ -56,14 +59,8 @@ export class CartComponent implements OnInit {
   ngOnInit(): void {
     this.supervisorMode = true;
     this.newItem = []; 
-    if(this.configService.getVarkioskUuid() ){
-      this.checkKioskUuid();
-      this.httpCart();
-    }else{
-      history.back();
-    }
-  
-    
+    this.kioskUuid = this.activatedRoute.snapshot.queryParams['kioskUuid'];
+    this.httpCart();
   }
 
   httpCart() {
@@ -76,6 +73,10 @@ export class CartComponent implements OnInit {
       data => {
         this.items = data['items'];
         this.ilock = data['ilock'];
+        if(data['error'] == true){
+          this.router.navigate(['not-found']);
+          this.modalService.dismissAll();
+        }
         console.log(data);
       },
       error => {
@@ -305,6 +306,8 @@ export class CartComponent implements OnInit {
     }).subscribe(
       data => {
          console.log(data);
+         this.router.navigate(['payment']);
+         this.modalService.dismissAll();
       },
       error => {
         console.log(error);

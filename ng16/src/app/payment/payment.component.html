@@ -1,9 +1,119 @@
 <app-header></app-header>
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-12">
-            payment
+        <div class="col-1">
+            <app-widget1></app-widget1>
+        </div>
+
+        <div class="col-6">
+            <div *ngIf="close === true" class="alert alert-warning text-center">
+                <div>  {{note}}  </div>
+                <div>  <a [routerLink]="[ '/printing' ]" [queryParams]="{id : transactionId }">Print Receipt Transaction</a> </div>
+
+            </div>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Qty</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Discount</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let x of items">
+                        <td>{{x.qty}}</td>
+                        <td>
+                            <div>{{x.shortDesc}}</div>
+                            <code>{{x.barcode}}</code>
+                        </td>
+                        <td>
+                            {{x.price | number}}
+                        </td>
+                        <td>
+                            {{x.discount | number}}
+                        </td>
+                        <td>
+                            {{x.total | number}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-2">
+            <div class="d-grid mb-1" *ngFor="let x of paymentMethod">
+                <button type="button" class="btn btn-lg rounded-0 btn-warning"
+                    (click)="open(contentPaymentMethod, x)">{{x.label}}</button>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="mb-3">
+                <strong>PAID</strong>
+                <table class="table table-sm table-bordered">
+                    <tr *ngFor="let x of kioskPaid">
+                        <td> {{x.paymentTypeId}}</td>
+                        <td class="text-end">Rp {{x.paid | number}}</td>
+                        
+                    </tr>
+                </table>
+            </div>
+            <div class="mb-3">
+                <div class="mb-3">
+                    Bill :
+                    <h4> {{total.bill | number}}</h4>
+                </div>
+                <div class="mb-3">
+                    PAID :
+                    <h4>{{total.paid | number}}</h4>
+                </div>
+                <div class="mb-3 text-danger">
+                    REMAINING :
+                    <h4>{{total.bill - (total.paid +payment.amount) | number}}</h4>
+                </div>
+                <div class="mb-3">
+                    <small>close : {{close}}</small>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<ng-template #contentPaymentMethod let-modal>
+    <form (ngSubmit)="onSubmitPayment()" #heroForm="ngForm">
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">{{paymentMethodDetail.label}}</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            {{paymentMethodDetail |json}}
+
+            <div class="mb-3">
+                <h4>Bill : {{total.bill | number}}</h4>
+                <h4>PAID : {{total.paid | number}}</h4>
+                <h4>REMAINING : {{total.bill - (total.paid +payment.amount) | number}}</h4>
+               
+            </div>
+            <div class="mb-3">
+                <label for="amount">Amount <span [hidden]="amount.valid || amount.pristine"
+                        class="text-danger">*</span></label>
+                <input type="number" autofocus class="form-control" id="amount" required [(ngModel)]="payment.amount"
+                    name="amount" #amount="ngModel">
+            </div>
+            <div class="mb-3">
+                <label>Card Id </label>
+                <input type="text" class="form-control" id="cardId" [(ngModel)]="payment.cardId" name="cardId"
+                    #cardId="ngModel">
+            </div>
+
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark mx-2" (click)="modal.close('Save click')">Cancel</button>
+            <button type="submit" class="btn btn-dark" [disabled]="!heroForm.form.valid">Submit</button>
+
+        </div>
+    </form>
+</ng-template>

@@ -20,11 +20,13 @@ class Cart extends BaseController
         LEFT JOIN cso1_item AS i ON  i.id = c.itemId";
         $items = $this->db->query($q1)->getResultArray();
 
-
+        $kioskUuid = model("Core")->select("kioskUuid","cso1_kiosk_uuid","kioskUuid = '$kioskUuid' and presence = 1  ");
         $data = array(
-            "error" => false,
-            "items" => $items,
-            "ilock" => (int)model("Core")->select("ilock","cso1_kiosk_uuid","kioskUuid = '$kioskUuid' "),
+            "kioskUuid" => $kioskUuid,
+            "error" => $kioskUuid ? false : true,
+            "items" => $kioskUuid ? $items : [],
+            "ilock" => (int)model("Core")->select("ilock","cso1_kiosk_uuid","kioskUuid = '$kioskUuid'  "),
+           
         );
         return $this->response->setJSON($data);
     }

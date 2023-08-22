@@ -9,6 +9,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { SetupComponent } from './setup/setup.component';
 import { ParkingComponent } from './parking/parking.component';
 import { PaymentComponent } from './payment/payment.component';
+import { PrintingComponent } from './printing/printing.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: "setup", component: SetupComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "parking", component: ParkingComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "payment", component: PaymentComponent, data: { active: "" },  canActivate:[authGuard]  }, 
+  { path: "printing", component: PrintingComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   
   { path: "**", component: NotFoundComponent, data: { active: "404" },  canActivate:[]  }, 
   

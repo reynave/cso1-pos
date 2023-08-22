@@ -127,4 +127,76 @@ class Core extends Model
         return $res;
     }
 
+    function sql($q)
+    {
+        $query = $this->db->query($q);
+        return $query->getResultArray();
+    }
+
+    function summary($uuid = "")
+    {
+        $memberId =  self::select("memberId", "cso1_kiosk_uuid", "presence = 1 AND status = 1  AND kioskUuid = '" . $uuid . "'");
+
+        $discountMember = 0;
+        if ((int)$memberId > 0) {
+            $discountMember = (int)self::sql("SELECT sum(discountAmount) as 'discountAmount', 
+        sum(discountPercent) as 'discountPercent'
+        from cso1_promotion where presence =1 and status =  1 and startDate >= " . time() . "  and endDate <= " . time())[0]['discountAmount'];
+        }
+        $bkp  = (int)self::sql("  SELECT  sum(c.price) as 'total'
+                from cso1_kiosk_cart as c
+                join cso1_item as i on i.id = c.itemId
+                join cso1_taxCode as x on x.id = i.itemTaxId
+                where c.presence = 1 and  kioskUuid = '$uuid' and x.percentage > 0 and x.taxType = 1
+            ")[0]['total'] + (int)self::sql("  SELECT  sum(c.price*(x.percentage /100) + c.price ) as 'total'
+                from cso1_kiosk_cart as c
+                join cso1_item as i on i.id = c.itemId
+                join cso1_taxCode as x on x.id = i.itemTaxId
+                where c.presence = 1 and  kioskUuid = '$uuid' and x.percentage > 0 and x.taxType = 0
+            ")[0]['total'];
+        $nonBkp = (int)self::sql("  SELECT   sum(c.price) as 'total'
+            from cso1_kiosk_cart as c
+            join cso1_item as i on i.id = c.itemId
+            join cso1_taxCode as x on x.id = i.itemTaxId
+            where c.presence = 1 and  kioskUuid = '$uuid' and x.percentage = 0")[0]['total'];
+
+            
+        $ppnExc = (int)self::sql("SELECT sum(((c.price - c.discount) * (t.percentage/100)) ) as 'tax' 
+            from cso1_kiosk_cart as c
+            join cso1_item as i on c.itemId = i.id
+            left join cso1_taxCode as t on t.id = i.itemTaxId
+            where c.presence = 1 and c.isFreeItem = 0 and c.kioskUuid = '$uuid' and t.taxType = 0 ")[0]['tax'];
+            
+        $ppnInc = (int)self::sql("SELECT sum(c.price - ((c.price - c.discount) / (t.percentage/100 + 1))) as    'ppnInc' 
+            from cso1_kiosk_cart as c
+            join cso1_item as i on c.itemId = i.id
+            left join cso1_taxCode as t on t.id = i.itemTaxId
+            where c.presence = 1 and c.isFreeItem = 0 and c.kioskUuid = '$uuid' and t.taxType = 1 ")[0]['ppnInc'];
+      
+        $summary = array(
+            "total" => self::sql("SELECT sum(k.price) as 'subTotal'
+                    FROM cso1_kiosk_cart as k
+                    where k.presence = 1 and k.kioskUuid = '$uuid' ")[0]['subTotal'],
+            "discount" => self::sql("SELECT sum(k.discount) as 'discount'
+                    FROM cso1_kiosk_cart as k
+                    where k.presence = 1 and k.kioskUuid = '$uuid' ")[0]['discount'],
+            "memberDiscount" =>   $discountMember, 
+            "voucer" => 0,
+
+            // Barang Kena Pajak 
+            "bkp" => $bkp - ($ppnExc + $ppnInc),
+            "dpp" => $bkp+$nonBkp, 
+
+            //harga sebelum ppn + (harga sebelum ppn x 0.11) = 100.000
+            "ppn" => $ppnInc+ $ppnExc,
+
+            "nonBkp" => $nonBkp,
+            "final" => 0,
+
+        );
+
+        $summary['final'] = $summary['total']  - $summary['discount'] -  $summary['memberDiscount'] ;
+        return $summary;
+    }
+
 }

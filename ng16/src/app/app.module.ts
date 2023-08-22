@@ -18,6 +18,7 @@ import { Widget1Component } from './global/widget1/widget1.component';
 import { ItemsComponent } from './items/items.component';
 import { CartDetailComponent } from './cart/cart-detail/cart-detail.component';
 import { PaymentComponent } from './payment/payment.component';
+import { PrintingComponent } from './printing/printing.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { PaymentComponent } from './payment/payment.component';
     Widget1Component,
     ItemsComponent,
     CartDetailComponent,
-    PaymentComponent
+    PaymentComponent,
+    PrintingComponent
   ],
   imports: [
     BrowserModule,

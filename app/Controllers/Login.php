@@ -16,7 +16,7 @@ class Login extends BaseController
             "error" => true,
             "post" => $post,
         ];
-        $id = model("Core")->select("id","cso2_cashier","id = '".$post['id']."' ");
+        $id = model("Core")->select("id","cso1_user","id = '".$post['id']."' ");
         if ($post &&  $id) {   
             $key = $_ENV['SECRETKEY'];
             $payload = [
@@ -27,7 +27,7 @@ class Login extends BaseController
                 'exp' => strtotime('+8 hours'),
                 "account" => array(
                     "id" =>  $id,
-                    'name' => model("Core")->select("name","cso2_cashier","id = '$id' "),
+                    'name' => model("Core")->select("name","cso1_user","id = '$id' "),
                 ),
             ];
             $jwt = JWT::encode($payload, $key, 'HS256');

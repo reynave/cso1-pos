@@ -9,7 +9,9 @@ class Printing extends BaseController
 {
     public function index()
     {
-        $q1 = "SELECT *  FROM auto_number";
+        $q1 = "SELECT t.*, u.name  FROM cso1_transaction as t
+        join cso1_user as u on u.id = t.cashierId
+        where t.presence  = 1 and t.locked = 1 order by t.inputDate DESC";
         $items = $this->db->query($q1)->getResultArray();
 
         $data = array(

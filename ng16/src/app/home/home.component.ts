@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfigService } from '../service/config.service';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment.development'; 
+import { environment } from 'src/environments/environment'; 
 import { Router } from '@angular/router';
 
 @Component({
@@ -42,6 +42,7 @@ export class HomeComponent implements OnInit {
     }).subscribe(
       data => {
         console.log(data); 
+        this.router.navigate(["cart"],{queryParams:{kioskUuid:data['id']}});
         this.httpParking()
       },
       error => {

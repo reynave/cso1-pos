@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfigService } from '../service/config.service';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-items',
@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment.development';
   styleUrls: ['./items.component.css']
 })
 export class ItemsComponent {
-  @Input() name : any;
+  @Input() kioskUuid : any;
   @Output() newItemEvent = new EventEmitter<string>();
   search : string = "";
   items : any = [];
@@ -55,7 +55,7 @@ export class ItemsComponent {
     const body = {
       item : x,
       barcode : x.barcode,
-      kioskUuid : this.configService.kioskUuid()
+      kioskUuid : this.kioskUuid
     }
     console.log(body);
     this.http.post<any>(environment.api+"cart/addToCart",body,{

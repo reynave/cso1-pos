@@ -10,6 +10,10 @@ import { SetupComponent } from './setup/setup.component';
 import { ParkingComponent } from './parking/parking.component';
 import { PaymentComponent } from './payment/payment.component';
 import { PrintingComponent } from './printing/printing.component';
+import { SettingComponent } from './setting/setting.component';
+import { PrintingHistoryComponent } from './printing/printing-history/printing-history.component';
+import { SettlementComponent } from './setting/settlement/settlement.component';
+import { SettlementPrintComponent } from './setting/settlement-print/settlement-print.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
@@ -22,7 +26,12 @@ const routes: Routes = [
   { path: "parking", component: ParkingComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "payment", component: PaymentComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "printing", component: PrintingComponent, data: { active: "" },  canActivate:[authGuard]  }, 
-  
+  { path: "printing/history", component: PrintingHistoryComponent, data: { active: "" },  canActivate:[authGuard]  }, 
+
+  { path: "setting", component: SettingComponent, data: { active: "" },  canActivate:[authGuard]  }, 
+  { path: "setting/settlement", component: SettlementComponent, data: { active: "" },  canActivate:[authGuard]  }, 
+  { path: "setting/settlement/print", component: SettlementPrintComponent, data: { active: "" },  canActivate:[authGuard]  }, 
+ 
   { path: "**", component: NotFoundComponent, data: { active: "404" },  canActivate:[]  }, 
   
 ];

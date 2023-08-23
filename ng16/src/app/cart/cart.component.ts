@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ConfigService } from '../service/config.service';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ItemsComponent } from '../items/items.component';
 import { CartDetailComponent } from './cart-detail/cart-detail.component';
@@ -84,28 +84,7 @@ export class CartComponent implements OnInit {
       }
     )
   }
-
-  checkKioskUuid() {
-    if (localStorage.getItem(this.varkioskUuid) == undefined || localStorage.getItem(this.varkioskUuid) == "") {
-      this.configService.getKioskUuid().subscribe(
-        data => {
-          console.log(data);
-          if (data['error'] === false) {
-            localStorage.setItem(this.varkioskUuid, data['id']);
-            this.kioskUuid = data['id'];
-          }
-        },
-        error => {
-          console.log(error);
-        }
-      )
-      console.log("id kiosk INSERT");
-    } else {
-      console.log("id kiosk ada");
-      this.kioskUuid = localStorage.getItem(this.varkioskUuid);
-    }
-  }
-
+ 
   callHttpServer() {
     this.callServer = setInterval(() => {
       this.rows.nativeElement.focus();
@@ -219,7 +198,7 @@ export class CartComponent implements OnInit {
 
     if (comp == 'items') {
       const modalRef = this.modalService.open(ItemsComponent, { size: 'lg' });
-      modalRef.componentInstance.name = 'World';
+      modalRef.componentInstance.kioskUuid =  this.kioskUuid;
 
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);
@@ -306,7 +285,7 @@ export class CartComponent implements OnInit {
     }).subscribe(
       data => {
          console.log(data);
-         this.router.navigate(['payment']);
+         this.router.navigate(['payment'], {queryParams:{kioskUuid:this.kioskUuid}});
          this.modalService.dismissAll();
       },
       error => {

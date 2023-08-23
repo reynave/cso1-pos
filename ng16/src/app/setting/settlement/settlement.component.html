@@ -1,0 +1,38 @@
+<app-header></app-header>
+
+<div class="container">
+    <div class="row mb-3">
+        <div class="col-6">
+            <strong>Waiting for settlement </strong>
+        </div>
+        <div class="col-6 text-end">
+            <button type="button" class="btn btn-primary" (click)="onSetSettlement();">SET SETTLEMENT</button>
+        </div>
+    </div>
+    <div class="row">
+        
+        <div class="col-12">
+            
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>ID</th>
+                        <th>Total</th>
+                        <th>Cashier ID</th> 
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let x of items; let i = index">
+                        <td>{{i+1}}</td>
+                        <td>{{x.transaction_date}}</td>
+                        <td>{{x.id}}</td>
+                        <td class="text-end">Rp {{x.total | number}}</td> 
+                        <td><code>{{x.cashierId}}</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

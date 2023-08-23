@@ -19,6 +19,10 @@ import { ItemsComponent } from './items/items.component';
 import { CartDetailComponent } from './cart/cart-detail/cart-detail.component';
 import { PaymentComponent } from './payment/payment.component';
 import { PrintingComponent } from './printing/printing.component';
+import { SettingComponent } from './setting/setting.component';
+import { PrintingHistoryComponent } from './printing/printing-history/printing-history.component';
+import { SettlementComponent } from './setting/settlement/settlement.component';
+import { SettlementPrintComponent } from './setting/settlement-print/settlement-print.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +39,11 @@ import { PrintingComponent } from './printing/printing.component';
     ItemsComponent,
     CartDetailComponent,
     PaymentComponent,
-    PrintingComponent
+    PrintingComponent,
+    SettingComponent,
+    PrintingHistoryComponent,
+    SettlementComponent,
+    SettlementPrintComponent
   ],
   imports: [
     BrowserModule,

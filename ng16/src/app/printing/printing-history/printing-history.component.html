@@ -1,0 +1,33 @@
+<app-header></app-header>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>DATE TIME</th>
+                        <th>STRUCK</th>
+                        <th>TOTAL</th>
+                        <th>CASHIER</th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let x of items">
+                        <td>{{x.transaction_date}}</td>
+                        <td>{{x.id}}</td>
+                        <td>{{x.total | number}}</td>
+                        <td>
+                            <code>{{x.cashierId}}</code>{{x.name}}
+                        </td>
+                        <td>
+                            <a class="btn btn-sm btn-success" [routerLink]="[ '/printing', ]" [queryParams]="{id:x.id}">DETAIL</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

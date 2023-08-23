@@ -14,6 +14,7 @@ import { SettingComponent } from './setting/setting.component';
 import { PrintingHistoryComponent } from './printing/printing-history/printing-history.component';
 import { SettlementComponent } from './setting/settlement/settlement.component';
 import { SettlementPrintComponent } from './setting/settlement-print/settlement-print.component';
+import { BalanceCashInComponent } from './setting/balance-cash-in/balance-cash-in.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
@@ -31,6 +32,7 @@ const routes: Routes = [
   { path: "setting", component: SettingComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "setting/settlement", component: SettlementComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "setting/settlement/print", component: SettlementPrintComponent, data: { active: "" },  canActivate:[authGuard]  }, 
+  { path: "setting/balance/cashIn", component: BalanceCashInComponent, data: { active: "" },  canActivate:[authGuard]  }, 
  
   { path: "**", component: NotFoundComponent, data: { active: "404" },  canActivate:[]  }, 
   

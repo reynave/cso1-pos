@@ -185,11 +185,24 @@ class Payment extends BaseController
                     "update_date" => date("Y-m-d H:i:s"), 
                 );
                 $this->db->table("cso1_transaction_payment")->insert($insertDetail);
+
+                if($row['paymentTypeId'] == 'CASH'){
+                    $this->db->table("cso2_balance")->insert([
+                        "cashIn" => $row['paid'],
+                        "transactionId" =>  $id,
+                        "cashierId" => model("Core")->accountId(),
+                        "input_date" => date("Y-m-d H:i:s")
+                    ]);
+                }
+              
             } 
 
             $this->db->table("cso1_kiosk_uuid")->update([
                 "presence" => 4,
             ]," kioskUuid = '$kioskUuid' ");
+
+             
+            
 
             $this->db->transComplete();
 

@@ -1,0 +1,41 @@
+<app-header></app-header>
+
+<div class="container">
+    <div class="row mb-3">
+        <div class="col-6">
+            <strong>Add Cashier Balance </strong>
+        </div>
+        <div class="col-6 text-end" *ngIf="items.length > 0">
+            <input type="number" class="form-control" [(ngModel)]="cashIn" required>
+            <button type="button" class="btn btn-primary" [disabled]="cashIn<0" (click)="onCashIn();">Add Balance</button>
+        </div>
+    </div>
+    <div class="row">
+        
+        <div class="col-12">
+            
+            <table class="table table-bordered">
+                <thead>
+                    <tr> 
+                        <th>Date</th>
+                        <th>cash In</th>
+                        <th>cash Out</th>
+                        <th>transactionId</th> 
+                        <th>cashierId</th> 
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let x of items; let i = index"> 
+                        <td>{{x.input_date}}</td>
+                        <td class="text-end"> {{x.cashIn | number}}</td>
+                        <td class="text-end"> ({{x.cashOut | number}})</td> 
+                        <td><code>{{x.transactionId}}</code></td> 
+                        <td><code>{{x.cashierId}}</code></td>
+                        
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

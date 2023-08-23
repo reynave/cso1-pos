@@ -132,7 +132,7 @@ export class PaymentComponent implements OnInit {
           console.log(data);
           this.httpPaymentInvoice();
           this.modalService.dismissAll();
-          this.payment.amount = this.total.bill - (this.total.paid);
+          this.payment.amount = 0;
         },
         error => {
           console.log(error);

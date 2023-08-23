@@ -46,7 +46,7 @@ class Cart extends BaseController
         if ($post) {
             $barcode = str_replace(["'", "\"",], "", $post['barcode']);
 
-            $cashierId = model("Core")->select("id", "cso2_cashier", "id = '$barcode' AND supervisor  = 1 ");
+            $cashierId = model("Core")->select("id", "cso1_user", "id = '$barcode' AND userAccessId  = 4 ");
             if ($cashierId != "") {
                 $isItem = false;
                 $result = "SUPERVISOR";
@@ -142,7 +142,7 @@ class Cart extends BaseController
             "post" => $post,
         );
         if ($post) {
-            $id = model("Core")->select("id", "cso2_cashier", "supervisor  = 1 and password = '" . md5($post['password']) . "' and id = '" . $post['barcode'] . "' ");
+            $id = model("Core")->select("id", "cso1_user", "supervisor  = 1 and password = '" . md5($post['password']) . "' and id = '" . $post['barcode'] . "' ");
 
             $data = array(
                 "error" => false,

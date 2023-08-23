@@ -70,7 +70,7 @@
                     <h4>{{total.paid | number}}</h4>
                 </div>
                 <div class="mb-3 text-danger">
-                    REMAINING :
+                    REMAINING:
                     <h4>{{total.bill - (total.paid) | number}}</h4>
                 </div>
                 <div class="mb-3">
@@ -93,8 +93,12 @@
             <div class="mb-3">
                 <h4>Bill : {{total.bill | number}}</h4>
                 <h4>PAID : {{total.paid | number}}</h4>
-                <h4>REMAINING : {{total.bill - (total.paid +payment.amount) | number}}</h4>
-               
+                <h4>REMAINING : 
+                    {{ ((total.bill - (total.paid +payment.amount) ) > 0 ?  (total.bill - (total.paid +payment.amount) ) : 0 )| number}} 
+                </h4>
+                <h4>CHANGE: 
+                    {{ ((total.bill - (total.paid +payment.amount) ) < 0 ?  (total.bill - (total.paid +payment.amount) ) : 0 )| number}} 
+                </h4>
             </div>
             <div class="mb-3">
                 <label for="amount">Amount <span [hidden]="amount.valid || amount.pristine"

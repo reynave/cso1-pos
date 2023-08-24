@@ -2,11 +2,15 @@
 
 <div class="container">
     <div class="row mb-3">
+        <div class="col-12">
+            <a (click)="back()">back</a>
+        </div>
         <div class="col-6">
             <strong>Waiting for settlement </strong>
         </div>
-        <div class="col-6 text-end" *ngIf="items.length > 0">
-            <button type="button" class="btn btn-primary" (click)="onSetSettlement();">SET SETTLEMENT</button>
+        <div class="col-6 text-end" >
+            <button type="button" *ngIf="items.length > 0" class="btn btn-primary mx-1" (click)="onSetSettlement();">SET SETTLEMENT</button>
+            <a [routerLink]="[ '/setting/settlement/history' ]">History</a>
         </div>
     </div>
     <div class="row">

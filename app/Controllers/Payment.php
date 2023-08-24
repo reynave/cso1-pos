@@ -39,7 +39,7 @@ class Payment extends BaseController
                 "remaining" => $bill - $paid,
                 "paid" => $paid,
             ),
-            "close" => $bill - $paid == 0 ? true : false,
+            "close" => $bill - $paid <= 0 ? true : false,
             "kioskPaid" => $kioskPaid,
         );
 
@@ -54,13 +54,26 @@ class Payment extends BaseController
             "post" => $post,
         );
         if ($post) {
+            $paid = $post['payment']['amount'] -  $post['changes'];
             $this->db->table("cso1_kiosk_paid_pos")->insert([
                 "kioskUuid" => $post['kioskUuid'],
-                "paid" => $post['payment']['amount'],
+                "paid" => $paid,
                 "paymentTypeId" => $post['paymentMethodDetail']['paymentTypeId'],
                 "cardId" => $post['payment']['cardId'],
                 "input_date" => date("Y-m-d H:i:s")
             ]);
+
+            if($post['paymentMethodDetail']['paymentTypeId'] == 'CASH'){
+                $this->db->table("cso2_balance")->insert([
+                    "cashIn" => $post['payment']['amount'], 
+                    "cashOut" => -1 * (int)$post['changes'],
+                    "kioskUuid" =>  $post['kioskUuid'],
+                    "terminalId" =>  $post['terminalId'], 
+                    "cashierId" => model("Core")->accountId(),
+                    "input_date" => date("Y-m-d H:i:s")
+                ]);
+            }
+
             $data = array(
                 "error" => false,
                 "post" => $post,
@@ -84,7 +97,7 @@ class Payment extends BaseController
 
         $summary = model("Core")->summary($kioskUuid);
         $finalPrice = (int) $summary['final'];
-        if ($closed === true && $finalPrice > 0 && !model("Core")->select("id", "cso1_transaction", "kioskUuid = '$kioskUuid'")) {
+        if ($closed === true  && $finalPrice > 0 && !model("Core")->select("id", "cso1_transaction", "kioskUuid = '$kioskUuid'")) {
 
             $this->db->transStart();
             $terminalId = $get['terminalId'];
@@ -184,26 +197,17 @@ class Payment extends BaseController
                     "input_date" => date("Y-m-d H:i:s"),
                     "update_date" => date("Y-m-d H:i:s"), 
                 );
-                $this->db->table("cso1_transaction_payment")->insert($insertDetail);
-
-                if($row['paymentTypeId'] == 'CASH'){
-                    $this->db->table("cso2_balance")->insert([
-                        "cashIn" => $row['paid'],
-                        "transactionId" =>  $id,
-                        "cashierId" => model("Core")->accountId(),
-                        "input_date" => date("Y-m-d H:i:s")
-                    ]);
-                }
-              
+                $this->db->table("cso1_transaction_payment")->insert($insertDetail); 
             } 
 
             $this->db->table("cso1_kiosk_uuid")->update([
                 "presence" => 4,
             ]," kioskUuid = '$kioskUuid' ");
 
+            $this->db->table("cso2_balance")->update([ 
+                "transactionId" =>  $id,   
+            ]," kioskUuid = '$kioskUuid' ");
              
-            
-
             $this->db->transComplete();
 
             $data = array(
@@ -221,6 +225,7 @@ class Payment extends BaseController
 
             $data = array(
                 "error" => true,
+                "summary" =>  $summary ,
                 "transactionId" => model("Core")->select("id", "cso1_transaction", "kioskUuid = '$kioskUuid'"), 
                 "closed" => true,
                 "note" => "transactionId Done",

@@ -32,10 +32,10 @@ export class PrintingComponent implements OnInit {
 
   ngOnInit() {
     this.id = this.activatedRoute.snapshot.queryParams['id']; 
-    this.httpCart();
+    this.httpBill();
   }
 
-  httpCart() {
+  httpBill() {
     this.http.get<any>(environment.api + "printing/detail", {
       headers: this.configService.headers(),
       params: {
@@ -44,7 +44,7 @@ export class PrintingComponent implements OnInit {
     }).subscribe(
       data => {
         this.copy = data['copy'];
-        console.log(data);
+        console.log('httpBill',data);
         this.items = data['items'];
         this.outputPrint = this.printing.template(data);
         console.log(this.outputPrint);
@@ -64,7 +64,7 @@ export class PrintingComponent implements OnInit {
     }).subscribe(
       data => {
         this.copy = data['copy'];
-        this.httpCart();
+        this.httpBill();
       },
       error => {
         console.log(error);

@@ -68,9 +68,8 @@ class KioskUuid extends BaseController
         ];
         if ($post) {
 
-            $id = $post['terminalId'] . model("Core")->number("kiosk");
-
-
+            $id = $post['terminalId'] .'.'.date("ymd").'.'.model("Core")->number("pos"); 
+            
             $this->db->table("cso1_kiosk_uuid")->insert([
                 "kioskUuid" => $id,
                 "terminalId" => $post['terminalId'],
@@ -78,8 +77,7 @@ class KioskUuid extends BaseController
                 "update_date" => date("Y-m-d H:i:s"),
                 "input_date" => date("Y-m-d H:i:s")
             ]);
-
-
+ 
             $data = array(
                 "error" => false,
                 "id" => $id,

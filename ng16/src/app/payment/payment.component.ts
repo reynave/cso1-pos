@@ -23,11 +23,11 @@ export class Payment {
 })
 export class PaymentComponent implements OnInit {
   kioskUuid: any;
-  note : string = "";
+  note: string = "";
   varkioskUuid: string = "kioskUuid";
   items: any = [];
-  terminalId : any;
-  transactionId : string = "";
+  terminalId: any;
+  transactionId: string = "";
   paymentMethodDetail: any = [];
   paymentMethod: any = [];
   payment: any = new Payment("", "", "", "", "");
@@ -37,11 +37,11 @@ export class PaymentComponent implements OnInit {
     remaining: 0,
   };
   kioskPaid: any = [];
-  close : boolean = false;
+  close: boolean = false;
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
-    private activatedRoute : ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
     config: NgbModalConfig,
   ) {
@@ -87,7 +87,7 @@ export class PaymentComponent implements OnInit {
       }
     )
   }
- 
+
   httpPaymentInvoice() {
     this.http.get<any>(environment.api + "payment/invoice", {
       headers: this.configService.headers(),
@@ -119,41 +119,38 @@ export class PaymentComponent implements OnInit {
       payment: this.payment,
       kioskUuid: this.kioskUuid,
       paymentMethodDetail: this.paymentMethodDetail,
+      changes : this.fnChangeBill(),
+      terminalId : this.terminalId,
     }
-    console.log(body);
-    if (this.total.bill - (this.total.paid + this.payment.amount) < 0) { 
-      alert("angka yang anda masukan salah atau melebihi total tagiahan !");
-      this.payment.amount = this.total.bill - (this.total.paid);
-    }else{
-      this.http.post<any>(environment.api + "payment/onSubmitPayment", body, {
-        headers: this.configService.headers(),
-      }).subscribe(
-        data => {
-          console.log(data);
-          this.httpPaymentInvoice();
-          this.modalService.dismissAll();
-          this.payment.amount = 0;
-        },
-        error => {
-          console.log(error);
-        }
-      )
-    }
+    console.log(body); 
+    this.http.post<any>(environment.api + "payment/onSubmitPayment", body, {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => {
+        console.log('onSubmitPayment',data);
+        this.httpPaymentInvoice();
+        this.modalService.dismissAll();
+        this.payment.amount = 0;
+      },
+      error => {
+        console.log(error);
+      }
+    )
   }
 
-  isCloseTransaction(){
-    if(this.close === true){
+  isCloseTransaction() {
+    if (this.close == true) {
       console.log("isCloseTransaction");
-      
-      this.http.get<any>(environment.api + "payment/isCloseTransaction",{
-        headers: this.configService.headers(), 
-        params : {
-          kioskUuid : this.kioskUuid,
-          terminalId : this.terminalId,
+
+      this.http.get<any>(environment.api + "payment/isCloseTransaction", {
+        headers: this.configService.headers(),
+        params: {
+          kioskUuid: this.kioskUuid,
+          terminalId: this.terminalId,
         }
       }).subscribe(
-        data => { 
-          console.log(data);
+        data => {
+          console.log('isCloseTransaction',data);
           this.note = data['note'];
           this.transactionId = data['transactionId'];
         },
@@ -162,5 +159,10 @@ export class PaymentComponent implements OnInit {
         }
       )
     }
+  }
+
+  fnChangeBill() {
+    let a = ((this.total.bill - (this.total.paid + this.payment.amount)) < 0 ? (this.total.bill - (this.total.paid + this.payment.amount)) : 0);
+    return a < 0 ? a *-1 : a;
   }
 }

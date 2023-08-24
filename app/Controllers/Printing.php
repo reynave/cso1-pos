@@ -28,7 +28,7 @@ class Printing extends BaseController
         $id = str_replace(["'", '"', "-"], "", $this->request->getVar()['id']);
         if ($id) {
             $isId = model("Core")->select("endDate", "cso1_transaction", "id='" . $id . "'");
-  
+
             $data = array(
                 "id" => $id,
                 "printable" => $isId ? true : false,
@@ -85,6 +85,12 @@ class Printing extends BaseController
                 LEFT JOIN cso1_payment_type AS p ON p.id = tp.paymentTypeId
                 WHERE tp.transactionId = '$id' AND tp.presence = 1"),
 
+                "balance" => model("Core")->sql("SELECT SUM(cashIn) AS 'caseIn', SUM(cashOut)*-1 AS 'caseOut'
+                    FROM cso2_balance 
+                    WHERE transactionId = '$id'
+                    GROUP BY transactionId 
+                "),
+
                 "template" => array(
                     "companyName" => model("Core")->select("value", "cso1_account", "name='companyName'"),
                     "companyAddress" => model("Core")->select("value", "cso1_account", "name='companyAddress'"),
@@ -102,19 +108,19 @@ class Printing extends BaseController
 
     function copyPrinting()
     {
-        $data = []; 
+        $data = [];
         $id = str_replace(["'", '"', "-"], "", $this->request->getVar()['id']);
         if ($id) {
-            $isId = model("Core")->select("endDate", "cso1_transaction", "id='" . $id . "'"); 
+            $isId = model("Core")->select("endDate", "cso1_transaction", "id='" . $id . "'");
             if ($isId) {
                 $this->db->table("cso1_transaction_printlog")->insert([
                     "transactionId" => $id,
                     "inputDate" => time(),
                     "input_date" => date("Y-m-d H:i:s"),
                 ]);
-            } 
+            }
             $data = array(
-                "copy" => (int)model("Core")->sql(" select count(id) as 'copy' from cso1_transaction_printlog where transactionId ='$id'")[0]['copy'],
+                "copy" => (int) model("Core")->sql(" select count(id) as 'copy' from cso1_transaction_printlog where transactionId ='$id'")[0]['copy'],
             );
         }
 

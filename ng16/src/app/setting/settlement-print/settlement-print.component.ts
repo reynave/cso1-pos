@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 export class SettlementPrintComponent implements OnInit {
   item: any = [];
   id: string = "";
+  balance : any = [];
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
@@ -33,6 +34,7 @@ export class SettlementPrintComponent implements OnInit {
       data => {
         console.log(data);
         this.item = data['item'];
+        this.balance = data['balance'];
       },
       error => {
         console.log(error);

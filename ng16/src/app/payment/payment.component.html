@@ -91,13 +91,13 @@
             {{paymentMethodDetail |json}}
 
             <div class="mb-3">
-                <h4>Bill : {{total.bill | number}}</h4>
-                <h4>PAID : {{total.paid | number}}</h4>
-                <h4>REMAINING : 
+                <h4>BILL <small>Tagihan</small> : {{total.bill | number}}</h4>
+                <h4>PAID <small>sudah terbayar</small>: {{total.paid | number}}</h4>
+                <h4>REMAINING  <small>Harus dilunasi</small>: 
                     {{ ((total.bill - (total.paid +payment.amount) ) > 0 ?  (total.bill - (total.paid +payment.amount) ) : 0 )| number}} 
                 </h4>
-                <h4>CHANGE: 
-                    {{ ((total.bill - (total.paid +payment.amount) ) < 0 ?  (total.bill - (total.paid +payment.amount) ) : 0 )| number}} 
+                <h4>CHANGE <small>kembalian</small>: 
+                    {{ fnChangeBill() | number}} 
                 </h4>
             </div>
             <div class="mb-3">
@@ -105,6 +105,12 @@
                         class="text-danger">*</span></label>
                 <input type="number" autofocus class="form-control" id="amount" required [(ngModel)]="payment.amount"
                     name="amount" #amount="ngModel">
+
+                    <div> 
+                        <a class="mx-1" (click)="payment.amount = 20000">20.000</a>
+                        <a class="mx-1" (click)="payment.amount = 50000">50.000</a>
+                        <a class="mx-1" (click)="payment.amount = 100000">100.000</a>  
+                    </div>
             </div>
             <div class="mb-3">
                 <label>Card Id </label>

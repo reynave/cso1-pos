@@ -16,3 +16,6 @@ ENGINE=InnoDB
 AUTO_INCREMENT=6
 ;
 
+
+alter TABLE cso1_transaction set settlementId
+ 

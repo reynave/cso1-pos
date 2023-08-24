@@ -286,7 +286,6 @@ class Cart extends BaseController
         return $this->response->setJSON($data); 
     }
 
-
     function goToPayment(){
         $post = json_decode(file_get_contents('php://input'), true);
         $data = array(

@@ -21,11 +21,26 @@ class Items extends BaseController
 
         $data = array(
             "error" => false,
-            "items" =>  $items,
-            "s" =>  $search,
+            "items" => $items,
+            "s" => $search,
         );
-       
+
         return $this->response->setJSON($data);
     }
- 
+
+    function endOfDay()
+    { 
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            $this->db->table("auto_number")->update([
+                "runninNumber" => 0
+            ]," pos = 'pos' ");
+        }
+    }
+
 }

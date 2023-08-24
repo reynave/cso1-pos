@@ -61,4 +61,8 @@ export class SettlementComponent implements OnInit {
     )
   }
 
+  back(){
+    history.back();
+  }
+
 }

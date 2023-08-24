@@ -2,10 +2,14 @@
 
 <div class="container my-5">
     <div class="row">
+        <div class="col-12">
+            <a (click)="back();">back</a>
+        </div>
         <div class="col-12"> 
             <a class="btn btn-lg btn-primary rounded-0 m-1" [routerLink]="[ '/printing/history' ]">PRINTING HISTORY</a> 
             <a class="btn btn-lg btn-primary rounded-0 m-1" [routerLink]="[ '/setting/balance/cashIn' ]">BEGINNING BALANCE</a> 
             <a class="btn btn-lg btn-primary rounded-0 m-1" [routerLink]="[ '/setting/settlement' ]">SETTLEMENT </a> 
+            <a class="btn btn-lg btn-primary rounded-0 m-1" (click)="endOfDay()" >END OF DAY </a> 
             
         </div>
     </div>

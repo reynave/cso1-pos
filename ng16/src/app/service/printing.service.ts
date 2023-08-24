@@ -33,7 +33,7 @@ export class PrintingService {
     return data;
   }
   numberFormat(price: any) {
-    console.log("numberFormat", parseInt(price));
+   // console.log("numberFormat", parseInt(price));
      let  data =  parseInt(price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,").toString().replace(".00", "");
    // let data = price;
     
@@ -85,13 +85,17 @@ export class PrintingService {
     message += "BILL                  : " + bill['id'] + "\n";
     message += "DATE                  : " + bill['date'] + "\n";
     message += "UNIT / OUTLET ID      : " + bill['detail']['terminalId'] + "/" + bill['detail']['storeOutlesId'] + " \n";
-    message += "PAYMENT METHOD " + "\n";
+    message += "PAYMENT PAID METHOD " + "\n";
 
     bill['paymentMethod'].forEach((el: any) => {
-    message += ` + ${el['label']} : Rp ${this.numberFormat(el['amount'])},- `+ "\n";
+      message += ` + ${el['label']} :  ${this.numberFormat(el['amount'])}`+ "\n";
     });
 
-   
+    if(bill['balance'].length > 0){
+      message += "PEMBAYARAN CASH        : "+this.stringfix(this.numberFormat(bill['balance'][0]['caseIn']), 24, 'f') + "\n";
+      message += "KEMBALI                : "+this.stringfix(this.numberFormat(bill['balance'][0]['caseOut']), 24, 'f') + "\n";
+    
+    }
      
     message += "\n";
     message += bill['template']['footer'].replace("<br>", "\n") + "\n\n\n\n";

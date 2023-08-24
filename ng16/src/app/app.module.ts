@@ -24,6 +24,7 @@ import { PrintingHistoryComponent } from './printing/printing-history/printing-h
 import { SettlementComponent } from './setting/settlement/settlement.component';
 import { SettlementPrintComponent } from './setting/settlement-print/settlement-print.component';
 import { BalanceCashInComponent } from './setting/balance-cash-in/balance-cash-in.component';
+import { SettlementHistoryComponent } from './setting/settlement-history/settlement-history.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { BalanceCashInComponent } from './setting/balance-cash-in/balance-cash-i
     PrintingHistoryComponent,
     SettlementComponent,
     SettlementPrintComponent,
-    BalanceCashInComponent
+    BalanceCashInComponent,
+    SettlementHistoryComponent
   ],
   imports: [
     BrowserModule,

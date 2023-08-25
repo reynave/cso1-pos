@@ -1,0 +1,3 @@
+id;cashIn;cashOut;transactionId;kioskUuid;cashierId;terminalId;settlementId;close;input_date
+13;125555555;0;;;123123;T02;T02SET000017;1;"2023-08-25 10:08:33"
+14;7000000;-57200;;T02.230825.0001;123123;T02;T02SET000017;1;"2023-08-25 10:08:58"

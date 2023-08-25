@@ -103,7 +103,7 @@ class Payment extends BaseController
             $terminalId = $get['terminalId'];
             $storeOutlesId = "Comingsoon";
 
-            $id =  $terminalId.".".model("Core")->number("transaction");
+            $id =  $terminalId."." .date("ymd"). "." .model("Core")->number("transaction");
             
             $this->db->table("cso1_transaction")->insert([
                 "id" => $id,

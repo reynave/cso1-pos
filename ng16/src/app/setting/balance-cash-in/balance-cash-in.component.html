@@ -5,7 +5,7 @@
         <div class="col-6">
             <strong>Add Cashier Balance </strong>
         </div>
-        <div class="col-6 text-end" *ngIf="items.length > 0">
+        <div class="col-6 text-end" *ngIf="items.length <= 0">
             <input type="number" class="form-control" [(ngModel)]="cashIn" required>
             <button type="button" class="btn btn-primary" [disabled]="cashIn<0" (click)="onCashIn();">Add Balance</button>
         </div>

@@ -9,7 +9,7 @@
             <a class="btn btn-lg btn-primary rounded-0 m-1" [routerLink]="[ '/printing/history' ]">PRINTING HISTORY</a> 
             <a class="btn btn-lg btn-primary rounded-0 m-1" [routerLink]="[ '/setting/balance/cashIn' ]">BEGINNING BALANCE</a> 
             <a class="btn btn-lg btn-primary rounded-0 m-1" [routerLink]="[ '/setting/settlement' ]">SETTLEMENT </a> 
-            <a class="btn btn-lg btn-primary rounded-0 m-1" (click)="endOfDay()" >END OF DAY </a> 
+            <button class="btn btn-lg btn-{{isEndOfday ? 'primary':'warning'}} rounded-0 m-1"    (click)="endOfDay()" >END OF DAY </button> 
             
         </div>
     </div>

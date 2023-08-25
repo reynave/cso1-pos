@@ -113,7 +113,12 @@ export class PrintingService {
 
 
 
-  print(id: string) {
+
+  dotMetix() {
+    console.log("print DOTMETIX()")
+  }
+
+  printDel(id: string) {
     let url = this.api + 'printing/detail?id=' + id;
     console.log(url);
     this.http.get<any>(url,
@@ -130,8 +135,6 @@ export class PrintingService {
       e => {
         console.log(e);
       },
-    );
-
-
+    ); 
   }
 }

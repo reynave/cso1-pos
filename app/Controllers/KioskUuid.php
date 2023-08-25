@@ -75,7 +75,9 @@ class KioskUuid extends BaseController
                 "terminalId" => $post['terminalId'],
                 "cashierId" => model("Core")->accountId(), 
                 "update_date" => date("Y-m-d H:i:s"),
-                "input_date" => date("Y-m-d H:i:s")
+                "input_date" => date("Y-m-d H:i:s"),
+                "inputDate" => time()
+              
             ]);
  
             $data = array(

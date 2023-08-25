@@ -3,12 +3,13 @@
 namespace App\Controllers;
 
 use CodeIgniter\Model;
+use CURLFile;
 use Unsplash\HttpClient;
 use App\Helpers\CSVHelper;
 
 class Settlement extends BaseController
 {
-    public function index()
+    function index()
     {
         $q1 = "SELECT t.*, u.name  FROM cso1_transaction as t
         join cso1_user as u on u.id = t.cashierId
@@ -18,10 +19,11 @@ class Settlement extends BaseController
         $data = array(
             "error" => false,
             "items" => $items,
+            "total" => (int)model("Core")->select("count(id)","cso1_transaction","presence  = 1 and locked = 1 and settlementId = ''"),
         );
         return $this->response->setJSON($data);
     }
-    public function history()
+    function history()
     {
         $q1 = "SELECT *  FROM cso2_settlement  order by input_date DESC";
         $items = $this->db->query($q1)->getResultArray();
@@ -96,14 +98,14 @@ class Settlement extends BaseController
             $data = $this->db->query($q)->getResultArray();
             $filePath1 = CSVHelper::arrayToCsv($data, 'cso1_transaction.' . $settlementId);
 
-            foreach ($data as $row) { 
+            foreach ($data as $row) {
                 $q = "SELECT *  FROM cso1_transaction_detail  
-                WHERE  transactionId = '".$row['id']."' order by id ASC";
+                WHERE  transactionId = '" . $row['id'] . "' order by id ASC";
                 $transaction_detail = $this->db->query($q)->getResultArray();
                 $filePath2 = CSVHelper::arrayToCsv($transaction_detail, 'cso1_transaction_detail.' . $settlementId);
 
                 $q = "SELECT *  FROM cso1_transaction_payment  
-                WHERE  transactionId = '".$row['id']."' order by id ASC";
+                WHERE  transactionId = '" . $row['id'] . "' order by id ASC";
                 $transaction_payment = $this->db->query($q)->getResultArray();
                 $filePath3 = CSVHelper::arrayToCsv($transaction_payment, 'cso1_transaction_payment.' . $settlementId);
 
@@ -117,14 +119,14 @@ class Settlement extends BaseController
             $csv = array(
                 "cso1_transaction" => $filePath1,
                 "cso1_transaction_detail" => $filePath2,
-                "cso1_transaction_payment" => $filePath3, 
-                "cso2_balance" => $filePath4, 
-                
+                "cso1_transaction_payment" => $filePath3,
+                "cso2_balance" => $filePath4,
+
             );
 
             $this->db->transComplete();
 
-            
+
 
 
             $data = array(
@@ -139,7 +141,9 @@ class Settlement extends BaseController
         return $this->response->setJSON($data);
     }
 
-    function test()
+    
+ 
+    function testCSV()
     {
         $data = [
             ['name' => 'Joh2n', 'age' => 230, 'email' => 'john@example.com'],

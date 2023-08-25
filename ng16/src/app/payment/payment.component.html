@@ -1,17 +1,27 @@
 <app-header></app-header>
 
-<div class="container-fluid">
+<div class="container-fluid" *ngIf="close === true">
     <div class="row">
         <div class="col-1">
             <app-widget1></app-widget1>
         </div>
-
-        <div class="col-6">
-            <div *ngIf="close === true" class="alert alert-warning text-center">
-                <div>  {{note}}  </div>
-                <div>  <a [routerLink]="[ '/printing' ]" [queryParams]="{id : transactionId }">Print Receipt Transaction</a> </div>
-
+        <div class="offset-2 col-6">
+            <div class="alert alert-warning text-center">
+                <div> {{note}} </div>
+                <div> <a [routerLink]="[ '/printing' ]" [queryParams]="{id : transactionId }">Print Receipt
+                        Transaction</a> </div>
             </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="container-fluid" *ngIf="close !== true">
+    <div class="row">
+        <div class="col-1">
+            <app-widget1></app-widget1>
+        </div>
+        <div class="col-6">
             <table class="table table-sm">
                 <thead>
                     <tr>
@@ -56,7 +66,7 @@
                     <tr *ngFor="let x of kioskPaid">
                         <td> {{x.paymentTypeId}}</td>
                         <td class="text-end">Rp {{x.paid | number}}</td>
-                        
+
                     </tr>
                 </table>
             </div>
@@ -93,11 +103,12 @@
             <div class="mb-3">
                 <h4>BILL <small>Tagihan</small> : {{total.bill | number}}</h4>
                 <h4>PAID <small>sudah terbayar</small>: {{total.paid | number}}</h4>
-                <h4>REMAINING  <small>Harus dilunasi</small>: 
-                    {{ ((total.bill - (total.paid +payment.amount) ) > 0 ?  (total.bill - (total.paid +payment.amount) ) : 0 )| number}} 
+                <h4>REMAINING <small>Harus dilunasi</small>:
+                    {{ ((total.bill - (total.paid +payment.amount) ) > 0 ? (total.bill - (total.paid +payment.amount) )
+                    : 0 )| number}}
                 </h4>
-                <h4>CHANGE <small>kembalian</small>: 
-                    {{ fnChangeBill() | number}} 
+                <h4>CHANGE <small>kembalian</small>:
+                    {{ fnChangeBill() | number}}
                 </h4>
             </div>
             <div class="mb-3">
@@ -106,11 +117,11 @@
                 <input type="number" autofocus class="form-control" id="amount" required [(ngModel)]="payment.amount"
                     name="amount" #amount="ngModel">
 
-                    <div> 
-                        <a class="mx-1" (click)="payment.amount = 20000">20.000</a>
-                        <a class="mx-1" (click)="payment.amount = 50000">50.000</a>
-                        <a class="mx-1" (click)="payment.amount = 100000">100.000</a>  
-                    </div>
+                <div>
+                    <a class="mx-1" (click)="payment.amount = 20000">20.000</a>
+                    <a class="mx-1" (click)="payment.amount = 50000">50.000</a>
+                    <a class="mx-1" (click)="payment.amount = 100000">100.000</a>
+                </div>
             </div>
             <div class="mb-3">
                 <label>Card Id </label>

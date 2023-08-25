@@ -46,8 +46,7 @@ export class PrintingComponent implements OnInit {
         this.copy = data['copy'];
         console.log('httpBill',data);
         this.items = data['items'];
-        this.outputPrint = this.printing.template(data);
-        console.log(this.outputPrint);
+        this.outputPrint = this.printing.template(data); 
       },
       error => {
         console.log(error);
@@ -64,6 +63,7 @@ export class PrintingComponent implements OnInit {
     }).subscribe(
       data => {
         this.copy = data['copy'];
+        this.printing.dotMetix()
         this.httpBill();
       },
       error => {

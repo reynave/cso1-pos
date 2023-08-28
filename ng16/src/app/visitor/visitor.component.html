@@ -1,0 +1,128 @@
+<div class="container">
+    <div class="row g-1">
+        <div class="col-8">
+            <div class="border p-3">
+                <table class="table">
+                    <tbody>
+                        <tr *ngFor="let x of items">
+                            <td> {{x.barcode}} </td>
+                            <td> {{x.shortDesc}}
+                                <div>
+                                    {{x.qty}} x {{x.price | number}} 
+                                </div>
+
+                            </td>
+                            <td class="text-end">
+                                {{x.total | number}}
+                                {{x.totalPrice | number}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="col-4">
+            <div class="border p-3" *ngIf="kioskUuid">
+                <div class="mb-4">
+                    <strong>PAYMENT METHOD</strong>
+
+                    <table class="table table-sm">
+                        <tr *ngFor="let x of kioskPaid">
+                            <td> {{x.label}} :</td>
+                            <td class="text-end">{{x.paid | number}}</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div>
+                    <strong>BILL</strong>
+                    <table class="table table-sm">
+                        <tr>
+                            <td>Bill :</td>
+                            <td class="text-end"> {{total.bill | number}}</td>
+                        </tr>
+                        <tr>
+                            <td>paid :</td>
+                            <td class="text-end"> {{total.paid | number}}</td>
+                        </tr>
+
+                        <tr>
+                            <td>remaining :</td>
+                            <td class="text-end"> {{total.remaining | number}}</td>
+                        </tr>
+
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="border p-3" *ngIf="transactionId">
+                <div class="mb-4">
+                    <strong>SUMMARY</strong>
+                    <table class="table table-sm">
+                        <tr>
+                            <td> BKP</td>
+                            <td class="text-end">{{summary.bkp | number}}</td>
+                        </tr>
+                        <tr>
+                            <td> PPN</td>
+                            <td class="text-end">{{summary.ppn | number}}</td>
+                        </tr>
+                        <tr>
+                            <td> DPP</td>
+                            <td class="text-end">{{summary.dpp | number}}</td>
+                        </tr>
+                        <tr>
+                            <td> NON BKP</td>
+                            <td class="text-end">{{summary.nonBkp | number}}</td>
+                        </tr>
+
+                        <!-- <tr>
+                            <td> DISCOUNT</td>
+                            <td class="text-end">{{summary.discount | number}}</td>
+                        </tr> -->
+                        <!-- <tr>
+                            <td> VOUCHER</td>
+                            <td class="text-end">{{summary.voucher | number}}</td>
+                        </tr> -->
+                        <!-- <tr>
+                            <td> TOTAL</td>
+                            <td class="text-end">{{summary.total | number}}</td>
+                        </tr>  -->
+                    </table>
+                </div>
+
+                <div class="mb-4">
+                    <strong>PAYMENT METHOD</strong>
+                    <table class="table table-sm">
+                        <tr *ngFor="let x of paymentMethod">
+                            <td> {{x.label}} :</td>
+                            <td class="text-end">{{x.amount | number}}</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="mb-4">
+                    <strong>BALANCE</strong>
+
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th class="text-end">CASH IN</th>
+                                <th class="text-end">CASH OUT</th>
+                            </tr>
+                        </thead>
+                        <tbody> 
+                            <tr *ngFor="let x of balance">
+                                <td class="text-end"> {{x.caseIn | number}}</td>
+                                <td class="text-end">{{x.caseOut | number}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

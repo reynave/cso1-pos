@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Socket } from 'ngx-socket-io';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,8 @@ import { environment } from 'src/environments/environment';
 export class ConfigService {
   private tokenKey: string = "pos1.vsi.com";
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private socket: Socket,
   ) { }
 
   setToken(token: string): Observable<boolean> {
@@ -80,4 +82,13 @@ export class ConfigService {
     }
   }
 
+  sendMessage(data: any) {
+    this.socket.emit('data', data);
+  }
+  getMessage(): any {
+    return this.socket.fromEvent('emiter');
+  }
+  getDocument(id: string) {
+    this.socket.emit('getDoc', id);
+  }
 }

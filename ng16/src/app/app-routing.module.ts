@@ -16,13 +16,16 @@ import { SettlementComponent } from './setting/settlement/settlement.component';
 import { SettlementPrintComponent } from './setting/settlement-print/settlement-print.component';
 import { BalanceCashInComponent } from './setting/balance-cash-in/balance-cash-in.component';
 import { SettlementHistoryComponent } from './setting/settlement-history/settlement-history.component';
+import { VisitorComponent } from './visitor/visitor.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
   { path: "home", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
- 
+
+  { path: "visitor", component: VisitorComponent, data: { active: "" },  canActivate:[]  }, 
   { path: "login", component: LoginComponent, data: { active: "" },  canActivate:[]  }, 
   { path: "relogin", component: ReloginComponent, data: { active: "" },  canActivate:[]  }, 
+
   { path: "cart", component: CartComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "setup", component: SetupComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "parking", component: ParkingComponent, data: { active: "" },  canActivate:[authGuard]  }, 

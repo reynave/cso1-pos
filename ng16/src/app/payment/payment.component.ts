@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfigService } from '../service/config.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 export class Payment {
 
@@ -21,7 +21,7 @@ export class Payment {
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css']
 })
-export class PaymentComponent implements OnInit {
+export class PaymentComponent implements OnInit, OnDestroy {
   kioskUuid: any;
   note: string = "";
   varkioskUuid: string = "kioskUuid";
@@ -43,21 +43,38 @@ export class PaymentComponent implements OnInit {
     private http: HttpClient,
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
+    private rounter : Router,
     config: NgbModalConfig,
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
   }
-
+  private _docSub: any;
   ngOnInit() {
+   
     this.kioskUuid = this.activatedRoute.snapshot.queryParams['kioskUuid'];
     this.httpCart();
     this.httpPaymentMethod();
     this.httpPaymentInvoice();
     this.terminalId = localStorage.getItem("terminalId");
+  
+  }
+  ngOnDestroy() { 
+    
+  }
+  sendReload(){
+    const msg = {
+      to: 'visitor',
+      msg: 'payment method',
+      action : 'reload',
+      kioskUuid : this.kioskUuid
+    }
+    this.configService.sendMessage(msg);
+    console.log("sendReload");
   }
 
   httpCart() {
+    this.sendReload();
     this.http.get<any>(environment.api + "cart/index", {
       headers: this.configService.headers(),
       params: {
@@ -79,8 +96,7 @@ export class PaymentComponent implements OnInit {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        this.paymentMethod = data['items'];
-
+        this.paymentMethod = data['items']; 
       },
       error => {
         console.log(error);
@@ -88,14 +104,14 @@ export class PaymentComponent implements OnInit {
     )
   }
 
-  httpPaymentInvoice() {
+  httpPaymentInvoice() { 
     this.http.get<any>(environment.api + "payment/invoice", {
       headers: this.configService.headers(),
       params: {
         kioskUuid: this.kioskUuid
       }
     }).subscribe(
-      data => {
+      data => { 
         this.total = data['total'];
         this.kioskPaid = data['kioskPaid'];
         this.close = data['close'];
@@ -107,8 +123,7 @@ export class PaymentComponent implements OnInit {
       }
     )
   }
-
-
+ 
   open(content: any, x: any) {
     this.paymentMethodDetail = x;
     this.modalService.open(content, { size: 'lg' });
@@ -131,6 +146,7 @@ export class PaymentComponent implements OnInit {
         this.httpPaymentInvoice();
         this.modalService.dismissAll();
         this.payment.amount = 0;
+        this.sendReload();
       },
       error => {
         console.log(error);
@@ -140,8 +156,7 @@ export class PaymentComponent implements OnInit {
 
   isCloseTransaction() {
     if (this.close == true) {
-      console.log("isCloseTransaction");
-
+      console.log("isCloseTransaction"); 
       this.http.get<any>(environment.api + "payment/isCloseTransaction", {
         headers: this.configService.headers(),
         params: {
@@ -149,10 +164,13 @@ export class PaymentComponent implements OnInit {
           terminalId: this.terminalId,
         }
       }).subscribe(
-        data => {
+        data => { 
           console.log('isCloseTransaction',data);
           this.note = data['note'];
           this.transactionId = data['transactionId'];
+        // http://localhost:4200/#/printing?id=T02.230828.0004
+          this.rounter.navigate(['printing'],{ queryParams:{id : data['transactionId']}} );
+          this.sendReload();
         },
         error => {
           console.log(error);

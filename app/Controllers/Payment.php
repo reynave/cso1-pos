@@ -26,8 +26,10 @@ class Payment extends BaseController
     {
         $kioskUuid = $this->request->getVar()['kioskUuid'];
 
-        $q1 = "SELECT * FROM cso1_kiosk_paid_pos 
-        WHERE kioskUuid = '$kioskUuid' ";
+        $q1 = "SELECT a.* , p.name, p.label
+        FROM cso1_kiosk_paid_pos AS a
+        LEFT JOIN cso1_payment_type AS p ON p.id = a.paymentTypeId
+        WHERE a.kioskUuid = '$kioskUuid' ";
         $kioskPaid = $this->db->query($q1)->getResultArray();
 
         $bill = (int) model("Core")->select("sum(price)", "cso1_kiosk_cart", "kioskUuid = '$kioskUuid'");

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
+import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -25,7 +25,10 @@ import { SettlementComponent } from './setting/settlement/settlement.component';
 import { SettlementPrintComponent } from './setting/settlement-print/settlement-print.component';
 import { BalanceCashInComponent } from './setting/balance-cash-in/balance-cash-in.component';
 import { SettlementHistoryComponent } from './setting/settlement-history/settlement-history.component';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { VisitorComponent } from './visitor/visitor.component';
 
+const config: SocketIoConfig = { url: environment.socket_url, options: { transports: ['websocket'] } };
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,7 +50,8 @@ import { SettlementHistoryComponent } from './setting/settlement-history/settlem
     SettlementComponent,
     SettlementPrintComponent,
     BalanceCashInComponent,
-    SettlementHistoryComponent
+    SettlementHistoryComponent,
+    VisitorComponent
   ],
   imports: [
     BrowserModule,
@@ -55,6 +59,7 @@ import { SettlementHistoryComponent } from './setting/settlement-history/settlem
     FormsModule,
     HttpClientModule,
     NgbModule,
+    SocketIoModule.forRoot(config)
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConfigService } from '../service/config.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -12,7 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css']
 })
-export class CartComponent implements OnInit {
+export class CartComponent implements OnInit, OnDestroy {
   @ViewChild('formRow') rows: ElementRef | any;
   @ViewChild('formPassword') formPassword: ElementRef | any;
 
@@ -44,6 +44,7 @@ export class CartComponent implements OnInit {
   ilock : number = 0;
   addQty: number = 1;
   item: any = []; 
+  private _docSub: any;
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
@@ -61,9 +62,16 @@ export class CartComponent implements OnInit {
     this.newItem = []; 
     this.kioskUuid = this.activatedRoute.snapshot.queryParams['kioskUuid'];
     this.httpCart();
+    this._docSub = this.configService.getMessage().subscribe(
+      (data: { [x: string]: any; }) => {
+        console.log(data);
+      }
+    );
   }
+   
 
   httpCart() {
+    this.sendReload();
     this.http.get<any>(environment.api + "cart/index", {
       headers: this.configService.headers(),
       params: {
@@ -93,7 +101,17 @@ export class CartComponent implements OnInit {
 
   ngOnDestroy() {
     clearInterval(this.callServer);
-    //  this._docSub.unsubscribe();
+    this._docSub.unsubscribe();
+  }
+  sendReload(){
+    const msg = {
+      to: 'visitor',
+      msg: 'add Item',
+      action : 'reload',
+      kioskUuid : this.kioskUuid
+    }
+    this.configService.sendMessage(msg);
+    console.log("sendReload");
   }
 
   addToCart() {
@@ -107,8 +125,7 @@ export class CartComponent implements OnInit {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        console.log(data);
-
+        console.log(data); 
         this.newItem = data['item'];
 
         if (data['error'] == false) {
@@ -183,9 +200,11 @@ export class CartComponent implements OnInit {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
+       
         this.addQty = 0;
         console.log(data);
         this.modalService.dismissAll();
+        
         this.httpCart();
       },
       error => {
@@ -198,8 +217,7 @@ export class CartComponent implements OnInit {
 
     if (comp == 'items') {
       const modalRef = this.modalService.open(ItemsComponent, { size: 'lg' });
-      modalRef.componentInstance.kioskUuid =  this.kioskUuid;
-
+      modalRef.componentInstance.kioskUuid =  this.kioskUuid; 
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);
         this.httpCart();
@@ -208,9 +226,7 @@ export class CartComponent implements OnInit {
     if (comp == 'cartDetail') {
       const modalRef = this.modalService.open(CartDetailComponent, { size: 'lg' });
       modalRef.componentInstance.item = item;
-      modalRef.componentInstance.kioskUuid = this.kioskUuid;
-
-
+      modalRef.componentInstance.kioskUuid = this.kioskUuid; 
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);
         this.httpCart();
@@ -242,7 +258,7 @@ export class CartComponent implements OnInit {
           alert("WRONG PASSWORD!");
 
         }
-        this.password = ""; 123456789
+        this.password = ""; 
 
       },
       error => {
@@ -261,8 +277,9 @@ export class CartComponent implements OnInit {
       this.http.post<any>(environment.api + "Cart/cancelTrans", body, {
         headers: this.configService.headers(),
       }).subscribe(
-        data => {
+        data => { 
           localStorage.removeItem("kioskUuid");
+          this.sendReload();
           history.back();
         },
         error => {
@@ -285,6 +302,7 @@ export class CartComponent implements OnInit {
     }).subscribe(
       data => {
          console.log(data);
+         this.sendReload();
          this.router.navigate(['payment'], {queryParams:{kioskUuid:this.kioskUuid}});
          this.modalService.dismissAll();
       },

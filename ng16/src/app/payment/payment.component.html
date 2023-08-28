@@ -8,8 +8,7 @@
         <div class="offset-2 col-6">
             <div class="alert alert-warning text-center">
                 <div> {{note}} </div>
-                <div> <a [routerLink]="[ '/printing' ]" [queryParams]="{id : transactionId }">Print Receipt
-                        Transaction</a> </div>
+                <div> <a [routerLink]="[ '/printing' ]" [queryParams]="{id : transactionId }">Print Receipt Transaction</a> </div>
             </div>
         </div>
     </div>
@@ -65,8 +64,7 @@
                 <table class="table table-sm table-bordered">
                     <tr *ngFor="let x of kioskPaid">
                         <td> {{x.paymentTypeId}}</td>
-                        <td class="text-end">Rp {{x.paid | number}}</td>
-
+                        <td class="text-end">Rp {{x.paid | number}}</td> 
                     </tr>
                 </table>
             </div>

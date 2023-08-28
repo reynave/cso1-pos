@@ -33,7 +33,19 @@ export class PrintingComponent implements OnInit {
   ngOnInit() {
     this.id = this.activatedRoute.snapshot.queryParams['id']; 
     this.httpBill();
+    this.sendReload();
   }
+  sendReload(){
+    const msg = {
+      to: 'visitor',
+      msg: 'payment method',
+      action : 'reload',
+      transactionId : this.id
+    }
+    this.configService.sendMessage(msg);
+    console.log("sendReload");
+  }
+
 
   httpBill() {
     this.http.get<any>(environment.api + "printing/detail", {

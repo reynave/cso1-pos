@@ -1,7 +1,7 @@
-<div class="container">
+<div class="container"  *ngIf=" action =='cart'">
     <div class="row g-1">
         <div class="col-8">
-            <div class="border p-3">
+            <div class="p-3">
                 <table class="table">
                     <tbody>
                         <tr *ngFor="let x of items">
@@ -20,8 +20,7 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-
+        </div> 
 
         <div class="col-4">
             <div class="border p-3" *ngIf="kioskUuid">
@@ -106,23 +105,29 @@
 
                 <div class="mb-4">
                     <strong>BALANCE</strong>
-
-                    <table class="table table-sm">
-                        <thead>
-                            <tr>
-                                <th class="text-end">CASH IN</th>
-                                <th class="text-end">CASH OUT</th>
-                            </tr>
-                        </thead>
-                        <tbody> 
-                            <tr *ngFor="let x of balance">
-                                <td class="text-end"> {{x.caseIn | number}}</td>
-                                <td class="text-end">{{x.caseOut | number}}</td>
-                            </tr>
-                        </tbody>
+                    <table class="table table-sm" *ngFor="let x of balance">
+                        <tr >
+                            <td> PEMBAYARAN CASH :</td>
+                            <td class="text-end">{{x.caseIn | number}}</td>
+                        </tr>
+                        <tr >
+                            <td> KEMBALI :</td>
+                            <td class="text-end">{{x.caseOut | number}}</td>
+                        </tr>
                     </table>
+                    
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="container"  *ngIf="action =='home' || action == ''">
+    <div class="row">
+        <div class="col-12 my-5 text-center">
+            <h1>WELCOME TO POS</h1>
+            <code>{{kioskUuid}} {{transactionId}}</code>
+
         </div>
     </div>
 </div>

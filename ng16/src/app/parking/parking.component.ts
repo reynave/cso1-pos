@@ -36,12 +36,6 @@ export class ParkingComponent implements OnInit {
   }
 
   setCart(x : any){
-    console.log(x);
-    this.configService.setKioskUuid(x.kioskUuid).subscribe(
-      data=>{
-        console.log(data);
-        history.back();
-      }
-    )
+    console.log(x); 
   }
 }

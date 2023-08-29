@@ -19,7 +19,9 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
       this.httpParking();
+      this.sendReload();
   }
+
   httpParking(){
     this.http.get<any>(environment.api + "parking/index", {
       headers: this.configService.headers(), 
@@ -33,6 +35,7 @@ export class HomeComponent implements OnInit {
       }
     );
   }
+
   getKioskUuid(){
     const body = {
       terminalId : localStorage.getItem("terminalId"),
@@ -50,6 +53,7 @@ export class HomeComponent implements OnInit {
       }
     );
   }
+
   setCart(x : any){
     console.log(x);
     this.configService.setKioskUuid(x.kioskUuid).subscribe(
@@ -58,5 +62,14 @@ export class HomeComponent implements OnInit {
         this.router.navigate(['cart'],{ queryParams: { kioskUuid : x.kioskUuid}});
       }
     )
+  }
+  sendReload(){
+    const msg = {
+      to: 'visitor',
+      msg: 'welcome',
+      action : 'home', 
+    }
+    this.configService.sendMessage(msg);
+    console.log("sendReload");
   }
 }

@@ -107,7 +107,7 @@ export class CartComponent implements OnInit, OnDestroy {
     const msg = {
       to: 'visitor',
       msg: 'add Item',
-      action : 'reload',
+      action : 'cart',
       kioskUuid : this.kioskUuid
     }
     this.configService.sendMessage(msg);

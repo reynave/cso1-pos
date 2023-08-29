@@ -66,7 +66,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     const msg = {
       to: 'visitor',
       msg: 'payment method',
-      action : 'reload',
+      action : 'cart',
       kioskUuid : this.kioskUuid
     }
     this.configService.sendMessage(msg);

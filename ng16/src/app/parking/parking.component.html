@@ -4,12 +4,14 @@
         <div class="col-12">
             <h4>Select Parking</h4>
         </div>
-        <div class="col-4" *ngFor="let x of items; let i = index" (click)="setCart(x)">
-            <div class="border p-2 text-center alert alert-primary pointer">
-                <h4>Parking {{i+1}}</h4>
-                <div><code>{{x.kioskUuid}}</code></div>
-            </div>
+        <div class="col-4" *ngFor="let x of items; let i = index">
+            <a [routerLink]="[ '/cart' ]" [queryParams]="{kioskUuid:x.kioskUuid}">
+                <div class="border p-2 text-center alert alert-primary pointer">
+                    <h4>Parking {{i+1}}</h4>
+                    <div><code>{{x.kioskUuid}}</code></div>
+                </div>
+            </a>
         </div>
-        
+
     </div>
 </div>

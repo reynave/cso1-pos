@@ -32,14 +32,13 @@ export class PrintingComponent implements OnInit {
 
   ngOnInit() {
     this.id = this.activatedRoute.snapshot.queryParams['id']; 
-    this.httpBill();
-    this.sendReload();
+    this.httpBill(); 
   }
   sendReload(){
     const msg = {
       to: 'visitor',
       msg: 'payment method',
-      action : 'reload',
+      action : 'cart',
       transactionId : this.id
     }
     this.configService.sendMessage(msg);
@@ -59,6 +58,7 @@ export class PrintingComponent implements OnInit {
         console.log('httpBill',data);
         this.items = data['items'];
         this.outputPrint = this.printing.template(data); 
+        this.sendReload();
       },
       error => {
         console.log(error);

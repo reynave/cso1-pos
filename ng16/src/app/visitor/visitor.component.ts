@@ -32,6 +32,7 @@ export class VisitorComponent implements OnInit, OnDestroy  {
   paymentMethod : any = [];
   close: boolean = false;
   balance : any = [];
+  action : string = "home";
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
@@ -50,6 +51,7 @@ export class VisitorComponent implements OnInit, OnDestroy  {
         console.log(data);
         this.kioskUuid = data['kioskUuid']; 
         this.transactionId = data['transactionId'];
+        this.action = data['action'];
         if(data['kioskUuid'] === undefined){
           this.httpBill();
         }else{

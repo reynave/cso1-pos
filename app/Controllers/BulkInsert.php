@@ -102,7 +102,7 @@ class BulkInsert extends BaseController
         FIELDS TERMINATED BY '|'  
         LINES TERMINATED BY '\r\n' 
         (`id`,`typeOfPromotion`,`storeOutlesId`,`code`,`description`,`startDate`,`endDate`, `discountPercent`,`discountAmount`,`status`,
-        `Mon`,`Tue`,`Wed`,`Thur`,`Fri`,`Sat`,`Sun`)";
+        `Mon`,`Tue`,`Wed`,`Thu`,`Fri`,`Sat`,`Sun`)";
 
         if ($this->db->simpleQuery($bulk)) {
             $rest = 'Success!';

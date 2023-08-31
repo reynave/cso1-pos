@@ -27,6 +27,7 @@ import { BalanceCashInComponent } from './setting/balance-cash-in/balance-cash-i
 import { SettlementHistoryComponent } from './setting/settlement-history/settlement-history.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { VisitorComponent } from './visitor/visitor.component';
+import { ThemesComponent } from './themes/themes.component';
 
 const config: SocketIoConfig = { url: environment.socket_url, options: { transports: ['websocket'] } };
 @NgModule({
@@ -51,7 +52,8 @@ const config: SocketIoConfig = { url: environment.socket_url, options: { transpo
     SettlementPrintComponent,
     BalanceCashInComponent,
     SettlementHistoryComponent,
-    VisitorComponent
+    VisitorComponent,
+    ThemesComponent
   ],
   imports: [
     BrowserModule,

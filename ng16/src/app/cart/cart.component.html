@@ -1,6 +1,6 @@
 <app-header [item]="kioskUuid+(supervisorMode ? ' - SUPERVISOR MODE ':'')"></app-header>
 
-<div class="container">
+<div class="container-fluid">
     <div class="row g-1">
         <div class="col-1">
             <app-widget1></app-widget1>
@@ -27,8 +27,9 @@
                                     <tr>
                                         <th>QTY</th>
                                         <th>DESCRIPTION</th>
-                                        <th>PRICE</th>
                                         <th>DISC</th>
+                                        <th>PRICE</th>
+                                       
                                         <th>TOTAL</th>
                                         <th></th>
                                         <th *ngIf="supervisorMode == true"></th>
@@ -39,12 +40,15 @@
                                         <td>{{x.qty}}</td>
                                         <td>
                                             <div>
-                                                <b>{{x.shortDesc}} </b>
+                                                <b>{{x.shortDesc}} RP {{x.originPrice | number}}</b>
                                             </div>
                                             <code>{{x.barcode}}</code>
+                                            <div>{{x.promotionDescription}}</div>
+
                                         </td>
+                                        <td>({{x.discount | number}})</td>
                                         <td>{{x.price | number}}</td>
-                                        <td>{{x.discount | number}}</td>
+                                      
                                         <td>{{x.total | number}}</td>
                                         <td>
                                             <button type="text" class="btn btn-warning"
@@ -54,6 +58,10 @@
                                             <button type="text" class="btn btn-danger"
                                                 (click)="openComponent('cartDetail',x)">Edit Qty</button>
                                         </td>
+                                    </tr>
+                                    
+                                    <tr *ngFor="let x of itemsFree">
+                                       <td>itemsFree</td> 
                                     </tr>
                                 </tbody>
                             </table>

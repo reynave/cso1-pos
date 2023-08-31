@@ -17,5 +17,9 @@ AUTO_INCREMENT=6
 ;
 
 
-alter TABLE cso1_transaction set settlementId
+alter TABLE 'cso1_transaction' add  settlementId
  
+
+ALTER TABLE `cso1_promotion`
+	CHANGE COLUMN `Thur` `Thu` INT(1) NULL DEFAULT '0' AFTER `Wed`;
+

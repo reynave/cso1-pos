@@ -1,0 +1,118 @@
+<app-header [item]="'themes'"></app-header>
+
+
+<div class="container-fluid">
+    <div class="row g-1">
+        <div class="col-1">
+            <div class="border bg-white text-center rounded mb-1 py-4">
+                BACK
+            </div>
+            <div class="border bg-white text-center rounded mb-1  py-4">
+                PARKING
+            </div>
+            
+        </div>
+        <div class="col-7">
+            <div class="mb-1">
+                <input type="text" class="form-control form-control-lg text-end px-4 font-cart">
+            </div>
+
+            <div class="bg-light   p-2 border cart cart-height">
+                <div class="bg-white px-3 py-2 border rounded mb-2">
+                    <div class="row g-1 ">
+                        <div class="col-10">
+                            <div>0001411 - LION STAR FOLDING HANGER 20 STICK GB-3 </div>
+                            <div>*PROMO ONYX DISC 70% ALL*</div>
+                            <div>1 x 59.500 </div>
+
+                        </div>
+                        <div class="col-2 text-end">
+                            2.302.000
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white px-3 py-2 border rounded mb-2">
+                    <div class="row g-1 ">
+                        <div class="col-10">
+                            <div>0001411 - LION STAR FOLDING HANGER 20 STICK GB-3 </div>
+                            <div>*PROMO ONYX DISC 70% ALL*</div>
+                            <div>1 x 59.500 </div>
+
+                        </div>
+                        <div class="col-2 text-end">
+                            2.302.000
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="col-3">
+           
+            <div class="border p-3 bg-white rounded mb-1">
+                <div class="row ">
+                    <div class="col-7 font-cart">SUB TOTAL:</div>
+                    <div class="col-5 text-end font-cart">124.950</div>
+                </div>
+                <div class="row ">
+                    <div class="col-6 font-cart">DISCOUNT:</div>
+                    <div class="col-6 text-end font-cart">124.950</div>
+                </div>
+                <div class="row ">
+                    <div class="col-6 font-cart">TAX:</div>
+                    <div class="col-6 text-end font-cart">124.950</div>
+                </div>
+                <div class="row ">
+                    <div class="col-6 font-cart">TOTAL:</div>
+                    <div class="col-6 text-end font-cart"><strong>124.950</strong></div>
+                </div>
+            </div>
+            <div class="border p-3  text-white  rounded mb-1 bg-info">
+                <div class="text-center fs-4"> SEARCH ITEM</div>
+            </div>
+            <div class="border p-3  text-white  rounded mb-1 bg-warning">
+                <div class="text-center fs-4"> ADD QTY</div>
+            </div>
+            <div class="border p-3  text-white  rounded mb-1 bg-danger">
+                <div class="text-center fs-4"> EDIT ITEM</div>
+            </div>
+            <div class="border p-3  text-white  rounded mb-1 bg-dark">
+                <div class="text-center fs-4"> PAYMENT</div>
+            </div>
+        </div>
+
+        <div class="col-1">
+            <div class="border bg-white text-center rounded mb-1 py-4">
+                F1
+            </div>
+            <div class="border bg-white text-center rounded mb-1">
+                F2
+            </div>
+            <div class="border bg-white text-center rounded mb-1">
+                F3
+            </div>
+            <div class="border bg-white text-center rounded mb-1">
+                F4
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="notif">
+    <div class="content">
+        <ngb-toast *ngIf="show" [header]="'LION STAR FOLDING HANGER'" [autohide]="false" (hidden)="close()">
+            <div class="cart">
+                <div>0001411 - LION STAR FOLDING HANGER 20 STICK GB-3 </div>
+                <div class="mb-2">*PROMO ONYX DISC 70% ALL*</div>
+                <div class="row">
+                    <div class="col-6"><strong>PRICE</strong></div>
+                    <div class="col-6 text-end"> <strong>RP 302.000</strong></div>
+                </div>
+            </div>
+        </ngb-toast>
+    </div>
+</div>

@@ -1,5 +1,76 @@
-/* You can add global styles to this file, and also import other style files */
+@font-face {
+    font-family: 'RobotoMono'; /* Ganti dengan nama font Anda */
+    src: url('./assets/fonts/RobotoMono-VariableFont_wght.ttf') format('truetype'); /* Ganti dengan path font Anda */
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins'; /* Ganti dengan nama font Anda */
+    src: url('./assets/fonts/Poppins-Regular.ttf') format('truetype'); /* Ganti dengan path font Anda */
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Poppins-ExtraBold'; /* Ganti dengan nama font Anda */
+    src: url('./assets/fonts/Poppins-ExtraBold.ttf') format('truetype'); /* Ganti dengan path font Anda */
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Poppins-Bold'; /* Ganti dengan nama font Anda */
+    src: url('./assets/fonts/Poppins-Bold.ttf') format('truetype'); /* Ganti dengan path font Anda */
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root{
+    --font-roboto-mono : 'RobotoMono';
+    --font-poppins: 'Poppins';
+    --font-poppins-bold: 'Poppins-Bold';
+    --font-poppins-extra-bold: 'Poppins-ExtraBold';
+    
+    --bg-color-gray : #f7f7f7ff;
+}
+ 
+body{
+    background-color: var(--bg-color-gray);
+    font-family: var(--font-poppins);
+    /* background: url('./assets/bgn/bgn1.jpg') repeat;
+    background-size: 30% auto; */
+    
+}
+button{
+    font-family: var(--font-poppins-bold);
+}
+.font-cart{
+    font-family: var(--font-roboto-mono);
+}
+
+.cart, .cart div{
+    font-family: var(--font-roboto-mono);
+    font-size: 0.9rem;
+    line-height: 125%;
+}
+.cart-height{
+    height: calc(100vh - 125px);
+    overflow-y: scroll;
+}
 .pointer,a {
     cursor: pointer;
+}
+
+.notif{ 
+    position: fixed;
+   
+    bottom: 10px;
+    left: 0px;
+    width: 100%;
+    height: auto;
+}
+.notif .content{
+    position: relative;
+    width: 400px; 
+    margin: 0px auto; 
 }
  

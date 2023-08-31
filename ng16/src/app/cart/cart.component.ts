@@ -24,6 +24,7 @@ export class CartComponent implements OnInit, OnDestroy {
   kioskUuid: any;
   supervisorMode: boolean = false;
   items: any = [];
+  itemsFree: any = []; 
   cart: any = [];
   newItem: any = [];
   alert: boolean = false;
@@ -81,6 +82,8 @@ export class CartComponent implements OnInit, OnDestroy {
       data => {
         this.items = data['items'];
         this.ilock = data['ilock'];
+        this.itemsFree = data['itemsFree'];
+        
         if(data['error'] == true){
           this.router.navigate(['not-found']);
           this.modalService.dismissAll();

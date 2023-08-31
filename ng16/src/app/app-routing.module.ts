@@ -17,6 +17,7 @@ import { SettlementPrintComponent } from './setting/settlement-print/settlement-
 import { BalanceCashInComponent } from './setting/balance-cash-in/balance-cash-in.component';
 import { SettlementHistoryComponent } from './setting/settlement-history/settlement-history.component';
 import { VisitorComponent } from './visitor/visitor.component';
+import { ThemesComponent } from './themes/themes.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
@@ -39,6 +40,7 @@ const routes: Routes = [
   { path: "setting/settlement/history", component: SettlementHistoryComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   
   { path: "setting/balance/cashIn", component: BalanceCashInComponent, data: { active: "" },  canActivate:[authGuard]  }, 
+  { path: "themes", component: ThemesComponent, data: { active: "" }  }, 
  
   { path: "**", component: NotFoundComponent, data: { active: "404" },  canActivate:[]  }, 
   

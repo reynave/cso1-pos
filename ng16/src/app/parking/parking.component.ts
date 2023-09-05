@@ -38,4 +38,8 @@ export class ParkingComponent implements OnInit {
   setCart(x : any){
     console.log(x); 
   }
+
+  back(){
+    history.back();
+  }
 }

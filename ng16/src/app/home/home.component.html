@@ -1,21 +1,53 @@
 <app-header></app-header>
-<div class="container">
+
+<div class="content-md my-4">
+
+    <div class="container">
+        <div class="row g-2">
+            <div class="col-12 text-center">
+                
+                <small>POS Ver {{env.ver}}</small>
+                <h1> Welcome Back</h1>
+            </div>
+            <div class="col-4">
+                <a (click)="getKioskUuid();">
+                    <img src="./assets/img/2123.jpg" class="border shadow-sm rounded" width="100%">
+                    <div class="text-center">
+                       <strong> OPEN CASHIER</strong>
+                    </div>
+                </a>
+            </div>
+            <div class="col-4">
+                <a target="_blank" [routerLink]="[ '/visitor' ]">
+                    <img src="./assets/img/6900.jpg" class="border shadow-sm rounded" width="100%">
+                    <div class="text-center">
+                        <strong> VISITOR MONITOR</strong>
+                     </div>
+                </a>
+            </div>
+            <div class="col-4">
+                <a [routerLink]="[ '/parking' ]">
+                    <img src="./assets/img/9000_5_2_07.jpg" class="border shadow-sm rounded" width="100%">
+                    <div class="text-center">
+                        <strong> PARKING</strong>
+                     </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- <div class="container">
+     
     <div class="row">
-        <div class="col-12">
-           
-        </div>
-        <div class="col-12 text-center mb-2">
-            <h1> WELCOME BACK</h1>
-            <button type="button" class="btn btn-lg btn-primary mx-1" (click)="getKioskUuid();">OPEN CART</button> 
-            <a class="btn btn-lg btn-primary mx-1"   [routerLink]="[ '/visitor' ]">VISITOR MONITOR</a>
-        </div>
 
         <table class="table table-hover border table-bordered">
             <thead>
                 <tr>
                     <th>NO</th>
                     <th>PARKING</th>
-                    <th></th> 
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -24,11 +56,11 @@
                     <td> {{x.kioskUuid}} </td>
                     <td>
                         <button type="button" (click)="setCart(x)" class="btn btn-sm btn-primary">SELECT</button>
-                    </td> 
+                    </td>
                 </tr>
-                
+
             </tbody>
-           
+
         </table>
     </div>
-</div>
+</div> -->

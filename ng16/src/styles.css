@@ -1,76 +1,139 @@
 @font-face {
-    font-family: 'RobotoMono'; /* Ganti dengan nama font Anda */
-    src: url('./assets/fonts/RobotoMono-VariableFont_wght.ttf') format('truetype'); /* Ganti dengan path font Anda */
+    font-family: 'RobotoMono';
+    /* Ganti dengan nama font Anda */
+    src: url('./assets/fonts/RobotoMono-VariableFont_wght.ttf') format('truetype');
+    /* Ganti dengan path font Anda */
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'Poppins'; /* Ganti dengan nama font Anda */
-    src: url('./assets/fonts/Poppins-Regular.ttf') format('truetype'); /* Ganti dengan path font Anda */
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'Poppins-ExtraBold'; /* Ganti dengan nama font Anda */
-    src: url('./assets/fonts/Poppins-ExtraBold.ttf') format('truetype'); /* Ganti dengan path font Anda */
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'Poppins-Bold'; /* Ganti dengan nama font Anda */
-    src: url('./assets/fonts/Poppins-Bold.ttf') format('truetype'); /* Ganti dengan path font Anda */
+    font-family: 'Poppins';
+    /* Ganti dengan nama font Anda */
+    src: url('./assets/fonts/Poppins-Regular.ttf') format('truetype');
+    /* Ganti dengan path font Anda */
     font-weight: normal;
     font-style: normal;
 }
 
-:root{
-    --font-roboto-mono : 'RobotoMono';
+@font-face {
+    font-family: 'Poppins-ExtraBold';
+    /* Ganti dengan nama font Anda */
+    src: url('./assets/fonts/Poppins-ExtraBold.ttf') format('truetype');
+    /* Ganti dengan path font Anda */
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins-Bold';
+    /* Ganti dengan nama font Anda */
+    src: url('./assets/fonts/Poppins-Bold.ttf') format('truetype');
+    /* Ganti dengan path font Anda */
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+    --font-roboto-mono: 'RobotoMono';
     --font-poppins: 'Poppins';
     --font-poppins-bold: 'Poppins-Bold';
     --font-poppins-extra-bold: 'Poppins-ExtraBold';
-    
-    --bg-color-gray : #f7f7f7ff;
+
+    --bg-color-gray: #f8f9fdff;
 }
- 
-body{
+
+.bg-warning {
+    background-color: #FFFFDD !important;
+}
+
+.bg-danger {
+    background-color: #FDE5EC !important;
+}
+
+.bg-success {
+    background-color: #CEE6F3 !important;
+}
+
+.btn-primary{
+    background-color: #0A6EBD;
+    border-color: #0A6EBD;
+}
+.btn-secondary {
+    background-color: #A8A196;
+    border-color: #A8A196;
+}
+
+
+.btn-success {
+    background-color: #0B666A;
+    border-color: #0B666A;
+}
+.bg-yellow{
+    background-color: #fff9e6ff;
+}
+.btn-success:hover,
+.btn-success:active:focus  {
+    background-color: #35A29F;
+}
+
+body {
     background-color: var(--bg-color-gray);
     font-family: var(--font-poppins);
     /* background: url('./assets/bgn/bgn1.jpg') repeat;
     background-size: 30% auto; */
-    
+
 }
-button{
+
+code {
+    color: #000;
+    font-size: 1rem;
+}
+
+button {
     font-family: var(--font-poppins-bold);
 }
-.font-cart{
+h1{
+    font-family: var(--font-poppins-extra-bold);
+}
+.font-cart {
     font-family: var(--font-roboto-mono);
 }
 
-.cart, .cart div{
+.cart,
+.cart div {
     font-family: var(--font-roboto-mono);
     font-size: 0.9rem;
     line-height: 125%;
 }
-.cart-height{
+.cart-sm{
+    font-size: 0.85rem;
+}
+.cart-height {
     height: calc(100vh - 125px);
     overflow-y: scroll;
 }
-.pointer,a {
+.cart-height-full {
+    height: calc(100vh - 57px);
+    overflow-y: scroll;
+}
+
+.pointer,
+a {
     cursor: pointer;
 }
 
-.notif{ 
+.notif {
     position: fixed;
-   
+
     bottom: 10px;
     left: 0px;
     width: 100%;
     height: auto;
 }
-.notif .content{
+
+.notif .content {
     position: relative;
-    width: 400px; 
-    margin: 0px auto; 
+    width: 400px;
+    margin: 0px auto;
 }
- 

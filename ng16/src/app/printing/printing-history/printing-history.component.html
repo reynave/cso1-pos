@@ -1,14 +1,20 @@
 <app-header></app-header>
 
-<div class="container my-5">
+<div class="container mb-5">
     <div class="row">
+        <div class="col-12 mb-4">
+            <div class="d-flex">
+                <div> <a (click)="back();" class="btn  btn-dark  border">Back</a></div>
+                <div class="mx-4"><h4>History</h4></div>
+            </div>
+        </div>
         <div class="col-12">
-            <table class="table table-bordered">
+            <table class="table table-striped shadow-sm border">
                 <thead>
                     <tr>
                         <th>DATE TIME</th>
                         <th>STRUCK</th>
-                        <th>TOTAL</th>
+                        <th class="text-end">TOTAL</th>
                         <th>CASHIER</th>
                         <th></th>
 
@@ -18,12 +24,13 @@
                     <tr *ngFor="let x of items">
                         <td>{{x.transaction_date}}</td>
                         <td>{{x.id}}</td>
-                        <td>{{x.total | number}}</td>
+                        <td class="text-end">{{x.total | number}}</td>
                         <td>
                             <code>{{x.cashierId}}</code>{{x.name}}
                         </td>
                         <td>
-                            <a class="btn btn-sm btn-success" [routerLink]="[ '/printing', ]" [queryParams]="{id:x.id}">DETAIL</a>
+                            <a class="btn btn-sm btn-success" [routerLink]="[ '/printing', ]"
+                                [queryParams]="{id:x.id}">DETAIL</a>
                         </td>
                     </tr>
                 </tbody>

@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
   parking : any = [];
+  env : any = environment;
   constructor(
     private configService: ConfigService,
     private http: HttpClient, 

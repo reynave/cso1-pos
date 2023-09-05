@@ -1,135 +1,257 @@
-<div class="container"  *ngIf=" action =='cart'">
-    <div class="row g-1">
-        <div class="col-8">
-            <div class="p-3">
-                <table class="table">
-                    <tbody>
-                        <tr *ngFor="let x of items">
-                            <td> {{x.barcode}} </td>
-                            <td> {{x.shortDesc}}
-                                <div>
-                                    {{x.qty}} x {{x.price | number}} 
-                                </div>
-                                <div>
-                                    {{x.promotionDescription}}
-                                </div>
-                            </td>
-                            <td class="text-end">
-                                {{x.total | number}}
-                                {{x.totalPrice | number}}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+<div class="bg-white mb-2 py-2 border-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                Vlinder Mart POS
             </div>
-        </div> 
-
-        <div class="col-4">
-            <div class="border p-3" *ngIf="kioskUuid">
-                <div class="mb-4">
-                    <strong>PAYMENT METHOD</strong>
-
-                    <table class="table table-sm">
-                        <tr *ngFor="let x of kioskPaid">
-                            <td> {{x.label}} :</td>
-                            <td class="text-end">{{x.paid | number}}</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div>
-                    <strong>BILL</strong>
-                    <table class="table table-sm">
-                        <tr>
-                            <td>Bill :</td>
-                            <td class="text-end"> {{total.bill | number}}</td>
-                        </tr>
-                        <tr>
-                            <td>paid :</td>
-                            <td class="text-end"> {{total.paid | number}}</td>
-                        </tr>
-
-                        <tr>
-                            <td>remaining :</td>
-                            <td class="text-end"> {{total.remaining | number}}</td>
-                        </tr>
-
-                    </table>
-                </div>
-
+            <div class="col-4 text-center">
+                Terminal : T02
             </div>
-
-            <div class="border p-3" *ngIf="transactionId">
-                <div class="mb-4">
-                    <strong>SUMMARY</strong>
-                    <table class="table table-sm">
-                        <tr>
-                            <td> BKP</td>
-                            <td class="text-end">{{summary.bkp | number}}</td>
-                        </tr>
-                        <tr>
-                            <td> PPN</td>
-                            <td class="text-end">{{summary.ppn | number}}</td>
-                        </tr>
-                        <tr>
-                            <td> DPP</td>
-                            <td class="text-end">{{summary.dpp | number}}</td>
-                        </tr>
-                        <tr>
-                            <td> NON BKP</td>
-                            <td class="text-end">{{summary.nonBkp | number}}</td>
-                        </tr>
-
-                        <!-- <tr>
-                            <td> DISCOUNT</td>
-                            <td class="text-end">{{summary.discount | number}}</td>
-                        </tr> -->
-                        <!-- <tr>
-                            <td> VOUCHER</td>
-                            <td class="text-end">{{summary.voucher | number}}</td>
-                        </tr> -->
-                        <!-- <tr>
-                            <td> TOTAL</td>
-                            <td class="text-end">{{summary.total | number}}</td>
-                        </tr>  -->
-                    </table>
-                </div>
-
-                <div class="mb-4">
-                    <strong>PAYMENT METHOD</strong>
-                    <table class="table table-sm">
-                        <tr *ngFor="let x of paymentMethod">
-                            <td> {{x.label}} :</td>
-                            <td class="text-end">{{x.amount | number}}</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div class="mb-4">
-                    <strong>BALANCE</strong>
-                    <table class="table table-sm" *ngFor="let x of balance">
-                        <tr >
-                            <td> PEMBAYARAN CASH :</td>
-                            <td class="text-end">{{x.caseIn | number}}</td>
-                        </tr>
-                        <tr >
-                            <td> KEMBALI :</td>
-                            <td class="text-end">{{x.caseOut | number}}</td>
-                        </tr>
-                    </table>
-                    
-                </div>
+            <div class="col-4 text-end">
+                {{date | date:'medium'}}
             </div>
         </div>
     </div>
 </div>
 
-<div class="container"  *ngIf="action =='home' || action == ''">
+
+<div class="container" *ngIf=" action =='cart'">
+    <div class="row g-2">
+        <div class="col-8">
+
+            <div class="bg-yellow  p-2 border shadow-sm cart cart-height-full" #chatContainer>
+
+
+                <div class="bg-white px-3 py-2 border rounded mb-2 pointer" *ngFor="let x of items">
+                    <div class="row g-1 ">
+                        <div class="col-12">
+                            <div>{{x.barcode}} - {{x.description}} </div>
+                            <div *ngIf="x.promotionId !== '0'">*{{x.promotionDescription}}*</div>
+                        </div>
+                        <div class="col-10">
+                            <div>{{x.qty}} x {{x.originPrice | number}}
+                                <span class="me-4" *ngIf="x.discount > 0"> DISC ({{x.discount | number}})</span>
+                            </div>
+                        </div>
+                        <div class="col-2 text-end  text-primary">
+                            <strong> {{x.total | number}}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="ilock == 1">
+                    <div class="text-center my-2">
+                        CLOSED
+                    </div>
+                    <div class="border p-3 bg-white rounded mb-2">
+                        <div class="row mb-1">
+                            <div class="col-7 font-cart ">SUB TOTAL:</div>
+                            <div class="col-5 text-end font-cart text-primary">{{bill['originPrice'] | number}}</div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-6 font-cart">DISCOUNT:</div>
+                            <div class="col-6 text-end font-cart text-primary">{{bill['discount'] | number}}</div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-6 font-cart">TOTAL:</div>
+                            <div class="col-6 text-end font-cart text-primary"><strong>{{bill['total'] |
+                                    number}}</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-4">
+            <div class="bg-white border p-2 mb-2">
+                <div class="row g-1">
+                    <div class="col-5">
+                        <img src="https://i.pravatar.cc/150?img=1" width="100%"
+                            class="rounded-circle border p-1 bg-white">
+                    </div>
+                    <div class="col-7 text-center align-self-center">
+                        <div>
+                            <small> Cashier</small>
+                        </div>
+                        <div class="text-danger">
+                            <strong> {{account['account']['name']}}</strong>
+                        </div>
+                        <div>
+                            <code> {{account['account']['id']}}</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="kioskUuid">
+                <div class="border p-3 bg-white rounded mb-2">
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <td class="font-cart cart-sm">SUB TOTAL</td>
+                            <td class="text-end font-cart cart-sm text-primary"> {{bill['originPrice'] | number}} </td>
+                        </tr>
+                        <tr>
+                            <td class="font-cart cart-sm">DISCOUNT </td>
+                            <td class="text-end font-cart cart-sm text-primary"> {{bill['discount'] | number}} </td>
+                        </tr>
+                        <tr>
+                            <td class="font-cart cart-sm">TOTAL </td>
+                            <td class="text-end font-cart cart-sm text-primary"> {{bill['total'] | number}} </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div *ngIf="ilock == 1">
+                <div class="border p-3 bg-white" *ngIf="!transactionId">
+
+                    <div class="mb-2">
+                        <strong class="font-cart">PAYMENT</strong>
+                    </div>
+
+                    <table class="table table-sm table-bordered">
+                        <tr *ngFor="let x of kioskPaid">
+                            <td class="font-cart cart-sm">{{x.label}} </td>
+                            <td class="text-end font-cart cart-sm text-primary">{{x.paid | number}}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-cart cart-sm">REMAINING </td>
+                            <td class="text-end font-cart cart-sm text-danger">{{(total.bill - (total.paid))*-1 |
+                                number}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="border p-3 bg-white" *ngIf="transactionId">
+                    <div class="mb-2">
+                        <div class="mb-1">
+                            <strong class="font-cart">SUMMARY</strong>
+                        </div>
+
+                        <table class="table table-sm table-bordered">
+                            <tr>
+                                <td class="font-cart cart-sm"> BKP </td>
+                                <td class="text-end font-cart cart-sm text-primary">{{summary.bkp | number}}</td>
+                            </tr>
+                            <tr>
+                                <td class="font-cart cart-sm"> PPN </td>
+                                <td class="text-end font-cart cart-sm text-primary">{{summary.ppn | number}}</td>
+                            </tr>
+                            <tr>
+                                <td class="font-cart cart-sm"> DPP </td>
+                                <td class="text-end font-cart cart-sm text-primary">{{summary.dpp | number}}</td>
+                            </tr>
+                            <tr>
+                                <td class="font-cart cart-sm"> NON BKP </td>
+                                <td class="text-end font-cart cart-sm text-primary">{{summary.nonBkp | number}}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="mb-2">
+                        <div class="mb-1">
+                            <strong class="font-cart">PAYMENT METHOD</strong>
+                        </div>
+                        <table class="table table-sm table-bordered">
+                            <tr *ngFor="let x of paymentMethod">
+                                <td class="font-cart cart-sm"> {{x.label}}</td>
+                                <td class="text-end font-cart cart-sm text-primary">{{x.amount | number}}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="mb-2">
+                        <div class="mb-1">
+                            <strong class="font-cart">BALANCE</strong>
+                        </div>
+
+                        <table class="table table-sm table-bordered" *ngFor="let x of balance">
+                            <tr>
+                                <td class="font-cart cart-sm"> PEMBAYARAN CASH </td>
+                                <td class="text-end font-cart cart-sm text-primary">{{x.caseIn | number}}</td>
+                            </tr>
+                            <tr>
+                                <td class="font-cart cart-sm"> KEMBALI </td>
+                                <td class="text-end font-cart cart-sm text-primary">{{x.caseOut | number}}</td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="transactionId">
+                <div class="border p-2 bg-white">
+                    <div class="mb-2">
+                        <div class="mb-1"> 
+                            <div class="font-cart cart-sm">
+                                BILL : {{transactionId}}
+                            </div>
+                            <div class="font-cart cart-sm">
+                                DATE : {{transactionDate | date:'medium'}}
+                            </div>
+                        </div>
+                        <strong class="font-cart">SUMMARY</strong>
+                        <table class="table table-bordered">
+
+                            <tr>
+                                <td class="font-cart cart-sm">SUBTOTAL</td>
+                                <td class="text-end font-cart cart-sm text-primary"> {{summary.total | number}} </td>
+                            </tr>
+                            <tr>
+                                <td class="font-cart cart-sm">DISCOUNT</td>
+                                <td class="text-end font-cart cart-sm text-primary"> {{summary.discount | number}} </td>
+                            </tr>
+                            <tr>
+                                <td class="font-cart cart-sm">DISCOUNT MEMBER</td>
+                                <td class="text-end font-cart cart-sm text-primary"> {{summary.discountMember | number}} </td>
+                            </tr>
+                            <tr>
+                                <td class="font-cart cart-sm">VOUCHER</td>
+                                <td class="text-end font-cart cart-sm text-primary"> {{summary.voucher | number}} </td>
+                            </tr>
+                            <tr>
+                                <td class="font-cart cart-sm">TOTAL (SETELAH PAJAK)</td>
+                                <td class="text-end font-cart cart-sm text-primary"> {{summary.final | number}} </td>
+                            </tr>
+                        </table>
+
+                        <b>PAYMENT PAID METHOD </b>
+                        <table class="table table-bordered">
+                            <tr *ngFor="let x of paymentMethod">
+                                <td class="font-cart cart-sm">{{x.label}} </td>
+                                <td class="text-end font-cart cart-sm text-primary">{{x.amount | number}}</td>
+                            </tr>
+                        </table>
+
+                        <b>PAYMENT CASH</b>
+                        <table class="table table-bordered" *ngFor="let x of balance">
+                            <tr>
+                                <td class="font-cart cart-sm">PEMBAYARAN CASH</td>
+                                <td class="text-end font-cart cart-sm text-primary">{{x.caseIn | number}}</td>
+                            </tr>
+                            <tr>
+                                <td class="font-cart cart-sm">KEMBALIAN</td>
+                                <td class="text-end font-cart cart-sm text-primary">{{x.caseOut | number}}</td>
+                            </tr>
+                        </table>
+
+
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" *ngIf="action =='home' || action == ''">
     <div class="row">
         <div class="col-12 my-5 text-center">
-            <h1>WELCOME TO POS</h1>
+            <div>
+                <h1>WELCOME</h1>
+            </div>
+            <img src="./assets/img/4115320.png" width="50%">
             <code>{{kioskUuid}} {{transactionId}}</code>
-
         </div>
     </div>
 </div>

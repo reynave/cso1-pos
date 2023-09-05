@@ -57,13 +57,14 @@ export class PrintingService {
    
     message += "================================================" + "\n";
     items.forEach((el: any) => {
-      message += el['barcode'] + " " + el['shortDesc'] + "\n";
+     let disc =  (el['totalDiscount'] > 0 ? this.stringfix("(DISC " + this.numberFormat(el['totalDiscount']) + "", 14, 'f') + ")" : "");
+
+      message += el['barcode'] + " " + el['shortDesc'] + disc + "\n";
       message +=
-        this.stringfix(el['qty'], 4) + " X " +
-        this.stringfix(this.numberFormat(el['price']), 10, 'f') + " " +
-        (el['totalDiscount'] > 0 ? this.stringfix("(DISC " + this.numberFormat(el['totalDiscount']) + ")", 14, 'f') + ")" : "") + this.stringfix(" ", 14, 'f') +
-        // this.stringfix("(DISC 23,000)", 14) + 
-        this.stringfix(this.numberFormat(el['totalPrice']), 10, 'f') +
+        this.stringfix(el['qty'], 4) + " X " +  
+        this.stringfix(this.numberFormat(el['price']), 10, 'f') + " "  + this.stringfix(" ", 14, 'f') +
+        
+        this.stringfix(this.numberFormat(el['totalPrice']), 15, 'f') +
         "\n";
     });
     message += "================================================" + "\n";

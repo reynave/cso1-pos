@@ -39,4 +39,10 @@ export class PrintingHistoryComponent implements OnInit{
     )
   }
 
+
+  back(){
+    history.back();
+  }
+  
+
 }

@@ -29,6 +29,27 @@ class Printing extends BaseController
         if ($id) {
             $isId = model("Core")->select("endDate", "cso1_transaction", "id='" . $id . "'");
 
+            $items = model("Core")->sql("SELECT t1.*, i.description, i.shortDesc, i.id as 'itemId'
+            FROM (
+                SELECT count(td.itemId) as qty, td.itemId, sum(td.price - td.discount) as 'totalPrice', td.price, td.barcode,
+                sum(td.isSpecialPrice) as 'isSpecialPrice', sum(td.discount) as 'totalDiscount', td.note, td.promotionId
+                from cso1_transaction_detail as td
+                where td.presence = 1 and td.void = 0 and td.transactionId = '$id' and td.isFreeItem = 0
+                group by td.itemId, td.price, td.note , td.barcode, td.promotionId
+            ) as t1
+            JOIN cso1_item as i on i.id = t1.itemId
+            ORDER BY i.description ASC
+            ");
+            $i = 0;
+            foreach ($items as $row) {
+                $items[$i]['promotionDescription'] = model("Core")->select("description", "cso1_promotion", "id = '" . $row['promotionId'] . "'  ");
+                $items[$i]['id'] = (int) model("Core")->select("id", "cso1_transaction_detail", "transactionId = '$id'  and itemId = '" . $row['itemId'] . "' order by inputDate DESC  ");
+
+                $i++;
+            }
+            model("Promo")->orderByID($items);
+
+
             $data = array(
                 "id" => $id,
                 "printable" => $isId ? true : false,
@@ -38,17 +59,7 @@ class Printing extends BaseController
                 left join cso1_payment_type as p on p.id = t.paymentTypeId
                 where t.id= '" . $id . "' ")[0] : [],
 
-                "items" => model("Core")->sql("SELECT t1.*, i.description, i.shortDesc, i.id as 'itemId'
-                FROM (
-                    SELECT count(td.itemId) as qty, td.itemId, sum(td.price - td.discount) as 'totalPrice', td.price, td.barcode,
-                    sum(td.isSpecialPrice) as 'isSpecialPrice', sum(td.discount) as 'totalDiscount', td.note
-                    from cso1_transaction_detail as td
-                    where td.presence = 1 and td.void = 0 and td.transactionId = '$id' and td.isFreeItem = 0
-                    group by td.itemId, td.price, td.note , td.barcode
-                ) as t1
-                JOIN cso1_item as i on i.id = t1.itemId
-                ORDER BY i.description ASC
-                "),
+                "items" => $items,
                 "freeItem" => model("Core")->sql(" SELECT t1.*, i.description, i.shortDesc, i.id as 'itemId'
                     from (
                         select count(td.itemId) as qty, td.itemId, sum(td.isPrintOnBill) as printOnBill

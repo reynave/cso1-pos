@@ -9,7 +9,7 @@ export class Payment {
 
   constructor(
     public paymentMethodId: string,
-    public amount: string,
+    public amount: number,
     public deviceId: string,
     public externalTransId: string,
     public cardId: string,
@@ -30,7 +30,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
   transactionId: string = "";
   paymentMethodDetail: any = [];
   paymentMethod: any = [];
-  payment: any = new Payment("", "", "", "", "");
+  payment: any = new Payment("", 0, "", "", "");
   total: any = {
     bill: 0,
     paid: 0,
@@ -182,5 +182,12 @@ export class PaymentComponent implements OnInit, OnDestroy {
   fnChangeBill() {
     let a = ((this.total.bill - (this.total.paid + this.payment.amount)) < 0 ? (this.total.bill - (this.total.paid + this.payment.amount)) : 0);
     return a < 0 ? a *-1 : a;
+  }
+
+  paymentAdd(val : number){
+    this.payment.amount = this.payment.amount + val;
+  } 
+  paymentAC(){
+    this.payment.amount = 0;
   }
 }

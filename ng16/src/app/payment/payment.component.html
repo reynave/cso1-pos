@@ -16,76 +16,87 @@
 </div>
 
 <div class="container-fluid" *ngIf="close !== true">
-    <div class="row">
+    <div class="row g-2">
         <div class="col-1">
             <app-widget1></app-widget1>
         </div>
         <div class="col-6">
-            <table class="table table-sm">
-                <thead>
-                    <tr>
-                        <th>Qty</th>
-                        <th>Description</th>
-                        <th>Price</th>
-                        <th>Discount</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let x of items">
-                        <td>{{x.qty}}</td>
-                        <td>
-                            <div>{{x.shortDesc}}</div>
-                            <code>{{x.barcode}}</code>
-                        </td>
-                        <td>
-                            {{x.price | number}}
-                        </td>
-                        <td>
-                            {{x.discount | number}}
-                        </td>
-                        <td>
+            <div class="bg-light   p-2 border cart cart-height">
+                <div class="bg-white px-3 py-2 border rounded mb-2 pointer" *ngFor="let x of items">
+
+                    <div class="row g-1 ">
+                        <div class="col-12">
+                            <div>{{x.barcode}} - {{x.description}} </div>
+                            <div *ngIf="x.promotionId !== '0'">*{{x.promotionDescription}}*</div>
+                        </div>
+                        <div class="col-10">
+                            <div>{{x.qty}} x {{x.originPrice | number}}
+                                <span class="me-4" *ngIf="x.discount > 0"> DISC ({{x.discount | number}})</span>
+                            </div>
+                        </div>
+                        <div class="col-2 text-end">
                             {{x.total | number}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <small>Status Paid : {{close}}</small>
+
+            </div>
+        </div>
+
+
+
+        <div class="col-3">
+            <div class="mb-2">
+                <small>Summary</small>
+            </div>
+            <div class="mb-2">
+                <div class="p-2 border bg-white">
+                    <b><small>PAID</small></b>
+                    <div class="row g-1 mb-2" *ngFor="let x of kioskPaid">
+                        <div class="col-7 lh-1">
+                            <small>{{x.label}}</small>
+                        </div>
+                        <div class="col-5 text-end lh-1">
+                           <small> Rp {{x.paid | number}}</small>
+                        </div>
+                    </div>
+                  
+                </div>
+            </div>
+            <div class="mb-2">
+                <div class="mb-1 border bg-warning px-2 py-1 text-end font-cart">
+                    <small>BILL</small>
+                    <h5>Rp {{total.bill | number}}</h5>
+                </div>
+                <div class="mb-1 border bg-success px-2 py-1 text-end font-cart">
+                    <small> PAID</small>
+                    <h5>{{total.paid | number}}</h5>
+                </div>
+                <div class="mb-1 border bg-danger px-2 py-1 text-end font-cart">
+                    <small> REMAINING</small>
+                    <h5>{{total.bill - (total.paid) | number}}</h5>
+                </div>
+
+            </div>
         </div>
 
         <div class="col-2">
+            <div class="mb-2">
+                <small>Select Payment Method</small>
+            </div>
             <div class="d-grid mb-1" *ngFor="let x of paymentMethod">
-                <button type="button" class="btn btn-lg rounded-0 btn-warning"
+                <button type="button" class="btn btn-lg rounded-0 btn-secondary"
                     (click)="open(contentPaymentMethod, x)">{{x.label}}</button>
+            </div> 
+            <div class="d-grid mb-1">
+                <button type="button" class="btn btn-lg rounded-0 btn-success" disabled>Voucher</button>
             </div>
         </div>
-        <div class="col-3">
-            <div class="mb-3">
-                <strong>PAID</strong>
-                <table class="table table-sm table-bordered">
-                    <tr *ngFor="let x of kioskPaid">
-                        <td> {{x.paymentTypeId}}</td>
-                        <td class="text-end">Rp {{x.paid | number}}</td> 
-                    </tr>
-                </table>
-            </div>
-            <div class="mb-3">
-                <div class="mb-3">
-                    Bill :
-                    <h4> {{total.bill | number}}</h4>
-                </div>
-                <div class="mb-3">
-                    PAID :
-                    <h4>{{total.paid | number}}</h4>
-                </div>
-                <div class="mb-3 text-danger">
-                    REMAINING:
-                    <h4>{{total.bill - (total.paid) | number}}</h4>
-                </div>
-                <div class="mb-3">
-                    <small>close : {{close}}</small>
-                </div>
-            </div>
-        </div>
+
     </div>
 </div>
 
@@ -96,32 +107,56 @@
             <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
         </div>
         <div class="modal-body">
-            {{paymentMethodDetail |json}}
-
+           
+ 
             <div class="mb-3">
-                <h4>BILL <small>Tagihan</small> : {{total.bill | number}}</h4>
-                <h4>PAID <small>sudah terbayar</small>: {{total.paid | number}}</h4>
-                <h4>REMAINING <small>Harus dilunasi</small>:
-                    {{ ((total.bill - (total.paid +payment.amount) ) > 0 ? (total.bill - (total.paid +payment.amount) )
-                    : 0 )| number}}
-                </h4>
-                <h4>CHANGE <small>kembalian</small>:
-                    {{ fnChangeBill() | number}}
-                </h4>
+                <div class="row g-1">
+                    <div class="col">
+                        <div class="border p-2 font-cart bg-warning text-end">
+                            <small>BILL</small>
+                            <h4>{{total.bill | number}}</h4>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="border  p-2 font-cart bg-success text-end">
+                            <small>PAID</small>
+                            <h4>{{total.paid | number}}</h4>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="border p-2 font-cart bg-danger text-end">
+                            <small>REMAINING</small>
+                            <h4>  {{ ((total.bill - (total.paid +payment.amount) ) > 0 ? (total.bill - (total.paid +payment.amount) )
+                                : 0 )| number}}</h4>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="border p-2 font-cart bg-light text-end">
+                            <small>CHANGE</small>
+                            <h4>{{ fnChangeBill() | number}}</h4>
+                        </div>
+                    </div>
+                </div>
+
+                 
             </div>
             <div class="mb-3">
                 <label for="amount">Amount <span [hidden]="amount.valid || amount.pristine"
                         class="text-danger">*</span></label>
                 <input type="number" autofocus class="form-control" id="amount" required [(ngModel)]="payment.amount"
                     name="amount" #amount="ngModel">
-
-                <div>
-                    <a class="mx-1" (click)="payment.amount = 20000">20.000</a>
-                    <a class="mx-1" (click)="payment.amount = 50000">50.000</a>
-                    <a class="mx-1" (click)="payment.amount = 100000">100.000</a>
+       
+                <div class="my-3"> 
+                    <a class="me-1 btn  btn-lg btn-success" (click)="paymentAdd(5000)">Rp 5.000</a>
+                    <a class="me-1 btn  btn-lg btn-success" (click)="paymentAdd(10000)">Rp 10.000</a>
+                    <a class="me-1 btn  btn-lg btn-success" (click)="paymentAdd(20000)">Rp 20.000</a>
+                    <a class="me-1 btn  btn-lg btn-success" (click)="paymentAdd(50000)">Rp 50.000</a>
+                    <a class="me-1 btn  btn-lg btn-success" (click)="paymentAdd(100000)">Rp 100.000</a>
+                    <a class="  btn  btn-lg btn-warning" (click)="paymentAC()">AC</a>
+                    
                 </div>
             </div>
-            <div class="mb-3">
+            <div class="mb-3" [hidden]="paymentMethodDetail.paymentTypeId == 'CASH'">
                 <label>Card Id </label>
                 <input type="text" class="form-control" id="cardId" [(ngModel)]="payment.cardId" name="cardId"
                     #cardId="ngModel">

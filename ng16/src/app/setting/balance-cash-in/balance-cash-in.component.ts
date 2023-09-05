@@ -64,4 +64,7 @@ export class BalanceCashInComponent implements OnInit {
     }
   }
 
+  back(){
+    history.back();
+  }
 }

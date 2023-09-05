@@ -1,120 +1,130 @@
 <app-header [item]="kioskUuid+(supervisorMode ? ' - SUPERVISOR MODE ':'')"></app-header>
 
 <div class="container-fluid">
-    <div class="row g-1">
+    <div class="row g-2">
         <div class="col-1">
             <app-widget1></app-widget1>
         </div>
 
-        <div class="col-9">
-            <div class="row g-1" *ngIf="ilock != 1">
+        <div class="col-7">
+            <div *ngIf="ilock != 1">
+                <div class="mb-1">
+                    <input type="text" class="form-control form-control-lg text-end px-4 font-cart"
+                        placeholder="Input Barcode" [(ngModel)]="barcode" autofocus #formRow (change)="addToCart();"
+                        (keyup.enter)="formRow.blur()">
+                </div> 
+                <div class="bg-light   p-2 border cart cart-height " #chatContainer > 
+                    <div class="bg-white px-3 py-2 border rounded mb-2 pointer" (click)="selectItem(x);"
+                        *ngFor="let x of items"
+                        [ngClass]="{'active-cart': x.id == activeCart.id && x.price == activeCart.price}">
 
-                <div class="col-9">
-                    <div class="border">
-
-                        <div class="alert alert-warning text-center" *ngIf="alert">
-                            {{newItem.description}} {{newItem.barcode}}
-                        </div>
-
-                        <div class="p-2 mb-2">
-                            <input type="text" class="form-control form-control-lg" [(ngModel)]="barcode" autofocus
-                                #formRow (change)="addToCart();" (keyup.enter)="formRow.blur()">
-                        </div>
-
-                        <div>
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>QTY</th>
-                                        <th>DESCRIPTION</th>
-                                        <th>DISC</th>
-                                        <th>PRICE</th>
-                                       
-                                        <th>TOTAL</th>
-                                        <th></th>
-                                        <th *ngIf="supervisorMode == true"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let x of items">
-                                        <td>{{x.qty}}</td>
-                                        <td>
-                                            <div>
-                                                <b>{{x.shortDesc}} RP {{x.originPrice | number}}</b>
-                                            </div>
-                                            <code>{{x.barcode}}</code>
-                                            <div>{{x.promotionDescription}}</div>
-
-                                        </td>
-                                        <td>({{x.discount | number}})</td>
-                                        <td>{{x.price | number}}</td>
-                                      
-                                        <td>{{x.total | number}}</td>
-                                        <td>
-                                            <button type="text" class="btn btn-warning"
-                                                (click)="open(contentAddQty,x)">Add Qty</button>
-                                        </td>
-                                        <td *ngIf="supervisorMode == true">
-                                            <button type="text" class="btn btn-danger"
-                                                (click)="openComponent('cartDetail',x)">Edit Qty</button>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr *ngFor="let x of itemsFree">
-                                       <td>itemsFree</td> 
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-3">
-                    <div class="border">
-                        <div class="row g-1">
+                        <div class="row g-1 ">
                             <div class="col-12">
-                                <div class=" d-grid">
-                                    <button type="button" class="btn btn-lg btn-info  rounded-0"
-                                        (click)="openComponent('items')">ADD BY ITEMS</button>
+                                <div>{{x.barcode}} - {{x.description}} </div>
+                                <div *ngIf="x.promotionId !== '0'">*{{x.promotionDescription}}*</div>
+                            </div>
+                            <div class="col-10">
+                                <div>{{x.qty}} x {{x.originPrice | number}}
+                                    <span class="me-4" *ngIf="x.discount > 0"> DISC ({{x.discount | number}})</span>
                                 </div>
                             </div>
-                            <div class="col-6 text-center" *ngFor="let x of func">
-                                <div class="border py-4"> F{{x.id}} </div>
+                            <div class="col-2 text-end">
+                                {{x.total | number}}
                             </div>
-
-
                         </div>
                     </div>
-                </div>
+                    <div>
+                        <!-- <table class="table table-hover">
 
+                            <tbody>
+                                <tr *ngFor="let x of itemsFree">
+                                    <td>itemsFree</td>
+                                </tr>
+                            </tbody>
+                        </table> -->
+                    </div>
+                </div>
             </div>
- 
-            <div class="row" *ngIf="ilock == 1">
-                <div class="col-12 text-center my-5">
+
+            <div *ngIf="ilock == 1">
+
+                <div class="alert text-center alert-warning">
                     <p>
                         Tansaksi sudah ditutup, silakan lajutkan ke pembayaran
                     </p>
-                    <a [routerLink]="[ '/payment' ]" [queryParams]="{kioskUuid:kioskUuid}">payment</a>
+                    <a [routerLink]="[ '/payment' ]" class="btn btn-dark"
+                        [queryParams]="{kioskUuid:kioskUuid}">Payment</a>
                 </div>
+
             </div>
         </div>
 
-        <div class="col-2" *ngIf="ilock != 1">
-            <div class="border mb-1">
-                <div class="d-grid">
-                    <button type="button" (click)="goToPayment()"
-                        class="btn btn-lg btn-primary rounded-0">PAYMENT</button>
+        <div class="col-3">
+            <div class="border p-3 bg-white rounded mb-2">
+                <div class="row ">
+                    <div class="col-7 font-cart">SUB TOTAL:</div>
+                    <div class="col-5 text-end font-cart">{{bill['originPrice'] | number}}</div>
+                </div>
+                <div class="row ">
+                    <div class="col-6 font-cart">DISCOUNT:</div>
+                    <div class="col-6 text-end font-cart">{{bill['discount'] | number}}</div>
+                </div>
+                <div class="row ">
+                    <div class="col-6 font-cart">TOTAL:</div>
+                    <div class="col-6 text-end font-cart"><strong>{{bill['total'] | number}}</strong></div>
                 </div>
             </div>
 
-            <div class="border  mb-1" *ngIf="supervisorMode == true">
-                <div class="d-grid">
-                    <button type="button" (click)="cancelTrans();" class="btn btn-lg btn-danger rounded-0">CANCEL
-                        TRANS</button>
-                </div>
+            <div class="d-grid" *ngIf="ilock != 1">
+                <button type="button" *ngIf="supervisorMode == true" (click)="supervisorMode = false;"
+                    class="btn btn-lg  btn-danger text-center fs-6 mb-2 text-white">
+                    CLOSE SUPERVISOR MODE
+                </button>
+                <button type="button" (click)="openComponent('items')"
+                    class="btn btn-lg btn-info text-center fs-4 mb-2  text-white">
+                    SEARCH ITEMS
+                </button>
+
+                <button type="button" (click)="open(contentAddQty, activeCart)" [disabled]="activeCart.id == null"
+                    class="btn btn-lg btn-warning text-center fs-4 mb-2 text-white">
+                    ADD QTY
+                </button>
+
+                <button type="button" *ngIf="supervisorMode == true" (click)="openComponent('cartDetail',activeCart)"
+                    [disabled]="activeCart.id == null" class="btn btn-lg btn-danger text-center fs-4 mb-2 text-white">
+                    EDIT QTY
+                </button>
+
+                <button type="button" (click)="goToPayment()" class="btn btn-lg btn-dark text-center fs-4  mb-2">
+                    PAYMENT
+                </button>
+
+                <button type="button" *ngIf="supervisorMode == true" (click)="cancelTrans();"
+                    class="btn btn-lg btn-danger text-center fs-4 mb-2 text-white">
+                    CANCEL
+                </button>
+            </div>
+
+            <div class="bg-white p-2">
+                <p>
+                    Demo Version
+                </p>
+                <p>
+                    ID supervisor : 123456789<br>
+                    password : 123213
+                </p>
             </div>
 
         </div>
+
+
+        <div class="col-1" *ngIf="ilock != 1">
+            <div class="border bg-white text-center rounded mb-1" style="padding: 1.78vh 0px; " *ngFor="let x of func">
+                F{{x.id}}
+            </div>
+
+        </div>
+
     </div>
 </div>
 
@@ -150,17 +160,24 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-        <input type="number" class="form-control form-control-lg text-center" maxlength="4" [(ngModel)]="addQty"
-            placeholder="0">
-        <!--  
-        <div class="row g-2 my-3">
-            <div class="col-4 d-grid" *ngFor="let x of listNumber">
-                <button type="button" class="btn btn-lg btn-primary" (click)="fnAddQty(x)">{{x}}</button>
+
+        <div class="mb-2">
+            <div>
+                {{activeCart.barcode}} - {{activeCart.description}}
             </div>
-            <div class="col-4 d-grid">
-                <button type="button" class="btn btn-lg btn-warning" (click)="onSubmitQty()">ENTER</button>
+            <div *ngIf="activeCart.promotionDescription != null ">
+                *{{activeCart.promotionDescription}}*
             </div>
-        </div> -->
+            <div>
+                Rp {{activeCart.price |number}}
+            </div>
+
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">QTY</span>
+            <input type="number" class="form-control form-control-lg text-center" maxlength="4" [(ngModel)]="addQty"
+                placeholder="0">
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-lg btn-outline-dark mx-2"
@@ -168,3 +185,19 @@
         <button type="button" class="btn btn-lg btn-warning" (click)="onSubmitQty()">ENTER</button>
     </div>
 </ng-template>
+
+
+
+<div class="notif">
+    <div class="content">
+        <ngb-toast *ngIf="alert" [header]="'ADD ITEM'" [autohide]="false" (hidden)="close()">
+            <div class="cart">
+                <div class="mb-2">{{newItem.barcode}} - {{newItem.description}}</div>
+                <div class="row">
+                    <div class="col-6"><strong></strong></div>
+                    <div class="col-6 text-end"> <strong>RP {{newItem.price1 | number}}</strong></div>
+                </div>
+            </div>
+        </ngb-toast>
+    </div>
+</div>

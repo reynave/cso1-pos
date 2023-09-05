@@ -138,7 +138,7 @@ class Payment extends BaseController
                 "input_date" => date("Y-m-d H:i:s"),
                 "update_date" => date("Y-m-d H:i:s"), 
             ]); 
-            $q = model("Core")->sql("SELECT * FROM cso1_kiosk_cart WHERE kioskUuid = '$kioskUuid' ");
+            $q = model("Core")->sql("SELECT * FROM cso1_kiosk_cart WHERE kioskUuid = '$kioskUuid' order by input_date ASC");
             foreach ($q as $row) {
                 $insertDetail = array(
                     "transactionId" => $id,
@@ -156,7 +156,7 @@ class Payment extends BaseController
                     "note" => $row['note'], 
                     "void" => $row['void'],
                     "presence" => 1,
-                    "inputDate" => time(),
+                    "inputDate" => $row['inputDate'],
                     "updateDate" =>  time(),
                     "updateBy" => $row['updateBy'],
                 );
@@ -180,14 +180,14 @@ class Payment extends BaseController
                     "isPrintOnBill" => $row['printOnBill'],
                     "void" => 0,
                     "presence" => $row['scanFree'] == true ? 1 : 2,
-                    "inputDate" => time(),
+                    "inputDate" => $row['inputDate'],
                     "updateDate" =>  time(),
                     "updateBy" => $row['updateBy'],
                 );
                 $this->db->table("cso1_transaction_detail")->insert($insertDetail);
             }
 
-            $q = model("Core")->sql("SELECT * FROM cso1_kiosk_paid_pos WHERE kioskUuid = '$kioskUuid' ");
+            $q = model("Core")->sql("SELECT * FROM cso1_kiosk_paid_pos WHERE kioskUuid = '$kioskUuid' order by id ASC ");
             foreach ($q as $row) { 
                 $insertDetail = array(
                     "transactionId" => $id,

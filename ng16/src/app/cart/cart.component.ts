@@ -17,6 +17,8 @@ export class CartComponent implements OnInit, OnDestroy {
   @ViewChild('formPassword') formPassword: ElementRef | any;
 
   @ViewChild('contentPassword') contentPassword: any;
+  @ViewChild('chatContainer') chatContainer: ElementRef | any;
+
   password: string = "";
   barcode: string = "";
   callServer: any;
@@ -24,8 +26,9 @@ export class CartComponent implements OnInit, OnDestroy {
   kioskUuid: any;
   supervisorMode: boolean = false;
   items: any = [];
-  itemsFree: any = []; 
+  itemsFree: any = [];
   cart: any = [];
+  bill: any = [];
   newItem: any = [];
   alert: boolean = false;
   func: any = [
@@ -42,15 +45,17 @@ export class CartComponent implements OnInit, OnDestroy {
     { id: 11 },
     { id: 12 },
   ]
-  ilock : number = 0;
+  ilock: number = 0;
   addQty: number = 1;
-  item: any = []; 
+  item: any = [];
+  activeCart: any = [];
+
   private _docSub: any;
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
-    private router : Router,
-    private activatedRoute : ActivatedRoute,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
     config: NgbModalConfig,
   ) {
@@ -59,8 +64,8 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.supervisorMode = true;
-    this.newItem = []; 
+    this.supervisorMode = false;
+    this.newItem = [];
     this.kioskUuid = this.activatedRoute.snapshot.queryParams['kioskUuid'];
     this.httpCart();
     this._docSub = this.configService.getMessage().subscribe(
@@ -69,7 +74,7 @@ export class CartComponent implements OnInit, OnDestroy {
       }
     );
   }
-   
+
 
   httpCart() {
     this.sendReload();
@@ -80,22 +85,33 @@ export class CartComponent implements OnInit, OnDestroy {
       }
     }).subscribe(
       data => {
+        console.log(data);
         this.items = data['items'];
         this.ilock = data['ilock'];
         this.itemsFree = data['itemsFree'];
-        
-        if(data['error'] == true){
+        this.bill = data['bill'];
+        if (data['error'] == true) {
           this.router.navigate(['not-found']);
           this.modalService.dismissAll();
         }
         console.log(data);
+        this.scrollToBottom();
       },
       error => {
         console.log(error);
       }
     )
   }
- 
+
+  scrollToBottom() {
+    setTimeout(() => {
+      console.log('scrollToBottom')
+      try {
+        this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+      } catch (err) { }
+    }, 0);
+  }
+
   callHttpServer() {
     this.callServer = setInterval(() => {
       this.rows.nativeElement.focus();
@@ -106,29 +122,31 @@ export class CartComponent implements OnInit, OnDestroy {
     clearInterval(this.callServer);
     this._docSub.unsubscribe();
   }
-  sendReload(){
+  sendReload() {
     const msg = {
       to: 'visitor',
       msg: 'add Item',
-      action : 'cart',
-      kioskUuid : this.kioskUuid
+      action: 'cart',
+      kioskUuid: this.kioskUuid
     }
     this.configService.sendMessage(msg);
     console.log("sendReload");
   }
 
   addToCart() {
+    this.activeCart = [];
     this.alert = false;
     const body = {
       barcode: this.barcode,
       kioskUuid: this.kioskUuid,
       qty: 1,
     }
+
     this.http.post<any>(environment.api + "Cart/addToCart", body, {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        console.log(data); 
+        console.log(data);
         this.newItem = data['item'];
 
         if (data['error'] == false) {
@@ -159,6 +177,8 @@ export class CartComponent implements OnInit, OnDestroy {
           }
         }
 
+
+        setTimeout(() => (this.alert = false), 4000);
       },
       error => {
         this.newItem = {
@@ -186,16 +206,17 @@ export class CartComponent implements OnInit, OnDestroy {
 
   }
 
-  // fnAddQty(number: string) {
 
-  //   this.addQty += number;
-  //   this.checkNumber();
-  // }
+  selectItem(x: any) {
+    console.log(x);
+    this.activeCart = x;
+  }
 
   onSubmitQty() {
     const body = {
       kioskUuid: this.kioskUuid,
       item: this.item,
+      activeCart: this.activeCart,
       addQty: this.addQty
     }
 
@@ -203,11 +224,11 @@ export class CartComponent implements OnInit, OnDestroy {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-       
+
         this.addQty = 0;
         console.log(data);
         this.modalService.dismissAll();
-        
+
         this.httpCart();
       },
       error => {
@@ -217,10 +238,10 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   openComponent(comp: any, item: any = []) {
-
+    console.log(item);
     if (comp == 'items') {
       const modalRef = this.modalService.open(ItemsComponent, { size: 'lg' });
-      modalRef.componentInstance.kioskUuid =  this.kioskUuid; 
+      modalRef.componentInstance.kioskUuid = this.kioskUuid;
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);
         this.httpCart();
@@ -229,7 +250,7 @@ export class CartComponent implements OnInit, OnDestroy {
     if (comp == 'cartDetail') {
       const modalRef = this.modalService.open(CartDetailComponent, { size: 'lg' });
       modalRef.componentInstance.item = item;
-      modalRef.componentInstance.kioskUuid = this.kioskUuid; 
+      modalRef.componentInstance.kioskUuid = this.kioskUuid;
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);
         this.httpCart();
@@ -261,7 +282,7 @@ export class CartComponent implements OnInit, OnDestroy {
           alert("WRONG PASSWORD!");
 
         }
-        this.password = ""; 
+        this.password = "";
 
       },
       error => {
@@ -276,11 +297,11 @@ export class CartComponent implements OnInit, OnDestroy {
       kioskUuid: this.kioskUuid,
     }
     if (confirm("Cancel this transaction ?")) {
- 
+
       this.http.post<any>(environment.api + "Cart/cancelTrans", body, {
         headers: this.configService.headers(),
       }).subscribe(
-        data => { 
+        data => {
           localStorage.removeItem("kioskUuid");
           this.sendReload();
           history.back();
@@ -293,9 +314,9 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
 
-  goToPayment(){
+  goToPayment() {
     const body = {
-      kioskUuid : this.kioskUuid,
+      kioskUuid: this.kioskUuid,
     }
     this.http.post<any>(environment.api + "cart/goToPayment", body, {
       headers: this.configService.headers(),
@@ -304,15 +325,20 @@ export class CartComponent implements OnInit, OnDestroy {
       }
     }).subscribe(
       data => {
-         console.log(data);
-         this.sendReload();
-         this.router.navigate(['payment'], {queryParams:{kioskUuid:this.kioskUuid}});
-         this.modalService.dismissAll();
+        console.log(data);
+        this.sendReload();
+        this.router.navigate(['payment'], { queryParams: { kioskUuid: this.kioskUuid } });
+        this.modalService.dismissAll();
       },
       error => {
         console.log(error);
       }
     )
+  }
+
+  close() {
+    this.alert = false;
+
   }
 
 }

@@ -1,38 +1,46 @@
 <app-header></app-header>
 
 <div class="container">
-    <div class="row mb-3">
-        <div class="col-6">
-            <strong>Add Cashier Balance </strong>
+    <div class="row mb-4">
+        <div class="col-6 ">
+            <div class="d-flex">
+                <div> <a (click)="back();" class="btn  btn-dark  border">Back</a></div>
+                <div class="mx-4">
+                    <h4>Cashier Balance</h4>
+                </div>
+            </div>
         </div>
         <div class="col-6 text-end" *ngIf="items.length <= 0">
-            <input type="number" class="form-control" [(ngModel)]="cashIn" required>
-            <button type="button" class="btn btn-primary" [disabled]="cashIn<0" (click)="onCashIn();">Add Balance</button>
+            <div class="input-group">
+                <input type="number" class="form-control" [(ngModel)]="cashIn" required>
+                <button type="button" class="btn btn-primary" [disabled]="cashIn<0" (click)="onCashIn();">Add
+                    Balance</button>
+            </div>
         </div>
     </div>
     <div class="row">
-        
+
         <div class="col-12">
-            
+
             <table class="table table-bordered">
                 <thead>
-                    <tr> 
+                    <tr>
                         <th>Date</th>
                         <th>cash In</th>
                         <th>cash Out</th>
-                        <th>transactionId</th> 
-                        <th>cashierId</th> 
-                        
+                        <th>transactionId</th>
+                        <th>cashierId</th>
+
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let x of items; let i = index"> 
+                    <tr *ngFor="let x of items; let i = index">
                         <td>{{x.input_date}}</td>
                         <td class="text-end"> {{x.cashIn | number}}</td>
-                        <td class="text-end"> ({{x.cashOut | number}})</td> 
-                        <td><code>{{x.transactionId}}</code></td> 
+                        <td class="text-end"> ({{x.cashOut | number}})</td>
+                        <td><code>{{x.transactionId}}</code></td>
                         <td><code>{{x.cashierId}}</code></td>
-                        
+
                     </tr>
                 </tbody>
             </table>

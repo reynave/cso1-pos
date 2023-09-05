@@ -1,16 +1,29 @@
 <app-header></app-header>
 
-<div class="container my-5">
+<div class="container ">
     <div class="row">
-        <div class="col-12">
-            <a (click)="back();">back</a>
+        <div class="col-12 mb-4">
+            <a (click)="back();" class="btn  btn-dark  border">Back</a>
         </div>
-        <div class="col-12"> 
-            <a class="btn btn-lg btn-primary rounded-0 m-1" [routerLink]="[ '/printing/history' ]">PRINTING HISTORY</a> 
-            <a class="btn btn-lg btn-primary rounded-0 m-1" [routerLink]="[ '/setting/balance/cashIn' ]">BEGINNING BALANCE</a> 
-            <a class="btn btn-lg btn-primary rounded-0 m-1" [routerLink]="[ '/setting/settlement' ]">SETTLEMENT </a> 
-            <button class="btn btn-lg btn-{{isEndOfday ? 'primary':'warning'}} rounded-0 m-1"    (click)="endOfDay()" >END OF DAY </button> 
-            
+    </div>
+    <div class="row g-2">
+        <div class="col d-grid">
+            <button class="btn btn-lg btn-primary rounded-0 " [routerLink]="[ '/parking' ]">PARKING</button>
+        </div>
+        <div class="col d-grid">
+            <button class="btn btn-lg btn-primary rounded-0" [routerLink]="[ '/printing/history' ]">PRINTING HISTORY</button>
+        </div>
+        <div class="col d-grid">
+            <button class="btn btn-lg btn-primary rounded-0" [routerLink]="[ '/setting/balance/cashIn' ]">BEGINNING
+                BALANCE</button>
+        </div>
+        <div class="col d-grid">
+            <button class="btn btn-lg btn-primary rounded-0" [routerLink]="[ '/setting/settlement' ]">SETTLEMENT </button> 
+        </div>
+        <div class="col d-grid">
+            <button class="btn btn-lg btn-{{isEndOfday ? 'primary':'warning'}} rounded-0" (click)="endOfDay()">END
+                OF DAY </button>
+
         </div>
     </div>
 </div>

@@ -68,12 +68,16 @@ export class CartDetailComponent implements OnInit {
         this.items.splice(objIndex, 1);
 
         this.addNewItem('void items');
+        if(this.items.length < 1 ){
+          this.close();
+        }
       },
       error => {
         console.log(error);
       }
     )
   }
+  
   close() {
     this.modalService.dismissAll();
   }
@@ -89,8 +93,7 @@ export class CartDetailComponent implements OnInit {
     }).subscribe(
       data => {
         console.log(data);
-        this.httpGet();
-
+        this.httpGet(); 
         this.addNewItem('update Price items');
       },
       error => {
@@ -110,8 +113,7 @@ export class CartDetailComponent implements OnInit {
     }).subscribe(
       data => {
         console.log(data);
-        this.modalService.dismissAll();
-
+        this.modalService.dismissAll(); 
         this.addNewItem('update Price items');
       },
       error => {

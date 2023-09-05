@@ -23,8 +23,8 @@ class Cart extends BaseController
         $i = 0;
         foreach ($items as $row) {
             $items[$i]['promotionDescription'] = model("Core")->select("description", "cso1_promotion", "id = '" . $row['promotionId'] . "'  ");
-            $items[$i]['id'] = (int)model("Core")->select("id", "cso1_kiosk_cart", "kioskUuid = '$kioskUuid'  and itemId = '" . $row['itemId'] . "' order by input_date DESC  ");
-            
+            $items[$i]['id'] = (int) model("Core")->select("id", "cso1_kiosk_cart", "kioskUuid = '$kioskUuid'  and itemId = '" . $row['itemId'] . "' order by input_date DESC  ");
+
             $i++;
         }
 
@@ -40,11 +40,12 @@ class Cart extends BaseController
         
         WHERE f.kioskUuid = '$kioskUuid'";
         $itemsFree = $this->db->query($q2)->getResultArray();
-        $i =0;
-        foreach($itemsFree as $row){
-            $itemsFree[$i]['freeItem'] = model("Core")->select("description","cso1_item","id = '".$row['freeItemId']."'");     
+        $i = 0;
+        foreach ($itemsFree as $row) {
+            $itemsFree[$i]['freeItem'] = model("Core")->select("description", "cso1_item", "id = '" . $row['freeItemId'] . "'");
             $i++;
-        };
+        }
+        ;
 
         $kioskUuid = model("Core")->select("kioskUuid", "cso1_kiosk_uuid", "kioskUuid = '$kioskUuid' and presence = 1  ");
         $data = array(
@@ -53,6 +54,11 @@ class Cart extends BaseController
             "items" => $kioskUuid ? $items : [],
             "itemsFree" => $itemsFree,
             "ilock" => (int) model("Core")->select("ilock", "cso1_kiosk_uuid", "kioskUuid = '$kioskUuid'  "),
+            "bill" => [
+                "originPrice" => (int) model("Core")->select("sum(originPrice)", "cso1_kiosk_cart", "presence = 1 and void = 0 and kioskUuid = '$kioskUuid'"),
+                "total" => (int) model("Core")->select("sum(price)", "cso1_kiosk_cart", "presence = 1 and void = 0 and kioskUuid = '$kioskUuid'"),
+                "discount" => (int) model("Core")->select("sum(discount)", "cso1_kiosk_cart", "presence = 1 and void = 0 and kioskUuid = '$kioskUuid'"),
+            ]
 
         );
         return $this->response->setJSON($data);
@@ -75,7 +81,10 @@ class Cart extends BaseController
         $isItem = true;
         $item = [];
         $data = [];
+        $freeItem = [];
         $result = "";
+        $qty = 0;
+        $promo = [];
         $post = json_decode(file_get_contents('php://input'), true);
         $data = array(
             "error" => true,
@@ -84,7 +93,7 @@ class Cart extends BaseController
         if ($post) {
             $barcode = str_replace(["'", "\"",], "", $post['barcode']);
 
-            $cashierId = model("Core")->select("id", "cso1_user", "id = '$barcode' AND userAccessId  = 4 ");
+            $cashierId = model("Core")->select("id", "cso1_user", "id = '$barcode' AND userAccessId  = 1 ");
             if ($cashierId != "") {
                 $isItem = false;
                 $result = "SUPERVISOR";
@@ -128,7 +137,8 @@ class Cart extends BaseController
                     "promotionId" => isset($promo['promotionId']) ? $promo['promotionId'] : "",
                     "promotionItemId" => isset($promo['promotionItemId']) ? $promo['promotionItemId'] : "",
                     "discount" => $promo['discount'],
-                    "input_date" => date("Y-m-d H:i:s")
+                    "input_date" => date("Y-m-d H:i:s"),
+                    "inputDate" => time(),
                 ];
                 $this->db->table("cso1_kiosk_cart")->insert($insert);
                 $q1 = "SELECT * FROM cso1_item
@@ -138,26 +148,26 @@ class Cart extends BaseController
 
 
                 //FREE ITEM 
-                $kioskCartId = model("Core")->select("id","cso1_kiosk_cart"," presence = 1 order by input_date DESC ");
-                $freeItem = model("promo")->getFreeItem($itemId);
-                if($freeItem['itemId'] != null){
-                    $insert = array(
-                        "kioskCartId" => $kioskCartId,
-                        "barcode" =>  $barcode,
-                        "kioskUuid" =>  $post['kioskUuid'],
-                        "useBykioskUuidId" => 0,
-                        "promotionFreeId" => $freeItem['id'],
-                        "promotionId" => $freeItem['promotionId'],
-                        "freeItemId" => $freeItem['freeItemId'],
-                        "scanFree" =>  $freeItem['scanFree'],
-                        "printOnBill" => $freeItem['printOnBill'],
-                        "presence" => 1,
-                        "status" => 0,
-                        "inputDate" => time(),
-                        "updateDate" => time(),
-                    );
-                    $this->db->table("cso1_kiosk_cart_free_item")->insert($insert);
-                }
+                // $kioskCartId = model("Core")->select("id", "cso1_kiosk_cart", " presence = 1 order by input_date DESC ");
+                // $freeItem = model("promo")->getFreeItem($itemId);
+                // if ($freeItem['itemId'] != null) {
+                //     $insert = array(
+                //         "kioskCartId" => $kioskCartId,
+                //         "barcode" => $barcode,
+                //         "kioskUuid" => $post['kioskUuid'],
+                //         "useBykioskUuidId" => 0,
+                //         "promotionFreeId" => $freeItem['id'],
+                //         "promotionId" => $freeItem['promotionId'],
+                //         "freeItemId" => $freeItem['freeItemId'],
+                //         "scanFree" => $freeItem['scanFree'],
+                //         "printOnBill" => $freeItem['printOnBill'],
+                //         "presence" => 1,
+                //         "status" => 0,
+                //         "inputDate" => time(),
+                //         "updateDate" => time(),
+                //     );
+                //     $this->db->table("cso1_kiosk_cart_free_item")->insert($insert);
+                // }
 
             }
 
@@ -165,11 +175,10 @@ class Cart extends BaseController
                 "error" => false,
                 "post" => $post,
                 "qty" => $qty,
-                "promo" => $promo,
-                // "cashierId" => $cashierId,
+                "promo" => $promo, 
+                "cashierId" => $cashierId,
                 "freeItem" => $freeItem,
-                "item" => $item,
-                "insert" => $insert,
+                "item" => $item, 
                 "result" => $result,
             );
         }
@@ -192,9 +201,10 @@ class Cart extends BaseController
                     "kioskUuid" => $post['kioskUuid'],
                     "itemId" => $itemid,
                     "barcode" => $post['item']['barcode'],
+                    "price" => $post['activeCart']['price'],
+                    "discount" => $post['activeCart']['discount'],
+                    "promotionId" => $post['activeCart']['promotionId'],
                     "originPrice" => model("Core")->select("price$i", "cso1_item", "id = '$itemid' "),
-                    "price" => model("Core")->select("price$i", "cso1_item", "id = '$itemid' "),
-                    "discount" => 0,
                     "input_date" => date("Y-m-d H:i:s")
                 ]);
             }
@@ -216,7 +226,7 @@ class Cart extends BaseController
             "post" => $post,
         );
         if ($post) {
-            $id = model("Core")->select("id", "cso1_user", "supervisor  = 1 and password = '" . md5($post['password']) . "' and id = '" . $post['barcode'] . "' ");
+            $id = model("Core")->select("id", "cso1_user", "userAccessId  = 1 and password = '" . md5($post['password']) . "' and id = '" . $post['barcode'] . "' ");
 
             $data = array(
                 "error" => false,
@@ -240,10 +250,9 @@ class Cart extends BaseController
             $kioskUuid = $post['kioskUuid'];
             $q1 = "SELECT c.*, i.description, i.shortDesc FROM cso1_kiosk_cart as c 
             left join cso1_item as i on c.itemId = i.id
-            where c.presence = 1 AND c.kioskUuid = '$kioskUuid' AND c.void = 0 AND c.barcode = '" . $post['item']['barcode'] . "'
+            where c.presence = 1 AND c.kioskUuid = '$kioskUuid' AND c.price = '" . $post['item']['price'] . "' AND c.void = 0 AND c.barcode = '" . $post['item']['barcode'] . "'
             ";
             $item = $this->db->query($q1)->getResultArray();
-
             $data = array(
                 "error" => false,
                 "items" => $item,

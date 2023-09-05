@@ -1,9 +1,16 @@
 <app-header></app-header>
 <div class="container">
     <div class="row g-2">
-        <div class="col-12">
-            <h4>Select Parking</h4>
+        <div class="col-12 mb-4">
+            <div class="d-flex">
+                <div> <a (click)="back();" class="btn  btn-dark  border">Back</a></div>
+                <div class="mx-4">
+                    <h4>Select Parking</h4>
+                </div>
+            </div>
         </div>
+        
+
         <div class="col-4" *ngFor="let x of items; let i = index">
             <a [routerLink]="[ '/cart' ]" [queryParams]="{kioskUuid:x.kioskUuid}">
                 <div class="border p-2 text-center alert alert-primary pointer">

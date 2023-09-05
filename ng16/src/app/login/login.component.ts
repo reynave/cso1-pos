@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit, OnDestroy { 
   @ViewChild('formRow') rows: ElementRef | any;
   cashierId : any  =  "";
-  
+  env : any = environment;
 
   constructor(
     private configService: ConfigService,

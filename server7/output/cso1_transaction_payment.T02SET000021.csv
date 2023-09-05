@@ -1,0 +1,2 @@
+id;transactionId;paymentTypeId;amount;rounding;presence;inputDate;updateDate;input_date;update_date
+60;T02.230905.0011;CASH;25300;;1;1693906362;1693906362;"2023-09-05 09:32:42";"2023-09-05 09:32:42"

@@ -1,12 +1,11 @@
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <a href="javascript:;" (click)="back();">Back</a>
-        </div>
-        
-        <div class="col-12">
-            <a [routerLink]="[ '/parking' ]">Parking</a>
-        </div>
-        
-    </div>
+<div class="d-grid">
+
+    <button type="button" class="btn  text-center mb-1 bg-white border py-3 " (click)="back();">
+        Back
+    </button>
+
+    <button type="button" class="btn  text-center mb-1 bg-white border py-3 " [routerLink]="[ '/parking' ]">
+        Parking
+    </button>
+
 </div>

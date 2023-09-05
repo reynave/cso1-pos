@@ -6,13 +6,12 @@
             <app-widget1></app-widget1>
         </div>
 
-        <div class="col-6">
+        <div class="col-5">
             <div class="p-1">
-                Total Copy : {{copy}}
-            </div>
-
-            <div class="border p-1 shadow-sm">
-                <pre>{{outputPrint}}</pre>
+                <small>Total Copy : {{copy}}</small>
+            </div> 
+            <div class="border p-1 bg-white shadow-sm" style="width: 420px; max-height: 85vh; overflow-y: scroll;">
+                <pre>{{outputPrint}}</pre> 
             </div> 
         </div>
 
@@ -24,9 +23,7 @@
                 <button type="button" (click)="home()" class="btn btn-lg btn-dark rounded-0">FINISH</button>
             </div>
         </div>
-        <div class="col-3">
-             
-        </div>
+       
     </div>
 </div>
 

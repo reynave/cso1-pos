@@ -12,14 +12,14 @@ class Settlement extends BaseController
     function index()
     {
         $q1 = "SELECT t.*, u.name  FROM cso1_transaction as t
-        join cso1_user as u on u.id = t.cashierId
+        left join cso1_user as u on u.id = t.cashierId
         where t.presence  = 1 and t.locked = 1 and t.settlementId = '' order by t.inputDate DESC";
         $items = $this->db->query($q1)->getResultArray();
 
         $data = array(
             "error" => false,
             "items" => $items,
-            "total" => (int)model("Core")->select("count(id)","cso1_transaction","presence  = 1 and locked = 1 and settlementId = ''"),
+            "total" => (int) model("Core")->select("count(id)", "cso1_transaction", "presence  = 1 and locked = 1 and settlementId = ''"),
         );
         return $this->response->setJSON($data);
     }
@@ -69,7 +69,7 @@ class Settlement extends BaseController
             $settlementId = $post['terminalId'] . model("Core")->number("settlement");
 
             $q1 = "SELECT t.*, u.name  FROM cso1_transaction as t
-            join cso1_user as u on u.id = t.cashierId
+            left join cso1_user as u on u.id = t.cashierId
             where t.presence  = 1 and t.locked = 1 and t.settlementId = '' order by t.inputDate DESC";
             $items = $this->db->query($q1)->getResultArray();
 
@@ -111,10 +111,14 @@ class Settlement extends BaseController
 
             }
 
+            $filePath4 = false;
             $q = "SELECT *  FROM cso2_balance  
-            where  settlementId = '$settlementId' order by id ASC";
+                where  settlementId = '$settlementId' order by id ASC";
             $data = $this->db->query($q)->getResultArray();
-            $filePath4 = CSVHelper::arrayToCsv($data, 'cso2_balance.' . $settlementId);
+            if (count($data) > 0) {
+                $filePath4 = CSVHelper::arrayToCsv($data, 'cso2_balance.' . $settlementId);
+
+            }
 
             $csv = array(
                 "cso1_transaction" => $filePath1,
@@ -141,8 +145,8 @@ class Settlement extends BaseController
         return $this->response->setJSON($data);
     }
 
-    
- 
+
+
     function testCSV()
     {
         $data = [

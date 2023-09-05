@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <strong class="modal-title" id="modal-basic-title">SUPERVISOR MODE, Cart {{kioskUuid}}</strong>
+    <strong class="modal-title" id="modal-basic-title">SUPERVISOR MODE, CART {{kioskUuid}}</strong>
     <a class="btn-close" (click)="close()"></a>
 </div>
 <div class="modal-body">
@@ -14,7 +14,7 @@
         </div>
         <div class="col">
             <div class="mb-1">Original Price</div>
-            <div class="form-control form-control-lg">{{detail.originPrice}}</div>
+            <div class="form-control form-control-lg">{{detail.originPrice | number}}</div>
         </div>
         <div class="col">
             <div class="mb-1">Price</div>
@@ -28,15 +28,13 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-12">
-            <a href="javascript:;" (click)="fnVoidAllCartItems()"> Delete all items</a> 
-        </div>
+       
         <div class="col-12 mb-3">
             <div class="border p-1 maxHeight">
                 <table class="table table-sm table-hover" *ngIf="loading != true">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>#</th>
                             <th>DESCRIPTION</th>
 
                             <th class="text-end">FINAL PRICE</th>
@@ -45,7 +43,7 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let x of items; let i = index">
-                            <td>{{x.id}}</td>
+                            <td>{{i+1}}</td>
                             <td>{{x.description}}</td>
                             <td class="text-end">{{x.price |number}}</td>
                             <td class="text-center">
@@ -60,6 +58,12 @@
                 </div>
             </div>
         </div>
+
+        
     </div>
 
+</div>
+<div class="modal-footer">
+    <a href="javascript:;" class="btn btn-danger " (click)="fnVoidAllCartItems()"> Delete all items</a> 
+    <a class="btn btn-light border" (click)="close()">CLOSE</a>
 </div>

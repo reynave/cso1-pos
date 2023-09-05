@@ -9,15 +9,23 @@
                 <small>POS Ver {{env.ver}}</small>
                 <h1> Welcome Back</h1>
             </div>
-            <div class="col-4">
+            <div class="col">
                 <a (click)="getKioskUuid();">
                     <img src="./assets/img/2123.jpg" class="border shadow-sm rounded" width="100%">
                     <div class="text-center">
-                       <strong> OPEN CASHIER</strong>
+                       <strong> OPEN NEW CART</strong>
                     </div>
                 </a>
             </div>
-            <div class="col-4">
+            <div class="col" *ngIf="parkingTotal > 0">
+                <a [routerLink]="[ '/parking' ]">
+                    <img src="./assets/img/9000_5_2_07.jpg" class="border shadow-sm rounded" width="100%">
+                    <div class="text-center">
+                        <strong>{{parkingTotal}} PARKING</strong>
+                     </div>
+                </a>
+            </div>
+            <div class="col">
                 <a target="_blank" [routerLink]="[ '/visitor' ]">
                     <img src="./assets/img/6900.jpg" class="border shadow-sm rounded" width="100%">
                     <div class="text-center">
@@ -25,14 +33,7 @@
                      </div>
                 </a>
             </div>
-            <div class="col-4">
-                <a [routerLink]="[ '/parking' ]">
-                    <img src="./assets/img/9000_5_2_07.jpg" class="border shadow-sm rounded" width="100%">
-                    <div class="text-center">
-                        <strong> PARKING</strong>
-                     </div>
-                </a>
-            </div>
+         
         </div>
     </div>
 

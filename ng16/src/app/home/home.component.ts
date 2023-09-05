@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
   parking : any = [];
+  parkingTotal : number = 0;
   env : any = environment;
   constructor(
     private configService: ConfigService,
@@ -29,6 +30,7 @@ export class HomeComponent implements OnInit {
     }).subscribe(
       data => {
         console.log(data); 
+        this.parkingTotal = data['parkingTotal'];
         this.parking = data['items'];
       },
       error => {

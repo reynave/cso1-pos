@@ -1,7 +1,7 @@
 export const environment = {
     production: true,
     ver : 2.2,
-    api : 'http://localhost/app/pos2/public/',
-    server : 'http://localhost:8012/app/cso/cso1-api/',
-    socket_url: 'http://localhost:3000',
+    api : 'http://128.199.94.89/cso1/public/',
+    server : 'http://128.199.94.89/cso1/server7',
+    socket_url: 'http://128.199.94.89:3000',
 };

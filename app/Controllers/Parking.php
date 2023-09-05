@@ -14,6 +14,7 @@ class Parking extends BaseController
         $data = array(
             "error" => false,
             "items" =>  $items,
+            "parkingTotal" => count($items),
         );
        
         return $this->response->setJSON($data);

@@ -10,13 +10,15 @@ class Cart extends BaseController
     {
         $kioskUuid = $this->request->getVar()['kioskUuid'];
 
-        $q1 = "SELECT c.*, i.shortDesc, i.description, c.price
+        $q1 = "SELECT c.barcode, c.itemId, c.qty, c.promotionId , c.total, c.discount, c.originPrice,
+        i.shortDesc, i.description, c.price
         FROM (
-        SELECT k.barcode, k.itemId , COUNT(k.barcode) AS 'qty', k.promotionId, 
-        sum(k.price) AS 'total', sum(k.discount) AS 'discount', k.price, k.originPrice
-        FROM cso1_kiosk_cart AS k 
-        WHERE k.kioskUuid = '$kioskUuid'  AND k.void = 0 and k.presence = 1
-        GROUP BY k.price, k.barcode, k.discount) AS c
+            SELECT k.barcode, k.itemId , COUNT(k.barcode) AS 'qty', k.promotionId, 
+            sum(k.price) AS 'total', sum(k.discount) AS 'discount', k.price, k.originPrice
+            FROM cso1_kiosk_cart AS k 
+            WHERE k.kioskUuid = '$kioskUuid'  AND k.void = 0 and k.presence = 1
+            GROUP BY k.barcode, k.itemId, k.promotionId, k.price, k.originPrice, k.discount
+        ) AS c
         LEFT JOIN cso1_item AS i ON  i.id = c.itemId";
         $items = $this->db->query($q1)->getResultArray();
 

@@ -146,31 +146,31 @@ class Core extends Model
         $bkp  = (int)self::sql("  SELECT  sum(c.price) as 'total'
                 from cso1_kiosk_cart as c
                 join cso1_item as i on i.id = c.itemId
-                join cso1_taxCode as x on x.id = i.itemTaxId
+                join cso1_taxcode as x on x.id = i.itemTaxId
                 where c.presence = 1 and  kioskUuid = '$uuid' and x.percentage > 0 and x.taxType = 1
             ")[0]['total'] + (int)self::sql("  SELECT  sum(c.price*(x.percentage /100) + c.price ) as 'total'
                 from cso1_kiosk_cart as c
                 join cso1_item as i on i.id = c.itemId
-                join cso1_taxCode as x on x.id = i.itemTaxId
+                join cso1_taxcode as x on x.id = i.itemTaxId
                 where c.presence = 1 and  kioskUuid = '$uuid' and x.percentage > 0 and x.taxType = 0
             ")[0]['total'];
         $nonBkp = (int)self::sql("  SELECT   sum(c.price) as 'total'
             from cso1_kiosk_cart as c
             join cso1_item as i on i.id = c.itemId
-            join cso1_taxCode as x on x.id = i.itemTaxId
+            join cso1_taxcode as x on x.id = i.itemTaxId
             where c.presence = 1 and  kioskUuid = '$uuid' and x.percentage = 0")[0]['total'];
 
             
         $ppnExc = (int)self::sql("SELECT sum(((c.price - c.discount) * (t.percentage/100)) ) as 'tax' 
             from cso1_kiosk_cart as c
             join cso1_item as i on c.itemId = i.id
-            left join cso1_taxCode as t on t.id = i.itemTaxId
+            left join cso1_taxcode as t on t.id = i.itemTaxId
             where c.presence = 1 and c.isFreeItem = 0 and c.kioskUuid = '$uuid' and t.taxType = 0 ")[0]['tax'];
             
         $ppnInc = (int)self::sql("SELECT sum(c.price - ((c.price - c.discount) / (t.percentage/100 + 1))) as    'ppnInc' 
             from cso1_kiosk_cart as c
             join cso1_item as i on c.itemId = i.id
-            left join cso1_taxCode as t on t.id = i.itemTaxId
+            left join cso1_taxcode as t on t.id = i.itemTaxId
             where c.presence = 1 and c.isFreeItem = 0 and c.kioskUuid = '$uuid' and t.taxType = 1 ")[0]['ppnInc'];
       
         $summary = array(

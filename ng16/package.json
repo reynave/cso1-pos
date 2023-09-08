@@ -21,6 +21,8 @@
     "@ng-bootstrap/ng-bootstrap": "^15.1.1",
     "@popperjs/core": "^2.11.6",
     "bootstrap": "^5.2.3",
+    "bootstrap-icons": "^1.10.5",
+    "ngx-currency": "^4.0.0",
     "ngx-socket-io": "^4.5.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

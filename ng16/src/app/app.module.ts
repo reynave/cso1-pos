@@ -28,6 +28,7 @@ import { SettlementHistoryComponent } from './setting/settlement-history/settlem
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { VisitorComponent } from './visitor/visitor.component';
 import { ThemesComponent } from './themes/themes.component';
+import { NgxCurrencyDirective , provideEnvironmentNgxCurrency, NgxCurrencyInputMode } from 'ngx-currency';
 
 const config: SocketIoConfig = { url: environment.socket_url, options: { transports: ['websocket'] } };
 @NgModule({
@@ -61,9 +62,25 @@ const config: SocketIoConfig = { url: environment.socket_url, options: { transpo
     FormsModule,
     HttpClientModule,
     NgbModule,
-    SocketIoModule.forRoot(config)
+    SocketIoModule.forRoot(config),
+    NgxCurrencyDirective
   ],
-  providers: [],
+  providers: [
+    provideEnvironmentNgxCurrency({
+      align: "right",
+      allowNegative: true,
+      allowZero: true,
+      decimal: ",",
+      precision: 0,
+      prefix: "",
+      suffix: "",
+      thousands: ".",
+      nullable: true,
+      min: null,
+      max: null,
+      inputMode: NgxCurrencyInputMode.Financial,
+    }),
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

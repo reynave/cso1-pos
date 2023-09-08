@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgxCurrencyDirective } from "ngx-currency";
 
 export class Payment {
 
@@ -19,7 +20,7 @@ export class Payment {
 @Component({
   selector: 'app-payment',
   templateUrl: './payment.component.html',
-  styleUrls: ['./payment.component.css']
+  styleUrls: ['./payment.component.css'],
 })
 export class PaymentComponent implements OnInit, OnDestroy {
   kioskUuid: any;
@@ -127,6 +128,19 @@ export class PaymentComponent implements OnInit, OnDestroy {
   open(content: any, x: any) {
     this.paymentMethodDetail = x;
     this.modalService.open(content, { size: 'lg' });
+  }
+
+  addAmount(val : string){
+    let amount : number = 0;
+    let tempAmount = this.payment.amount.toString();  
+    this.payment.amount = Number.parseInt(tempAmount+val);
+  }
+
+  paymentCutLastOne(){
+    let tempAmount = this.payment.amount.toString().slice(0, -1);  
+    let amount = Number.parseInt(tempAmount);
+
+    this.payment.amount = (Number.isNaN(amount)) ? 0 : amount ;
   }
 
   onSubmitPayment() {

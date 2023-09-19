@@ -24,9 +24,9 @@ export class CartComponent implements OnInit, OnDestroy {
 
   // save by INDEX, bukan ID
   customFunc: any = [
-    1, 2, 3, 4,
-    1, 1, 1, 1,
-    1, 1, 1, 1,
+    1, 2, 4, 3,
+    5, 0, 0, 0,
+    0, 0, 0, 0,
 
   ]; // SAVE LOCALSTORAGE
 
@@ -54,7 +54,7 @@ export class CartComponent implements OnInit, OnDestroy {
   newItem: any = [];
   alert: boolean = false;
   func: MyFunction[] = [
-    { id: 0, value: () => { return false; }, label: 'No action' },
+    { id: 0, value: () => { return false; }, label: 'null' },
     { id: 1, value: () => { this.openComponent('items'); }, label: 'Search Items' },
     {
       id: 2, value: () => {

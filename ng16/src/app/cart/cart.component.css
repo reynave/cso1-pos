@@ -13,3 +13,7 @@
     overflow-y: auto;
     overflow-x: hidden;
 }
+small{
+    font-size: 0.8rem;
+
+}

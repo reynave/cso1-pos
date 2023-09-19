@@ -7,21 +7,24 @@
         </div>
     </div>
     <div class="row g-2">
-        <div class="col d-grid">
-            <button class="btn btn-lg btn-primary rounded-0 " [routerLink]="[ '/parking' ]">PARKING</button>
+        <div class="col-4 d-grid">
+            <button class="btn btn-lg btn-primary rounded-0 py-4 " [routerLink]="[ '/setting/function' ]">FUNCTION</button>
         </div>
-        <div class="col d-grid">
-            <button class="btn btn-lg btn-primary rounded-0" [routerLink]="[ '/printing/history' ]">PRINTING HISTORY</button>
+        <div class="col-4  d-grid">
+            <button class="btn btn-lg btn-primary rounded-0 py-4" [routerLink]="[ '/parking' ]">PARKING</button>
         </div>
-        <div class="col d-grid">
-            <button class="btn btn-lg btn-primary rounded-0" [routerLink]="[ '/setting/balance/cashIn' ]">BEGINNING
+        <div class="col-4  d-grid">
+            <button class="btn btn-lg btn-primary rounded-0 py-4" [routerLink]="[ '/printing/history' ]">PRINTING HISTORY</button>
+        </div>
+        <div class="col-4  d-grid">
+            <button class="btn btn-lg btn-primary rounded-0 py-4" [routerLink]="[ '/setting/balance/cashIn' ]">BEGINNING
                 BALANCE</button>
         </div>
-        <div class="col d-grid">
-            <button class="btn btn-lg btn-primary rounded-0" [routerLink]="[ '/setting/settlement' ]">SETTLEMENT </button> 
+        <div class="col-4  d-grid">
+            <button class="btn btn-lg btn-primary rounded-0 py-4" [routerLink]="[ '/setting/settlement' ]">SETTLEMENT </button> 
         </div>
-        <div class="col d-grid">
-            <button class="btn btn-lg btn-{{isEndOfday ? 'primary':'warning'}} rounded-0" (click)="endOfDay()">END
+        <div class="col-4  d-grid">
+            <button class="btn btn-lg btn-{{isEndOfday ? 'primary':'warning'}} rounded-0 py-4" (click)="endOfDay()">END
                 OF DAY </button>
 
         </div>

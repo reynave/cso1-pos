@@ -18,6 +18,7 @@ import { BalanceCashInComponent } from './setting/balance-cash-in/balance-cash-i
 import { SettlementHistoryComponent } from './setting/settlement-history/settlement-history.component';
 import { VisitorComponent } from './visitor/visitor.component';
 import { ThemesComponent } from './themes/themes.component';
+import { SettingFunctionComponent } from './setting/setting-function/setting-function.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
@@ -38,6 +39,7 @@ const routes: Routes = [
   { path: "setting/settlement", component: SettlementComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "setting/settlement/print", component: SettlementPrintComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "setting/settlement/history", component: SettlementHistoryComponent, data: { active: "" },  canActivate:[authGuard]  }, 
+  { path: "setting/function", component: SettingFunctionComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   
   { path: "setting/balance/cashIn", component: BalanceCashInComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "themes", component: ThemesComponent, data: { active: "" }  }, 

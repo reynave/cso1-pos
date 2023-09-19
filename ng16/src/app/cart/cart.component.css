@@ -7,3 +7,9 @@
     background-color: #FFFFDD !important;
     border: 1px solid #000 !important;
 }
+
+.maxHeightWidget{
+    height: 80vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

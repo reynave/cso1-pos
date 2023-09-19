@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConfigService } from '../service/config.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -6,6 +6,7 @@ import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ItemsComponent } from '../items/items.component';
 import { CartDetailComponent } from './cart-detail/cart-detail.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MyFunction } from './functions';
 
 @Component({
   selector: 'app-cart',
@@ -19,6 +20,27 @@ export class CartComponent implements OnInit, OnDestroy {
   @ViewChild('contentPassword') contentPassword: any;
   @ViewChild('chatContainer') chatContainer: ElementRef | any;
 
+  @ViewChild('contentAddQty') contentAddQty: any;
+
+  // save by INDEX, bukan ID
+  customFunc: any = [
+    1, 2, 3, 4,
+    1, 1, 1, 1,
+    1, 1, 1, 1,
+
+  ]; // SAVE LOCALSTORAGE
+
+  @HostListener('document:keypress', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    this.key = event.key;
+    console.log(event);
+
+    // BISA DI DALAM Loop!
+    if (event.charCode == 70) {
+      this.callFunction(1);
+    }
+  }
+  key: any;
   password: string = "";
   barcode: string = "";
   callServer: any;
@@ -31,20 +53,42 @@ export class CartComponent implements OnInit, OnDestroy {
   bill: any = [];
   newItem: any = [];
   alert: boolean = false;
-  func: any = [
-    { id: 1 },
-    { id: 2 },
-    { id: 3 },
-    { id: 4 },
-    { id: 5 },
-    { id: 6 },
-    { id: 7 },
-    { id: 8 },
-    { id: 9 },
-    { id: 10 },
-    { id: 11 },
-    { id: 12 },
-  ]
+  func: MyFunction[] = [
+    { id: 0, value: () => { return false; }, label: 'No action' },
+    { id: 1, value: () => { this.openComponent('items'); }, label: 'Search Items' },
+    {
+      id: 2, value: () => {
+        if (this.activeCart['barcode'] !== undefined) {
+          this.open(this.contentAddQty, this.activeCart)
+        } else {
+          this.newItem = {
+            barcode: '',
+            description: "ITEM BELUM DIPILIH",
+          }
+          this.alert = true;
+          setTimeout(() => (this.alert = false), 2000);
+        }
+      }, label: 'Add Qty'
+    },
+    { id: 3, value: () => { this.goToPayment(); }, label: 'Payment' },
+    {
+      id: 4, value: () => {
+        if (this.activeCart['barcode'] !== undefined) {
+          this.openComponent('cartDetail', this.activeCart)
+        } else {
+          this.newItem = {
+            barcode: '',
+            description: "ITEM BELUM DIPILIH",
+          }
+          this.alert = true;
+          setTimeout(() => (this.alert = false), 2000);
+        }
+      }, label: 'Edit Qty'
+    },
+    { id: 5, value: () => { this.cancelTrans(); }, label: 'Cancel Trans' },
+    { id: 12, value: () => { this.supervisorMode = false; }, label: 'Close Admin' },
+
+  ];
   ilock: number = 0;
   addQty: number = 1;
   item: any = [];
@@ -64,6 +108,11 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.setFunctionSaved();
+
+
+
+
     this.supervisorMode = false;
     this.newItem = [];
     this.kioskUuid = this.activatedRoute.snapshot.queryParams['kioskUuid'];
@@ -75,6 +124,29 @@ export class CartComponent implements OnInit, OnDestroy {
     );
   }
 
+  setFunctionSaved() {
+    const storedDataString = localStorage.getItem("function.pos");
+
+    if (storedDataString) {
+      const storedData = JSON.parse(storedDataString);
+      this.customFunc = storedData;
+    } else {
+      console.log("Data tidak ditemukan di localStorage.");
+    }
+  }
+
+  callFunction(id: number) {
+
+    const item = this.func.find((x: { id: number; }) => x.id === id);
+    console.log(id, item)
+    if (item && item.value && typeof item.value === 'function') {
+      item.value(); // Panggil fungsi
+    }
+  }
+  callLabel(id: number) {
+    const index = this.func.findIndex((item: { id: number }) => item.id === id);
+    return this.func[index].label;
+  }
 
   httpCart() {
     this.sendReload();
@@ -122,6 +194,7 @@ export class CartComponent implements OnInit, OnDestroy {
     clearInterval(this.callServer);
     this._docSub.unsubscribe();
   }
+
   sendReload() {
     const msg = {
       to: 'visitor',
@@ -239,6 +312,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   openComponent(comp: any, item: any = []) {
     console.log(item);
+
     if (comp == 'items') {
       const modalRef = this.modalService.open(ItemsComponent, { size: 'lg' });
       modalRef.componentInstance.kioskUuid = this.kioskUuid;
@@ -247,6 +321,7 @@ export class CartComponent implements OnInit, OnDestroy {
         this.httpCart();
       });
     }
+
     if (comp == 'cartDetail') {
       const modalRef = this.modalService.open(CartDetailComponent, { size: 'lg' });
       modalRef.componentInstance.item = item;

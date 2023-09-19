@@ -29,6 +29,7 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { VisitorComponent } from './visitor/visitor.component';
 import { ThemesComponent } from './themes/themes.component';
 import { NgxCurrencyDirective , provideEnvironmentNgxCurrency, NgxCurrencyInputMode } from 'ngx-currency';
+import { SettingFunctionComponent } from './setting/setting-function/setting-function.component';
 
 const config: SocketIoConfig = { url: environment.socket_url, options: { transports: ['websocket'] } };
 @NgModule({
@@ -54,7 +55,8 @@ const config: SocketIoConfig = { url: environment.socket_url, options: { transpo
     BalanceCashInComponent,
     SettlementHistoryComponent,
     VisitorComponent,
-    ThemesComponent
+    ThemesComponent,
+    SettingFunctionComponent
   ],
   imports: [
     BrowserModule,

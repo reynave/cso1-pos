@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfigService } from '../service/config.service';
 import { environment } from 'src/environments/environment';
@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './items.component.html',
   styleUrls: ['./items.component.css']
 })
-export class ItemsComponent {
+export class ItemsComponent implements OnInit {
   @Input() kioskUuid : any;
   @Output() newItemEvent = new EventEmitter<string>();
   search : string = "";
@@ -22,6 +22,13 @@ export class ItemsComponent {
     public configService : ConfigService,
     public http : HttpClient
   ) {}
+  ngOnInit(): void {
+    setTimeout(()=>{
+      this.search = "";
+    },100); 
+  }
+
+  
 
   addNewItem(value: string) {
     this.newItemEvent.emit(value);

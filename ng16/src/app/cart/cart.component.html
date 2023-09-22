@@ -17,12 +17,12 @@
                         <!-- (click)="open(contentAddQty, activeCart)" -->
                         <div class="row g-1 ">
                             <div class="col-12">
-                                <div>{{x.barcode}} - {{x.description}} </div>
-                                <div *ngIf="x.promotionId !== '0'">*{{x.promotionDescription}}*</div>
+                                <div>{{x.barcode}} - {{x.description}}      <span>{{x.note}}</span> </div>
+                                <div *ngIf="x.promotionId !== '0'">*{{x.promotionDescription}}*</div> 
                             </div>
                             <div class="col-10">
-                                <div>{{x.qty}} x {{x.originPrice | number}}
-                                    <span class="me-4" *ngIf="x.discount > 0"> DISC ({{x.discount | number}})</span>
+                                <div>{{x.qty}} x {{x.price | number}}
+                                    <span class="me-4" *ngIf="x.discount > 0"> DISC ({{x.discount | number}})</span> 
                                 </div>
                             </div>
                             <div class="col-2 text-end">

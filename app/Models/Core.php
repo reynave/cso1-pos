@@ -135,44 +135,44 @@ class Core extends Model
 
     function summary($uuid = "")
     {
-        $memberId =  self::select("memberId", "cso1_kiosk_uuid", "presence = 1 AND status = 1  AND kioskUuid = '" . $uuid . "'");
+        $memberId = self::select("memberId", "cso1_kiosk_uuid", "presence = 1 AND status = 1  AND kioskUuid = '" . $uuid . "'");
 
         $discountMember = 0;
-        if ((int)$memberId > 0) {
-            $discountMember = (int)self::sql("SELECT sum(discountAmount) as 'discountAmount', 
+        if ((int) $memberId > 0) {
+            $discountMember = (int) self::sql("SELECT sum(discountAmount) as 'discountAmount', 
         sum(discountPercent) as 'discountPercent'
         from cso1_promotion where presence =1 and status =  1 and startDate >= " . time() . "  and endDate <= " . time())[0]['discountAmount'];
         }
-        $bkp  = (int)self::sql("  SELECT  sum(c.price) as 'total'
+        $bkp = (int) self::sql("  SELECT  sum(c.price) as 'total'
                 from cso1_kiosk_cart as c
                 join cso1_item as i on i.id = c.itemId
                 join cso1_taxcode as x on x.id = i.itemTaxId
                 where c.presence = 1 and  kioskUuid = '$uuid' and x.percentage > 0 and x.taxType = 1
-            ")[0]['total'] + (int)self::sql("  SELECT  sum(c.price*(x.percentage /100) + c.price ) as 'total'
+            ")[0]['total'] + (int) self::sql("  SELECT  sum(c.price*(x.percentage /100) + c.price ) as 'total'
                 from cso1_kiosk_cart as c
                 join cso1_item as i on i.id = c.itemId
                 join cso1_taxcode as x on x.id = i.itemTaxId
                 where c.presence = 1 and  kioskUuid = '$uuid' and x.percentage > 0 and x.taxType = 0
             ")[0]['total'];
-        $nonBkp = (int)self::sql("  SELECT   sum(c.price) as 'total'
+        $nonBkp = (int) self::sql("  SELECT   sum(c.price) as 'total'
             from cso1_kiosk_cart as c
             join cso1_item as i on i.id = c.itemId
             join cso1_taxcode as x on x.id = i.itemTaxId
             where c.presence = 1 and  kioskUuid = '$uuid' and x.percentage = 0")[0]['total'];
 
-            
-        $ppnExc = (int)self::sql("SELECT sum(((c.price - c.discount) * (t.percentage/100)) ) as 'tax' 
+
+        $ppnExc = (int) self::sql("SELECT sum(((c.price - c.discount) * (t.percentage/100)) ) as 'tax' 
             from cso1_kiosk_cart as c
             join cso1_item as i on c.itemId = i.id
             left join cso1_taxcode as t on t.id = i.itemTaxId
             where c.presence = 1 and c.isFreeItem = 0 and c.kioskUuid = '$uuid' and t.taxType = 0 ")[0]['tax'];
-            
-        $ppnInc = (int)self::sql("SELECT sum(c.price - ((c.price - c.discount) / (t.percentage/100 + 1))) as    'ppnInc' 
+
+        $ppnInc = (int) self::sql("SELECT sum(c.price - ((c.price - c.discount) / (t.percentage/100 + 1))) as    'ppnInc' 
             from cso1_kiosk_cart as c
             join cso1_item as i on c.itemId = i.id
             left join cso1_taxcode as t on t.id = i.itemTaxId
             where c.presence = 1 and c.isFreeItem = 0 and c.kioskUuid = '$uuid' and t.taxType = 1 ")[0]['ppnInc'];
-      
+
         $summary = array(
             "total" => self::sql("SELECT sum(k.price) as 'subTotal'
                     FROM cso1_kiosk_cart as k
@@ -180,23 +180,71 @@ class Core extends Model
             "discount" => self::sql("SELECT sum(k.discount) as 'discount'
                     FROM cso1_kiosk_cart as k
                     where k.presence = 1 and k.kioskUuid = '$uuid' ")[0]['discount'],
-            "memberDiscount" =>   $discountMember, 
+            "memberDiscount" => $discountMember,
             "voucer" => 0,
 
             // Barang Kena Pajak 
             "bkp" => $bkp - ($ppnExc + $ppnInc),
-            "dpp" => $bkp+$nonBkp, 
+            "dpp" => $bkp + $nonBkp,
 
             //harga sebelum ppn + (harga sebelum ppn x 0.11) = 100.000
-            "ppn" => $ppnInc+ $ppnExc,
+            "ppn" => $ppnInc + $ppnExc,
 
             "nonBkp" => $nonBkp,
             "final" => 0,
 
         );
 
-        $summary['final'] = $summary['total']  - $summary['discount'] -  $summary['memberDiscount'] ;
+        $summary['final'] = $summary['total'] - $summary['discount'] - $summary['memberDiscount'];
         return $summary;
+    }
+    function barcode($code)
+    {
+        $barcode = str_split($code);
+        if (count($barcode) >= 13) {  
+            $digitPrefixPosition = (int) self::select("value", "cso1_account", "id=51");
+            $digitItem = (int) self::select("value", "cso1_account", "id=52");
+            $digitWeight = (int) self::select("value", "cso1_account", "id=53");
+            $digitFloat = (int) self::select("value", "cso1_account", "id=54");
+
+            $item = "";
+
+            $prefix = $barcode[$digitPrefixPosition - 1];
+            for ($i = 1; $i <= $digitItem; $i++) {
+                $item .= $barcode[$i];
+            }
+            $weight = "";
+            for ($i = $digitItem + 1; $i <= $digitItem + $digitWeight; $i++) {
+                $weight .= $barcode[$i];
+            }
+            $pow = 10;
+            for ($i = 1; $i < +$digitFloat; $i++) {
+                $pow = 10 * $pow;
+            }
+            $weight = (float) $weight / $pow;
+
+            $checkDigit = !isset($barcode[$digitPrefixPosition + $digitItem + $digitWeight]) ? 0 : $barcode[$digitPrefixPosition + $digitItem + $digitWeight];
+
+
+            $array = array(
+                "barcode" => $code,
+                // "raw" =>    $barcode,
+                "config" => array(
+                    "digitPrefixPosition" => $digitPrefixPosition,
+                    "digitItem" => $digitItem,
+                    "digitWeight" => $digitWeight,
+                    "digitFloat" => $digitFloat,
+                ),
+                "prefix" => $prefix,
+                "itemId" => $prefix == 2 ? $item : $code,
+                "weight" => $weight,
+                "checkDigit" => $checkDigit,
+            );
+            return $array;
+        } else {
+            return $code;
+        }
+
     }
 
 }

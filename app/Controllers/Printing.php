@@ -110,9 +110,9 @@ class Printing extends BaseController
                 ),
                 "copy" => (int) model("Core")->sql(" select count(id) as 'copy' from cso1_transaction_printlog where transactionId ='$id'")[0]['copy'],
 
-            );
-
-
+            ); 
+            
+            $data['promo_fixed'] =  model("Promo")->promo_fixed($data['summary']['total']);
         }
         return $this->response->setJSON($data);
     }

@@ -44,7 +44,14 @@ class Payment extends BaseController
             "close" => $bill - $paid <= 0 ? true : false,
             "kioskPaid" => $kioskPaid,
         );
-
+        $data["promoFixed"] = [
+            "freeParking" =>  model("Promo")->freeParking( $data['total']['bill']),
+            "voucher" =>   model("Promo")->voucher( $data['total']['bill']),
+            "voucherDiscount" =>  model("Promo")->voucherDiscount( $data['total']['bill']),
+            "luckyDip" =>  model("Promo")->luckyDip( $data['total']['bill']),
+            
+            
+       ];
         return $this->response->setJSON($data);
     }
 

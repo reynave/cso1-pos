@@ -18,10 +18,8 @@
 
 <div class="container-fluid" *ngIf="close !== true">
     <div class="row g-2">
-        <div class="col-1">
-            <app-widget1></app-widget1>
-        </div>
-        <div class="col-6">
+
+        <div class="col-8">
             <div class="bg-light   p-2 border cart cart-height">
                 <div class="bg-white px-3 py-2 border rounded mb-2 pointer" *ngFor="let x of items">
 
@@ -40,6 +38,31 @@
                         </div>
                     </div>
                 </div>
+                <div class=" m-2">
+                    <div *ngFor="let item of promo_fixed" class="mb-1">
+                        {{ item['detail']['description'] }}
+                    </div>
+                </div>
+                <hr>
+                <div *ngIf="kioskPaid.length > 0">
+                    <div class="mb-2">
+                        <b>PAID</b>
+                    </div>
+                    <div class="mb-2">
+                        <div class="p-2 border bg-white">
+
+                            <div class="row g-1 mb-2" *ngFor="let x of kioskPaid">
+                                <div class="col-7 lh-1">
+                                    <small>{{x.label}}</small>
+                                </div>
+                                <div class="col-5 text-end lh-1">
+                                    <small> Rp {{x.paid | number}}</small>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div>
@@ -50,24 +73,8 @@
 
 
 
-        <div class="col-3">
-            <div class="mb-2">
-                <small>Summary</small>
-            </div>
-            <div class="mb-2">
-                <div class="p-2 border bg-white">
-                    <b><small>PAID</small></b>
-                    <div class="row g-1 mb-2" *ngFor="let x of kioskPaid">
-                        <div class="col-7 lh-1">
-                            <small>{{x.label}}</small>
-                        </div>
-                        <div class="col-5 text-end lh-1">
-                            <small> Rp {{x.paid | number}}</small>
-                        </div>
-                    </div>
+        <div class="col-2">
 
-                </div>
-            </div>
             <div class="mb-2">
                 <div class="mb-1 border bg-warning px-2 py-1 text-end font-cart">
                     <small>BILL</small>
@@ -85,8 +92,8 @@
             </div>
         </div>
 
-        <div class="col-2"> 
-            
+        <div class="col-2">
+
             <div class="mb-2">
                 <small>Select Payment Method</small>
             </div>
@@ -106,7 +113,7 @@
     <form (ngSubmit)="onSubmitPayment()" #heroForm="ngForm">
         <div class="modal-header">
             <strong class="modal-title" id="modal-basic-title">{{paymentMethodDetail.label}}</strong>
-            <button type="button" class="btn btn-warning"  (click)="modal.dismiss('Cross click')">CANCEL</button>
+            <button type="button" class="btn btn-warning" (click)="modal.dismiss('Cross click')">CANCEL</button>
         </div>
         <div class="modal-body">
 
@@ -143,14 +150,14 @@
 
 
             </div>
- 
+
             <div class="row">
                 <div class="col-7">
                     <label for="amount">Amount <span [hidden]="amount.valid || amount.pristine"
                             class="text-danger">*</span></label>
-                    <input type="text" autofocus class="form-control form-control-lg text-end fs-1" id="amount"
-                        required [(ngModel)]="payment.amount" name="amount" currencyMask  #amount="ngModel">
-                    
+                    <input type="text" autofocus class="form-control form-control-lg text-end fs-1" id="amount" required
+                        [(ngModel)]="payment.amount" name="amount" currencyMask #amount="ngModel">
+
                     <div class="my-2">
                         <div class="row g-1 ">
                             <div class="col d-grid">
@@ -187,14 +194,17 @@
                         </div>
                         <div class="row g-1 ">
                             <div class="col d-grid">
-                                <button type="button" (click)="addAmount('00')"  class="btn btn-lg fs-1  py-3">00</button>
+                                <button type="button" (click)="addAmount('00')"
+                                    class="btn btn-lg fs-1  py-3">00</button>
                             </div>
                             <div class="col d-grid">
-                                <button type="button" (click)="addAmount('000')" class="btn btn-lg fs-1  py-3">000</button>
+                                <button type="button" (click)="addAmount('000')"
+                                    class="btn btn-lg fs-1  py-3">000</button>
                             </div>
                             <div class="col d-grid">
                                 <!-- <button type="button" class="btn btn-lg fs-4  py-3"><strong>SUBMIT</strong></button> -->
-                                <button type="submit" class="btn btn-lg fs-4 py-3 border-0" [disabled]="payment.amount == 0"><strong>SUBMIT</strong></button>
+                                <button type="submit" class="btn btn-lg fs-4 py-3 border-0"
+                                    [disabled]="payment.amount == 0"><strong>SUBMIT</strong></button>
 
                             </div>
                         </div>
@@ -207,7 +217,8 @@
                                 <div class="col-6">
                                     <div class="d-grid mb-2">
                                         <button type="button" class="  btn  btn-lg btn-warning  "
-                                            (click)="paymentCutLastOne()"><i class="bi bi-caret-right-fill fs-2"></i></button>
+                                            (click)="paymentCutLastOne()"><i
+                                                class="bi bi-caret-right-fill fs-2"></i></button>
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -238,7 +249,7 @@
                                 <button type="button" class="me-1 btn  btn-lg btn-success py-3"
                                     (click)="paymentAdd(100000)">+Rp 100.000</button>
                             </div>
-                            
+
 
                             <!-- <div class="mb-3" [hidden]="paymentMethodDetail.paymentTypeId == 'CASH'">
                                 <label>Card Id </label>

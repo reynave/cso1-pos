@@ -37,6 +37,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     paid: 0,
     remaining: 0,
   };
+  promo_fixed : any = [];
   kioskPaid: any = [];
   close: boolean = false;
   constructor(
@@ -84,7 +85,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     }).subscribe(
       data => {
         this.items = data['items'];
-
+        this.promo_fixed = data['promo_fixed'];
       },
       error => {
         console.log(error);

@@ -1,4 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { ConfigService } from 'src/app/service/config.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-setting-function',
@@ -10,7 +13,10 @@ export class SettingFunctionComponent {
 
   items = Array.from({ length: 12 }).map((_, i) => i);
   saveFunc: any = [];
-  constructor() {
+  constructor(
+    private http : HttpClient,
+    private configService : ConfigService,
+  ) {
     if (!localStorage.getItem("function.pos")) {
       this.saveFunc = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       localStorage.setItem("function.pos", this.saveFunc);
@@ -42,5 +48,19 @@ export class SettingFunctionComponent {
     const intArray = this.saveFunc.map((str: string) => parseInt(str, 10));
     const dataString = JSON.stringify(intArray);
     localStorage.setItem("function.pos", dataString);
+    const body = {
+      saveFunc : dataString,
+    }
+    this.http.post<any>(environment.api+"setting/saveFunc",body,{
+      headers : this.configService.headers(),
+    }).subscribe(
+      data=>{
+        console.log(data);
+      },
+      error =>{
+        console.log(error);
+      }
+    )
+
   }
 }

@@ -40,14 +40,14 @@ class Promo extends Model
         WHERE i.itemId = '$itemId' AND  p.typeOfPromotion = 1 
         AND (p.startDate < unix_timestamp(now()) AND unix_timestamp(NOW()) <  p.endDate)
         AND ( i.qtyFrom <= $qty AND i.qtyTo >= $qty)
-        AND p.$today = 1 AND p.`status` = 1 AND p.presence = 1 AND i.presence = 1 AND i.`status` = 1"; 
+        AND p.$today = 1 AND p.`status` = 1 AND p.presence = 1 AND i.presence = 1 AND i.`status` = 1";
         $items = $this->db->query($q)->getResultArray();
- 
+
 
         $data = array(
             "error" => count($items) > 0 ? false : true,
-            "promo" => $items, 
-            "q" =>  $q, 
+            "promo" => $items,
+            "q" => $q,
         );
 
         return $data;
@@ -95,7 +95,7 @@ class Promo extends Model
                 "itemId" => $itemId,
                 "typeOfPromotion" => $typeOfPromotion,
                 "promotionId" => $promo['promo'][0]['promotionId'],
-                "promotionItemId" => $promotionItemId,  
+                "promotionItemId" => $promotionItemId,
                 "newPrice" => (int) $newPrice,
                 "isSpecialPrice" => $isSpecialPrice > 0 ? 1 : 0,
                 "discount" => $isSpecialPrice == 1 ? 0 : $discountPrice + $discLevel,
@@ -118,7 +118,8 @@ class Promo extends Model
     }
 
 
-    function getFreeItem($itemId) {
+    function getFreeItem($itemId)
+    {
         $today = date('D', time());
         $q2 = "SELECT   i.id AS 'promotionItemId', i.*,
         p.typeOfPromotion,
@@ -129,24 +130,25 @@ class Promo extends Model
         WHERE i.itemId = '$itemId' AND  p.typeOfPromotion = 2 
         AND (p.startDate < unix_timestamp(now()) AND unix_timestamp(NOW()) <  p.endDate)
      
-        AND p.$today = 1 AND p.`status` = 1 AND p.presence = 1 AND i.presence = 1 AND i.`status` = 1"; 
+        AND p.$today = 1 AND p.`status` = 1 AND p.presence = 1 AND i.presence = 1 AND i.`status` = 1";
         $free = $this->db->query($q2)->getResultArray();
-        if(!count($free)){
+        if (!count($free)) {
             $data = [
-                "itemId"=> null,
+                "itemId" => null,
             ];
 
-        }else{
+        } else {
             $data = $free[0];
         }
 
-        return   $data;
+        return $data;
     }
 
 
-    function orderByID(&$array) {
+    function orderByID(&$array)
+    {
         $length = count($array);
-    
+
         for ($i = 0; $i < $length - 1; $i++) {
             for ($j = 0; $j < $length - $i - 1; $j++) {
                 if ($array[$j]['id'] > $array[$j + 1]['id']) {
@@ -157,5 +159,117 @@ class Promo extends Model
                 }
             }
         }
+    }
+
+    function promo_fixed($total = 0){
+        $data = array();
+        $id = 1;
+        $data[] = [
+            "name"   => self::select("name", "cso1_promo_fixed", " id = $id"),
+            "detail" => self::freeParking($total),
+        ];
+
+        $id = 10;
+        $data[] = [
+            "name"   => self::select("name", "cso1_promo_fixed", " id = $id"),
+            "detail" => self::luckyDip($total),
+        ];
+
+        $id = 20;
+        $data[] = [
+            "name" => self::select("name", "cso1_promo_fixed", " id = $id"),
+            "detail" => self::voucher($total),
+        ];
+
+        $id = 21;
+        $data[] = [
+            "name" => self::select("name", "cso1_promo_fixed", " id = $id"),
+            "detail" => self::voucherDiscount($total),
+        ];
+
+        return $data;
+    }
+
+    function freeParking($total = 0)
+    {
+        $id = 1;
+        $data =  array(
+            "description" => self::select("description", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now() AND 
+            $total >= targetAmount"),
+            "shortDesc" => self::select("shortDesc", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now() AND 
+            $total >= targetAmount"),
+        );
+        return $data;
+    }
+
+    function voucher($total = 0) {
+        $id = 20; 
+        $data = [
+            "description" => '',
+            "shortDesc" => '',
+        ];
+        $status = self::select("status", "cso1_promo_fixed", "status = 1  AND id = $id  AND   expDate > now()");
+        if ($status == 1) { 
+            $isMultiple = self::select("isMultiple", "cso1_promo_fixed", "status = 1  AND id = $id  AND   expDate > now()");
+            $n = intval($total / self::select("targetAmount", "cso1_promo_fixed", "status = 1  AND id = $id  AND   expDate > now()"));
+
+            if ($n >= 1) {
+                if ($isMultiple != 1) {
+                    $n = 1;
+                }
+                $voucher = (int)self::select("voucherAmount", "cso1_promo_fixed", " id = $id ");
+                $totalVoucer = $n * $voucher;
+                $data = [
+                    "description" => self::select("description", "cso1_promo_fixed", "status = 1 AND id = $id  AND   expDate > now() ") . "  " . number_format($totalVoucer),
+                    "shortDesc" => self::select("shortDesc", "cso1_promo_fixed", "status = 1 AND id = $id  AND   expDate > now() ") . "  " . number_format($totalVoucer),
+                ];
+              
+            } 
+        }
+        return $data;
+    }
+
+    
+    function voucherDiscount($total = 0) {
+        $id = 21;
+        $discount = (float) self::select("voucherAmount", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now() AND 
+        $total >= targetAmount") *  100;
+        // return   $discount > 0 ? self::select("description", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now() AND 
+        // $total >= targetAmount").' '. $discount. ' %' : ''; 
+ 
+        $data = [
+            "description" => $discount > 0 ? self::select("description", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now() AND 
+            $total >= targetAmount").' '. $discount. ' %' : '',
+            "shortDesc" => $discount > 0 ? self::select("shortDesc", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now() AND 
+            $total >= targetAmount").' '. $discount. ' %' : '',
+        ];
+        return $data;
+    }
+
+    function luckyDip($total = 0)
+    {
+        $id = 10;
+        $data = [
+            "description" => '',
+            "shortDesc" => '',
+        ];
+        $status = self::select("status", "cso1_promo_fixed", "status = 1  AND id = $id  AND   expDate > now()");
+        if ($status == 1) { 
+            $isMultiple = self::select("isMultiple", "cso1_promo_fixed", "status = 1  AND id = $id  AND   expDate > now()");
+            $n = intval($total / self::select("targetAmount", "cso1_promo_fixed", "status = 1  AND id = $id  AND   expDate > now()"));
+
+            if ($n >= 1) {
+                if ($isMultiple != 1) {
+                    $n = 1;
+                } 
+
+                $data = [
+                    "description" => self::select("description", "cso1_promo_fixed", "status = 1 AND id = $id  AND   expDate > now() ") . ", sebanyak " . $n,
+                    "shortDesc" => self::select("shortDesc", "cso1_promo_fixed", "status = 1 AND id = $id  AND   expDate > now() ") . ", sebanyak " . $n,
+                ];
+               
+            }  
+        }
+        return $data;
     }
 }

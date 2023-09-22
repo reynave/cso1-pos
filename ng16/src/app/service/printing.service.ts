@@ -99,6 +99,11 @@ export class PrintingService {
     }
      
     message += "\n";
+    bill['promo_fixed'].forEach((el: any) => {
+      message += el['detail']['shortDesc'] + "\n"; 
+    });
+  
+ 
     message += bill['template']['footer'].replace("<br>", "\n") + "\n\n\n\n";
     message += "                                               " + "\n";
     message += "                                               " + "\n";

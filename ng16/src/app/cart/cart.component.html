@@ -11,7 +11,7 @@
                         (keyup.enter)="formRow.blur()">
                 </div>
                 <div class="bg-light  p-2 border cart cart-height " #chatContainer>
-                    <div class="bg-white px-3 py-2 border rounded mb-2 pointer" (click)="selectItem(x);" 
+                    <div class="bg-white px-3 py-2 border rounded mb-2 pointer" (click)="selectItem(x);"
                         *ngFor="let x of items"
                         [ngClass]="{'active-cart': x.id == activeCart.id && x.price == activeCart.price}">
                         <!-- (click)="open(contentAddQty, activeCart)" -->
@@ -30,8 +30,14 @@
                             </div>
                         </div>
                     </div>
-                    
-                    
+                    <div class=" m-2"> 
+                        <div *ngFor="let item of promo_fixed" class="mb-1">
+                            {{ item['detail']['description']  }}
+                        </div>
+                        
+                    </div>
+
+
                     <div class="bg-warning p-2">
                         <p>
                             Demo Version
@@ -43,7 +49,7 @@
                     </div>
                 </div>
             </div>
-          
+
             <div *ngIf="ilock == 1">
 
                 <div class="alert text-center alert-warning">
@@ -76,11 +82,11 @@
                 </div>
 
 
-                <div class="row g-1 mb-2"> 
-                    <div class="col-4" *ngFor="let x of customFunc; let i = index">
+                <div class="row g-1 mb-2">
+                    <div class="col-6" *ngFor="let x of customFunc; let i = index">
                         <div class="d-grid">
-                            <a  class="py-3 px-0 btn bg-white border" (click)="callFunction(x)"> 
-                                <h4 class="mb-0 pb-0">F{{i+1}}</h4> 
+                            <a class="py-2 px-0 btn bg-white border" (click)="callFunction(x)">
+                                <h4 class="mb-0 pb-0">F{{i+1}}</h4>
                                 <div class="lh-sm">
                                     <small>{{callLabel(x)}}</small>
                                 </div>
@@ -98,7 +104,7 @@
                         class="btn btn-lg btn-info text-center fs-4 mb-2  text-white">
                         SEARCH ITEMS
                     </button> -->
-<!-- 
+                    <!-- 
                     <button type="button" (click)="open(contentAddQty, activeCart)" [disabled]="activeCart.id == null"
                         class="btn btn-lg btn-warning text-center fs-4 mb-2 text-white">
                         ADD QTY
@@ -122,7 +128,7 @@
 
                 </div>
 
-               
+
 
 
             </div>

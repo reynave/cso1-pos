@@ -33,7 +33,7 @@ export class CartComponent implements OnInit, OnDestroy {
   @HostListener('document:keypress', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     this.key = event.key;
-    console.log(event);
+  //  console.log(event);
 
     // BISA DI DALAM Loop!
     if (event.charCode == 70) {
@@ -92,8 +92,8 @@ export class CartComponent implements OnInit, OnDestroy {
   ilock: number = 0;
   addQty: number = 1;
   item: any = [];
-  activeCart: any = [];
-
+  activeCart: any = []; 
+  promo_fixed : any = [];
   private _docSub: any;
   constructor(
     private configService: ConfigService,
@@ -109,10 +109,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.setFunctionSaved();
-
-
-
-
+ 
     this.supervisorMode = false;
     this.newItem = [];
     this.kioskUuid = this.activatedRoute.snapshot.queryParams['kioskUuid'];
@@ -125,18 +122,29 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   setFunctionSaved() {
-    const storedDataString = localStorage.getItem("function.pos");
 
-    if (storedDataString) {
-      const storedData = JSON.parse(storedDataString);
-      this.customFunc = storedData;
-    } else {
-      console.log("Data tidak ditemukan di localStorage.");
-    }
+    this.http.get<any>(environment.api+"setting/getFunc",{
+      headers : this.configService.headers(),
+    }).subscribe(
+      data=>{
+        console.log('setFunctionSaved',data);
+        //const storedDataString = localStorage.getItem("function.pos");
+        const storedDataString = data['saveFunc'];
+
+        if (storedDataString) {
+          const storedData = JSON.parse(storedDataString);
+           this.customFunc = storedData;
+          console.log(storedDataString);
+        } else {
+          const storedDataString = localStorage.setItem("function.pos", JSON.stringify(this.customFunc)); 
+          console.log("Data tidak ditemukan di localStorage.");
+        }
+      }
+    )
+   
   }
 
-  callFunction(id: number) {
-
+  callFunction(id: number) {  
     const item = this.func.find((x: { id: number; }) => x.id === id);
     console.log(id, item)
     if (item && item.value && typeof item.value === 'function') {
@@ -162,6 +170,8 @@ export class CartComponent implements OnInit, OnDestroy {
         this.ilock = data['ilock'];
         this.itemsFree = data['itemsFree'];
         this.bill = data['bill'];
+        this.promo_fixed = data['promo_fixed'];
+        
         if (data['error'] == true) {
           this.router.navigate(['not-found']);
           this.modalService.dismissAll();

@@ -60,9 +60,11 @@ class Cart extends BaseController
                 "originPrice" => (int) model("Core")->select("sum(originPrice)", "cso1_kiosk_cart", "presence = 1 and void = 0 and kioskUuid = '$kioskUuid'"),
                 "total" => (int) model("Core")->select("sum(price)", "cso1_kiosk_cart", "presence = 1 and void = 0 and kioskUuid = '$kioskUuid'"),
                 "discount" => (int) model("Core")->select("sum(discount)", "cso1_kiosk_cart", "presence = 1 and void = 0 and kioskUuid = '$kioskUuid'"),
-            ]
-
-        );
+            ], 
+        ); 
+        
+        $data['promo_fixed'] =  model("Promo")->promo_fixed($data['bill']['total']);
+        
         return $this->response->setJSON($data);
     }
 
@@ -177,10 +179,10 @@ class Cart extends BaseController
                 "error" => false,
                 "post" => $post,
                 "qty" => $qty,
-                "promo" => $promo, 
+                "promo" => $promo,
                 "cashierId" => $cashierId,
                 "freeItem" => $freeItem,
-                "item" => $item, 
+                "item" => $item,
                 "result" => $result,
             );
         }

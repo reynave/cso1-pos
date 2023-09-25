@@ -22,7 +22,7 @@
                             </div>
                             <div class="col-10">
                                 <div>{{x.qty}} x {{x.price | number}}
-                                    <span class="me-4" *ngIf="x.discount > 0"> DISC ({{x.discount | number}})</span> 
+                                    <span class="me-4" *ngIf="x.discount > 0"> DISC({{x.discount | number}})</span> 
                                 </div>
                             </div>
                             <div class="col-2 text-end">
@@ -30,11 +30,16 @@
                             </div>
                         </div>
                     </div>
-                    <div class=" m-2"> 
+                    <div class="me-2 mb-4"> 
                         <div *ngFor="let item of promo_fixed" class="mb-1">
-                            {{ item['detail']['description']  }}
+                           <span [innerHTML]=" item['detail']['description'] "></span>
+                        </div> 
+                    </div> 
+                    <div class="me-2 mb-4">
+                       
+                        <div *ngFor="let item of promo_fixed" class="mb-1">
+                            {{ item['detail']['reminder']  }} 
                         </div>
-                        
                     </div>
 
 

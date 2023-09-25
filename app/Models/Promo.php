@@ -39,7 +39,8 @@ class Promo extends Model
         LEFT JOIN cso1_promotion AS p ON p.id = i.promotionId
         WHERE i.itemId = '$itemId' AND  p.typeOfPromotion = 1 
         AND (p.startDate < unix_timestamp(now()) AND unix_timestamp(NOW()) <  p.endDate)
-        AND ( i.qtyFrom <= $qty AND i.qtyTo >= $qty)
+ 
+        AND ( $qty > i.qtyFrom and $qty <= i.qtyTo )
         AND p.$today = 1 AND p.`status` = 1 AND p.presence = 1 AND i.presence = 1 AND i.`status` = 1";
         $items = $this->db->query($q)->getResultArray();
 
@@ -161,17 +162,18 @@ class Promo extends Model
         }
     }
 
-    function promo_fixed($total = 0){
+    function promo_fixed($total = 0)
+    {
         $data = array();
         $id = 1;
         $data[] = [
-            "name"   => self::select("name", "cso1_promo_fixed", " id = $id"),
+            "name" => self::select("name", "cso1_promo_fixed", " id = $id"),
             "detail" => self::freeParking($total),
         ];
 
         $id = 10;
         $data[] = [
-            "name"   => self::select("name", "cso1_promo_fixed", " id = $id"),
+            "name" => self::select("name", "cso1_promo_fixed", " id = $id"),
             "detail" => self::luckyDip($total),
         ];
 
@@ -185,6 +187,12 @@ class Promo extends Model
         $data[] = [
             "name" => self::select("name", "cso1_promo_fixed", " id = $id"),
             "detail" => self::voucherDiscount($total),
+        ]; 
+        
+        $id = 100;
+        $data[] = [
+            "name" => self::select("name", "cso1_promo_fixed", " id = $id"),
+            "detail" => self::promoFixed($total,$id),
         ];
 
         return $data;
@@ -193,23 +201,70 @@ class Promo extends Model
     function freeParking($total = 0)
     {
         $id = 1;
-        $data =  array(
-            "description" => self::select("description", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now() AND 
+        $ifAmountNearTarget = self::select("ifAmountNearTarget", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now()");
+        $target = (int) self::select("targetAmount", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now()");
+
+        $data = array(
+            "description" => self::select("concat(icon,description)", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now() AND 
             $total >= targetAmount"),
             "shortDesc" => self::select("shortDesc", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now() AND 
             $total >= targetAmount"),
+
+            "target" => $target,
+            "reminder" => '',
         );
+        $status = self::select("status", "cso1_promo_fixed", "status = 1  AND id = $id  AND   expDate > now()");
+        if ($status == 1 && $target > 0) {
+            if ((($total / $target) * 100) > (float) $ifAmountNearTarget && $data['description'] == "") {
+                $data['reminder'] = "REMINDER " . self::select("description", "cso1_promo_fixed", "status =1 AND id = $id ");
+            }
+        }
+
+
         return $data;
     }
 
-    function voucher($total = 0) {
-        $id = 20; 
+    function promoFixed($total = 0, $id = 100)
+    {
+
+        $ifAmountNearTarget = self::select("ifAmountNearTarget", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now()");
+        $target = (int) self::select("targetAmount", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now()");
+
+        $data = array(
+            "description" => self::select("concat(icon,description)", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now() AND 
+            $total >= targetAmount"),
+            "shortDesc" => self::select("shortDesc", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now() AND 
+            $total >= targetAmount"), 
+            "target" => $target,
+            "reminder" => '',
+        );
+        $status = self::select("status", "cso1_promo_fixed", "status = 1  AND id = $id  AND   expDate > now()");
+        if ($status == 1 && $target > 0) {
+            if ((($total / $target) * 100) > (float) $ifAmountNearTarget && $data['description'] == "") {
+                $data['reminder'] = "REMINDER " . self::select("description", "cso1_promo_fixed", "status =1 AND id = $id ");
+            }
+        }
+
+
+        return $data;
+    }
+
+
+
+    function voucher($total = 0)
+    {
+        $id = 20;
+        $target = (int) self::select("targetAmount", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now()");
+        $ifAmountNearTarget = self::select("ifAmountNearTarget", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now()");
+
         $data = [
             "description" => '',
             "shortDesc" => '',
+            "target" => $target,
+            "reminder" => '',
         ];
         $status = self::select("status", "cso1_promo_fixed", "status = 1  AND id = $id  AND   expDate > now()");
-        if ($status == 1) { 
+        if ($status == 1 && $target > 0) {
             $isMultiple = self::select("isMultiple", "cso1_promo_fixed", "status = 1  AND id = $id  AND   expDate > now()");
             $n = intval($total / self::select("targetAmount", "cso1_promo_fixed", "status = 1  AND id = $id  AND   expDate > now()"));
 
@@ -217,59 +272,97 @@ class Promo extends Model
                 if ($isMultiple != 1) {
                     $n = 1;
                 }
-                $voucher = (int)self::select("voucherAmount", "cso1_promo_fixed", " id = $id ");
+                $voucher = (int) self::select("voucherAmount", "cso1_promo_fixed", " id = $id ");
                 $totalVoucer = $n * $voucher;
+                if ((($total / $target) * 100) > (float) $ifAmountNearTarget && $data['description'] == "") {
+                    $data['reminder'] = self::select("description", "cso1_promo_fixed", "status =1 AND id = $id ");
+                }
                 $data = [
-                    "description" => self::select("description", "cso1_promo_fixed", "status = 1 AND id = $id  AND   expDate > now() ") . "  " . number_format($totalVoucer),
+                    "description" => self::select("concat(icon,description)", "cso1_promo_fixed", "status = 1 AND id = $id  AND   expDate > now() ") . "  " . number_format($totalVoucer),
                     "shortDesc" => self::select("shortDesc", "cso1_promo_fixed", "status = 1 AND id = $id  AND   expDate > now() ") . "  " . number_format($totalVoucer),
+                    "target" => $target,
+                    "reminder" => '',
                 ];
-              
-            } 
+
+            }
+            if ((($total / $target) * 100) > (float) $ifAmountNearTarget && $data['description'] == "") {
+                $data['reminder'] = "REMINDER " . self::select("description", "cso1_promo_fixed", "status =1 AND id = $id ");
+            }
+
         }
+
+
+
         return $data;
     }
 
-    
-    function voucherDiscount($total = 0) {
+
+    function voucherDiscount($total = 0)
+    {
         $id = 21;
         $discount = (float) self::select("voucherAmount", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now() AND 
-        $total >= targetAmount") *  100;
-        // return   $discount > 0 ? self::select("description", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now() AND 
-        // $total >= targetAmount").' '. $discount. ' %' : ''; 
- 
+        $total >= targetAmount") * 100;
+        $ifAmountNearTarget = self::select("ifAmountNearTarget", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now()");
+        $target = (int) self::select("targetAmount", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now()");
+
+
         $data = [
-            "description" => $discount > 0 ? self::select("description", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now() AND 
-            $total >= targetAmount").' '. $discount. ' %' : '',
+            "description" => $discount > 0 ? self::select("concat(icon,description)", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now() AND 
+            $total >= targetAmount") . ' ' . $discount . ' %' : '',
             "shortDesc" => $discount > 0 ? self::select("shortDesc", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now() AND 
-            $total >= targetAmount").' '. $discount. ' %' : '',
+            $total >= targetAmount") . ' ' . $discount . ' %' : '',
+            "target" => self::select("targetAmount", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now() AND $total >= targetAmount"),
+
         ];
+        $status = self::select("status", "cso1_promo_fixed", "status = 1  AND id = $id  AND   expDate > now()");
+        if ($status == 1 && $target > 0) {
+            if ((($total / $target) * 100) > (float) $ifAmountNearTarget && $data['description'] == "") {
+                $data['reminder'] = "REMINDER " . self::select("description", "cso1_promo_fixed", "status =1 AND id = $id ");
+            }
+        }
         return $data;
     }
 
     function luckyDip($total = 0)
     {
         $id = 10;
+        $target = (int) self::select("targetAmount", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now()");
+        $ifAmountNearTarget = self::select("ifAmountNearTarget", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now()");
+
         $data = [
             "description" => '',
             "shortDesc" => '',
+            "target" => $target,
+            "reminder" => '',
         ];
         $status = self::select("status", "cso1_promo_fixed", "status = 1  AND id = $id  AND   expDate > now()");
-        if ($status == 1) { 
+        if ($status == 1 && $target > 0) {
             $isMultiple = self::select("isMultiple", "cso1_promo_fixed", "status = 1  AND id = $id  AND   expDate > now()");
             $n = intval($total / self::select("targetAmount", "cso1_promo_fixed", "status = 1  AND id = $id  AND   expDate > now()"));
 
             if ($n >= 1) {
                 if ($isMultiple != 1) {
                     $n = 1;
-                } 
-
+                }
+                $voucher = (int) self::select("voucherAmount", "cso1_promo_fixed", " id = $id ");
+                $totalVoucer = $n * $voucher;
+                if ((($total / $target) * 100) > (float) $ifAmountNearTarget && $data['description'] == "") {
+                    $data['reminder'] = self::select("description", "cso1_promo_fixed", "status =1 AND id = $id ");
+                }
                 $data = [
-                    "description" => self::select("description", "cso1_promo_fixed", "status = 1 AND id = $id  AND   expDate > now() ") . ", sebanyak " . $n,
-                    "shortDesc" => self::select("shortDesc", "cso1_promo_fixed", "status = 1 AND id = $id  AND   expDate > now() ") . ", sebanyak " . $n,
+                    "description" => self::select("concat(icon,description)", "cso1_promo_fixed", "status = 1 AND id = $id  AND   expDate > now() ") . "  " . number_format($totalVoucer),
+                    "shortDesc" => self::select("shortDesc", "cso1_promo_fixed", "status = 1 AND id = $id  AND   expDate > now() ") . "  " . number_format($totalVoucer),
+                    "target" => $target,
+                    "reminder" => '',
                 ];
-               
-            }  
+
+            }
+            if ((($total / $target) * 100) > (float) $ifAmountNearTarget && $data['description'] == "") {
+                $data['reminder'] = "REMINDER " . self::select("description", "cso1_promo_fixed", "status =1 AND id = $id ");
+            }
+
         }
+
         return $data;
     }
 }

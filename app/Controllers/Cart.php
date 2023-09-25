@@ -130,35 +130,43 @@ class Cart extends BaseController
             if ($itemId && $isItem == true) {
                 $result = "ITEMS";
 
-                $qty = (int) model("Core")->select("count(id)", "cso1_kiosk_cart", " kioskUuid = '" . $post['kioskUuid'] . "' AND  itemId = '$itemId' ") + 1;
-
-                $promo = model("Promo")->getPromo($itemId, $qty);
                 $originPrice = model("Core")->select("price$i", "cso1_item", "id = '$itemId' ");
- 
                 
-                $price = $originPrice*$weight;
-                // $coma =   (float)$finalPrice - (int)$finalPrice;
-                // if( $coma > 0.5) { 
-                //     $finalPrice = ceil( $finalPrice);
-                // }else{
-                //     $finalPrice = (int)$finalPrice;
-                // }
 
                 $insert = [
                     "kioskUuid" => $post['kioskUuid'],
                     "itemId" => $itemId,
                     "barcode" => $post['barcode'],
                     "originPrice" => $originPrice,
-                    "price" => $price,
-                    "isSpecialPrice" => isset($promo['isSpecialPrice']),
-                    "promotionId" => isset($promo['promotionId']) ? $promo['promotionId'] : "",
-                    "promotionItemId" => isset($promo['promotionItemId']) ? $promo['promotionItemId'] : "",
-                    "discount" => $promo['discount'],
+                    "price" =>  $originPrice,  
+                    "promotionId" => "0",
                     "input_date" => date("Y-m-d H:i:s"),
                     "inputDate" => time(),
                     "note" =>  $note,
                 ];
+        
                 $this->db->table("cso1_kiosk_cart")->insert($insert);
+                $cartId = model("Core")->select("id","cso1_kiosk_cart"," kioskUuid = '".$post['kioskUuid']."' ORDER BY  id DESC");
+                
+                
+                // PROMOTION_ITEM
+                $qty = (int) model("Core")->select("count(id)", "cso1_kiosk_cart", " kioskUuid = '" . $post['kioskUuid'] . "' AND  itemId = '$itemId' ") + 1;
+                $promo = model("Promo")->getPromo($itemId, $qty);
+               
+                if($promo['promotionItemId'] > 0 ){
+                    $update = [
+                        "kioskUuid" => $post['kioskUuid'],
+                        "price" =>  $promo['newPrice'],
+                        "isSpecialPrice" => isset($promo['isSpecialPrice']),
+                        "promotionId" => isset($promo['promotionId']) ? $promo['promotionId'] : "",
+                        "promotionItemId" => isset($promo['promotionItemId']) ? $promo['promotionItemId'] : "",
+                        "discount" => $promo['discount'],
+                    ]; 
+                    $this->db->table("cso1_kiosk_cart")->update( $update," id = $cartId ");
+                }
+              
+
+
                 $q1 = "SELECT * FROM cso1_item  WHERE id = '$itemId' ";
                 $item = $this->db->query($q1)->getResultArray()[0];
                 $item['barcode'] = $barcode;
@@ -187,7 +195,7 @@ class Cart extends BaseController
             //     $this->db->table("cso1_kiosk_cart_free_item")->insert($insert);
             // }
 
-
+            $item['barcode'] = $post['barcode'];
 
             $data = array(
                 "error" => false,

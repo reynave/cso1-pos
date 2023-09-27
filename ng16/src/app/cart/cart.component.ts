@@ -94,6 +94,7 @@ export class CartComponent implements OnInit, OnDestroy {
   item: any = [];
   activeCart: any = []; 
   promo_fixed : any = [];
+  freeItem : any = [];
   private _docSub: any;
   constructor(
     private configService: ConfigService,
@@ -116,7 +117,7 @@ export class CartComponent implements OnInit, OnDestroy {
     this.httpCart();
     this._docSub = this.configService.getMessage().subscribe(
       (data: { [x: string]: any; }) => {
-        console.log(data);
+       // console.log(data);
       }
     );
   }
@@ -126,15 +127,13 @@ export class CartComponent implements OnInit, OnDestroy {
     this.http.get<any>(environment.api+"setting/getFunc",{
       headers : this.configService.headers(),
     }).subscribe(
-      data=>{
-        console.log('setFunctionSaved',data);
+      data=>{ 
         //const storedDataString = localStorage.getItem("function.pos");
         const storedDataString = data['saveFunc'];
 
         if (storedDataString) {
           const storedData = JSON.parse(storedDataString);
-           this.customFunc = storedData;
-          console.log(storedDataString);
+           this.customFunc = storedData; 
         } else {
           const storedDataString = localStorage.setItem("function.pos", JSON.stringify(this.customFunc)); 
           console.log("Data tidak ditemukan di localStorage.");
@@ -176,7 +175,7 @@ export class CartComponent implements OnInit, OnDestroy {
           this.router.navigate(['not-found']);
           this.modalService.dismissAll();
         }
-        console.log(data);
+        this.freeItem = data['freeItem'];
         this.scrollToBottom();
       },
       error => {
@@ -187,7 +186,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   scrollToBottom() {
     setTimeout(() => {
-      console.log('scrollToBottom')
+       
       try {
         this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
       } catch (err) { }
@@ -212,8 +211,7 @@ export class CartComponent implements OnInit, OnDestroy {
       action: 'cart',
       kioskUuid: this.kioskUuid
     }
-    this.configService.sendMessage(msg);
-    console.log("sendReload");
+    this.configService.sendMessage(msg); 
   }
 
   addToCart() {
@@ -290,8 +288,7 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
 
-  selectItem(x: any) {
-    console.log(x);
+  selectItem(x: any) { 
     this.activeCart = x;
   }
 
@@ -321,7 +318,7 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   openComponent(comp: any, item: any = []) {
-    console.log(item);
+    console.log('openComponent : ',item);
 
     if (comp == 'items') {
       const modalRef = this.modalService.open(ItemsComponent, { size: 'lg' });
@@ -334,7 +331,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
     if (comp == 'cartDetail') {
       const modalRef = this.modalService.open(CartDetailComponent, { size: 'lg' });
-      modalRef.componentInstance.item = item;
+      modalRef.componentInstance.item = item;  
       modalRef.componentInstance.kioskUuid = this.kioskUuid;
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);

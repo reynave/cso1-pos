@@ -119,7 +119,7 @@ class Promo extends Model
     }
 
 
-    function getFreeItem($itemId)
+    function getFreeItem($itemId,$qty)
     {
         $today = date('D', time());
         $q2 = "SELECT   i.id AS 'promotionItemId', i.*,
@@ -128,19 +128,14 @@ class Promo extends Model
         NOW() as 'nowDate',  p.$today as '$today' 
         FROM cso1_promotion_free AS i
         LEFT JOIN cso1_promotion AS p ON p.id = i.promotionId
-        WHERE i.itemId = '$itemId' AND  p.typeOfPromotion = 2 
-        AND (p.startDate < unix_timestamp(now()) AND unix_timestamp(NOW()) <  p.endDate)
-     
-        AND p.$today = 1 AND p.`status` = 1 AND p.presence = 1 AND i.presence = 1 AND i.`status` = 1";
+        WHERE i.itemId = '$itemId' 
+            AND  p.typeOfPromotion = 2  AND  $qty > i.qty
+            AND (p.startDate < unix_timestamp(now()) AND unix_timestamp(NOW()) <  p.endDate) 
+            AND p.$today = 1 AND p.`status` = 1 AND p.presence = 1 AND i.presence = 1 AND i.`status` = 1";
         $free = $this->db->query($q2)->getResultArray();
-        if (!count($free)) {
-            $data = [
-                "itemId" => null,
-            ];
-
-        } else {
-            $data = $free[0];
-        }
+        $free['q'] = $q2;
+        $data =  $free;
+        
 
         return $data;
     }

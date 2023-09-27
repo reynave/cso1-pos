@@ -3,30 +3,7 @@
     <a class="btn-close" (click)="close()"></a>
 </div>
 <div class="modal-body">
-    <div class="row g-1 mb-3">
-        <div class="col">
-            <div class="mb-1">Barcode</div>
-            <div class="form-control form-control-lg"> {{detail.barcode}} </div>
-        </div>
-        <div class="col">
-            <div class="mb-1">Qty</div>
-            <div class="form-control form-control-lg">{{items.length}}</div>
-        </div>
-        <div class="col">
-            <div class="mb-1">Original Price</div>
-            <div class="form-control form-control-lg">{{detail.originPrice | number}}</div>
-        </div>
-        <div class="col">
-            <div class="mb-1">Price</div>
-            <input type="number" class="form-control form-control-lg text-end" (change)="updatePrice()"
-                (keyup.enter)="updatePrice()" [(ngModel)]="detail.price">
-        </div>
-        <div class="col">
-            <div class="mb-1">Discount</div>
-            <input type="number" class="form-control form-control-lg text-end" (change)="updatePrice()"
-                (keyup.enter)="updatePrice()" [(ngModel)]="detail.discount">
-        </div>
-    </div>
+    
     <div class="row">
        
         <div class="col-12 mb-3">

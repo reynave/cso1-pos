@@ -1,0 +1,38 @@
+<div class="modal-header">
+    <strong class="modal-title" id="modal-basic-title">ITEM TEBUS MURAH, CART {{kioskUuid}}</strong>
+    <a class="btn-close" (click)="close()"></a>
+</div>
+<div class="modal-body">
+    <div class="mb-3">
+        <input type="text" class="form-control form-control-lg" placeholder="search by Description / Barcode / Item ID">
+    </div>
+    <div class="border p-1 maxHeight">
+
+       
+
+        <table class="table table-sm table-hover" *ngIf="loading != true">
+            <thead>
+                <tr>
+                    <th>Item ID </th>
+                    <th>Description </th>
+                    <th class="text-end">Price </th>
+                    <th>Exp Date </th>
+                    <th class="text-end">Min Trans </th> 
+                    <th class="text-end">Max Item</th> 
+                    
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let x of items" (click)="onTb(x)">
+                    <td>{{x.itemId}}</td> 
+                    <td>{{x.description}}</td>
+                    <td class="text-end">{{x.price | number}}</td>
+                    <td>{{x.exp_date | date}}</td> 
+                    <td class="text-end">{{x.minTransaction | number}}</td> 
+                    <td class="text-end">{{x.maxItem | number}}</td> 
+                    
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -30,6 +30,7 @@ import { VisitorComponent } from './visitor/visitor.component';
 import { ThemesComponent } from './themes/themes.component';
 import { NgxCurrencyDirective , provideEnvironmentNgxCurrency, NgxCurrencyInputMode } from 'ngx-currency';
 import { SettingFunctionComponent } from './setting/setting-function/setting-function.component';
+import { ItemTebusMurahComponent } from './cart/item-tebus-murah/item-tebus-murah.component';
 
 const config: SocketIoConfig = { url: environment.socket_url, options: { transports: ['websocket'] } };
 @NgModule({
@@ -56,7 +57,8 @@ const config: SocketIoConfig = { url: environment.socket_url, options: { transpo
     SettlementHistoryComponent,
     VisitorComponent,
     ThemesComponent,
-    SettingFunctionComponent
+    SettingFunctionComponent,
+    ItemTebusMurahComponent
   ],
   imports: [
     BrowserModule,

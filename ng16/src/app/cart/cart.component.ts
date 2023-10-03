@@ -7,6 +7,7 @@ import { ItemsComponent } from '../items/items.component';
 import { CartDetailComponent } from './cart-detail/cart-detail.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MyFunction } from './functions';
+import { ItemTebusMurahComponent } from './item-tebus-murah/item-tebus-murah.component';
 
 @Component({
   selector: 'app-cart',
@@ -122,8 +123,7 @@ export class CartComponent implements OnInit, OnDestroy {
     );
   }
 
-  setFunctionSaved() {
-
+  setFunctionSaved() { 
     this.http.get<any>(environment.api+"setting/getFunc",{
       headers : this.configService.headers(),
     }).subscribe(
@@ -154,7 +154,7 @@ export class CartComponent implements OnInit, OnDestroy {
     const index = this.func.findIndex((item: { id: number }) => item.id === id);
     return this.func[index].label;
   }
-
+  tebus_murah : string = "";
   httpCart() {
     this.sendReload();
     this.http.get<any>(environment.api + "cart/index", {
@@ -170,6 +170,7 @@ export class CartComponent implements OnInit, OnDestroy {
         this.itemsFree = data['itemsFree'];
         this.bill = data['bill'];
         this.promo_fixed = data['promo_fixed'];
+        this.tebus_murah = data['tebus_murah'];
         
         if (data['error'] == true) {
           this.router.navigate(['not-found']);
@@ -339,6 +340,14 @@ export class CartComponent implements OnInit, OnDestroy {
       });
     }
 
+    if (comp == 'itemTebusMurah') {
+      const modalRef = this.modalService.open(ItemTebusMurahComponent, { size: 'xl' }); 
+      modalRef.componentInstance.kioskUuid = this.kioskUuid;
+      modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
+        console.log('itemTebusMurah', data);
+        this.httpCart();
+      });
+    }
 
   }
 

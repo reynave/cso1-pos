@@ -37,7 +37,7 @@ class Cart extends BaseController
             0 AS 'total', 0 AS 'discount',0 AS 'originPrice'
             FROM cso1_kiosk_cart_free_item AS f 
             WHERE f.kioskUuid =  '$kioskUuid'
-            ORDER BY f.freeItemId 
+            group BY f.freeItemId 
         ) AS c
         LEFT JOIN cso1_item AS i ON i.id = c.itemId
         ";
@@ -69,6 +69,11 @@ class Cart extends BaseController
 
         $data['promo_fixed'] = model("Promo")->promo_fixed($data['bill']['total']);
 
+       // $data['bill']['total']
+        $tb = model("Core")->select("count(id)","cso1_tebus_murah","status= 1 and  ".$data['bill']['total']." >=  minTransaction");
+ 
+        $data['tebus_murah'] =  $tb > 0 ? '<i class="bi bi-check"></i>Tersedia tebus murah' : '' ;
+
         return $this->response->setJSON($data);
     }
 
@@ -81,6 +86,37 @@ class Cart extends BaseController
     {
 
         return $this->response->setJSON(model("promo")->getFreeItem($itemId));
+    }
+
+    function addTebusMurah(){
+        $i = 1;
+        $post = json_decode(file_get_contents('php://input'), true);
+        $data = array(
+            "error" => true,
+            "post" => $post,
+        );
+        if ($post) {
+            
+            $this->db->table("cso1_kiosk_cart")->insert([
+                "kioskUuid" => $post['kioskUuid'],
+                "promotionId" => "tebusMurah", 
+                "itemId" => $post['item']['itemId'],
+                "barcode" => $post['item']['itemId'],
+                
+                "originPrice" => model("Core")->select("price1","cso1_item","id = '".$post['item']['itemId']."' "),
+                "price" => $post['item']['price'],
+                "presence" => 1,
+                "inputDate" => time(),
+                "input_date" => date("Y-m-d H:i:s"), 
+            ]);
+
+            $data = array(
+                "error" => false,
+                "post" => $post,
+            );
+        }
+
+        return $this->response->setJSON($data);
     }
 
     function addToCart()

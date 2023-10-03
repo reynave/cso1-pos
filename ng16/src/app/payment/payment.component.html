@@ -40,7 +40,7 @@
                 </div>
                 <div class=" m-2">
                     <div *ngFor="let item of promo_fixed" class="mb-1">
-                        {{ item['detail']['description'] }}
+                       <span [innerHTML]="item['detail']['description']"></span>
                     </div>
                 </div>
                 <hr>

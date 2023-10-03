@@ -17,12 +17,12 @@
                         <!-- (click)="open(contentAddQty, activeCart)" -->
                         <div class="row g-1 ">
                             <div class="col-12">
-                                <div>{{x.barcode}} - {{x.description}}   <span>{{x.note}}</span> </div>
-                                <div *ngIf="x.promotionId !== '0'">*{{x.promotionDescription}}*</div> 
+                                <div>{{x.barcode}} - {{x.description}} <span>{{x.note}}</span> </div>
+                                <div *ngIf="x.promotionId !== '0'">*{{x.promotionDescription}}*</div>
                             </div>
                             <div class="col-10">
                                 <div>{{x.qty}} x {{x.price | number}}
-                                    <span class="me-4" *ngIf="x.discount > 0"> DISC({{x.discount | number}})</span> 
+                                    <span class="me-4" *ngIf="x.discount > 0"> DISC({{x.discount | number}})</span>
                                 </div>
                             </div>
                             <div class="col-2 text-end">
@@ -31,28 +31,30 @@
                         </div>
                     </div>
                     <hr>
-                  <div *ngIf="freeItem.length>0" class="px-3">  <small>Promo Free Items</small></div>
+                    <div *ngIf="freeItem.length>0" class="px-3"> <small>Promo Free Items</small></div>
                     <div class="bg-white px-3 py-2 border rounded mb-2 pointer" *ngFor="let x of freeItem"
                         [ngClass]="{'active-cart': x.id == activeCart.id && x.price == activeCart.price}">
                         <!-- (click)="open(contentAddQty, activeCart)" -->
-                        <div class="row g-1 "> 
+                        <div class="row g-1 ">
                             <div class="col-12">
-                                <div>{{x.barcode}} - {{x.description}}   <span>{{x.note}}</span> ({{x.qty}} Items)</div>
-                                <div *ngIf="x.promotionId !== '0'">*{{x.promotionDescription}}*</div>  
+                                <div>{{x.barcode}} - {{x.description}} <span>{{x.note}}</span> ({{x.qty}} Items)</div>
+                                <div *ngIf="x.promotionId !== '0'">*{{x.promotionDescription}}*</div>
                             </div>
-                           
-                           
+
+
                         </div>
                     </div>
-                  
-                    <div class="me-2 mb-4"> 
+
+                    <div class="me-2 mb-4">
+                      
                         <div *ngFor="let item of promo_fixed" class="mb-1">
-                           <span [innerHTML]=" item['detail']['description'] "></span>
-                        </div> 
-                    </div> 
-                    <div class="me-2 mb-4"> 
+                            <span [innerHTML]=" item['detail']['description'] "></span>
+                        </div>
+                        <div [innerHTML]="tebus_murah" class="mb-1">  </div>
+                    </div>
+                    <div class="me-2 mb-4">
                         <div *ngFor="let item of promo_fixed" class="mb-1">
-                            {{ item['detail']['reminder']  }} 
+                            {{ item['detail']['reminder'] }}
                         </div>
                     </div>
 
@@ -99,7 +101,17 @@
                         <div class="col-6 text-end font-cart"><strong>{{bill['total'] | number}}</strong></div>
                     </div>
                 </div>
-
+                <div class="d-grid" *ngIf="ilock != 1">
+                    <button type="button" *ngIf="supervisorMode == true" (click)="supervisorMode = false;"
+                        class="btn btn-lg  btn-danger text-center fs-6 py-3 mb-2 text-white">
+                        CLOSE SUPERVISOR
+                    </button>
+                    
+                </div>
+                <button type="button"   (click)="openComponent('itemTebusMurah')"
+                    class="btn btn-lg  btn-info text-center fs-6 py-3 mb-2 text-white">
+                    TEBUS MURAH
+                </button>
 
                 <div class="row g-1 mb-2">
                     <div class="col-6" *ngFor="let x of customFunc; let i = index">
@@ -114,42 +126,12 @@
                     </div>
                 </div>
 
-                <div class="d-grid" *ngIf="ilock != 1">
-                    <button type="button" *ngIf="supervisorMode == true" (click)="supervisorMode = false;"
-                        class="btn btn-lg  btn-danger text-center fs-6 py-3 mb-2 text-white">
-                        CLOSE SUPERVISOR
-                    </button>
-                    <!-- <button type="button" (click)="openComponent('items')"
-                        class="btn btn-lg btn-info text-center fs-4 mb-2  text-white">
-                        SEARCH ITEMS
-                    </button> -->
-                    <!-- 
-                    <button type="button" (click)="open(contentAddQty, activeCart)" [disabled]="activeCart.id == null"
-                        class="btn btn-lg btn-warning text-center fs-4 mb-2 text-white">
-                        ADD QTY
-                    </button> -->
 
-                    <!-- <button type="button" *ngIf="supervisorMode == true"
-                        (click)="openComponent('cartDetail',activeCart)" [disabled]="activeCart.id == null"
-                        class="btn btn-lg btn-danger text-center fs-4 mb-2 text-white">
-                        EDIT QTY
-                    </button> -->
 
-                    <!-- <button type="button" (click)="goToPayment()" class="btn btn-lg btn-dark text-center fs-4  mb-2">
-                        PAYMENT
-                    </button> -->
-
-                    <!-- <button type="button" *ngIf="supervisorMode == true" (click)="cancelTrans();"
-                        class="btn btn-lg btn-danger text-center fs-4 mb-2 text-white">
-                        CANCEL
-                    </button> -->
-  
-                </div>
- 
             </div>
             <app-widget1></app-widget1>
         </div>
- 
+
 
     </div>
 </div>

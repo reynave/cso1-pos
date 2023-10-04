@@ -184,11 +184,14 @@ class Promo extends Model
             "detail" => self::voucherDiscount($total),
         ]; 
         
-        $id = 100;
-        $data[] = [
-            "name" => self::select("name", "cso1_promo_fixed", " id = $id"),
-            "detail" => self::promoFixed($total,$id),
-        ];
+        for($i = 100 ; $i<= 103; $i++){ 
+            $id = $i;
+            $data[] = [
+                "name" => self::select("name", "cso1_promo_fixed", " id = $id"),
+                "detail" => self::promoFixed($total,$id),
+            ];
+        }   
+            
 
         return $data;
     }

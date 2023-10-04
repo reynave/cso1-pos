@@ -45,6 +45,17 @@ class Items extends BaseController
         WHERE $total >=  t.minTransaction and  $totalCart < t.maxItem and t.status = 1 
         ";
         $items = $this->db->query($q1)->getResultArray();
+        $i=0;
+        foreach($items as $row){
+            $items[$i]['barcode'] = "";
+            $q2 = "SELECT * FROM cso1_item_barcode where itemId = '".$row['itemId']."' ";
+            $temp = $this->db->query($q2)->getResultArray();
+            foreach($temp as $re){
+                $items[$i]['barcode'] .= $re["barcode"].' ';
+            } 
+            $items[$i]['search'] = $row['itemId'].' '.$row['description'].' '.  $items[$i]['barcode']; 
+            $i++;
+        }
 
         $data = array(
             "error" => false,

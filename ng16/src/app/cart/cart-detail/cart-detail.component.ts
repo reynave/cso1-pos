@@ -40,7 +40,7 @@ export class CartDetailComponent implements OnInit {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        console.log(data);
+        console.log("cart/detail",data);
         this.detail = data['detail'];
         this.items = data['items'];
       },
@@ -78,9 +78,6 @@ export class CartDetailComponent implements OnInit {
     )
   }
   
-  close() {
-    this.modalService.dismissAll();
-  }
 
   updatePrice(){
     const body = {
@@ -120,5 +117,10 @@ export class CartDetailComponent implements OnInit {
         console.log(error);
       }
     )
+  }
+
+  
+  close() {
+    this.modalService.dismissAll();
   }
 }

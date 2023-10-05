@@ -164,7 +164,7 @@ export class CartComponent implements OnInit, OnDestroy {
       }
     }).subscribe(
       data => {
-        console.log(data);
+      //   console.log(data);
         this.items = data['items'];
         this.ilock = data['ilock'];
         this.itemsFree = data['itemsFree'];
@@ -290,7 +290,10 @@ export class CartComponent implements OnInit, OnDestroy {
 
 
   selectItem(x: any) { 
-    this.activeCart = x;
+    this.activeCart  = []
+    if(x.total > 0){
+      this.activeCart = x;
+    } 
   }
 
   onSubmitQty() {
@@ -319,8 +322,7 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   openComponent(comp: any, item: any = []) {
-    console.log('openComponent : ',item);
-
+     
     if (comp == 'items') {
       const modalRef = this.modalService.open(ItemsComponent, { size: 'lg' });
       modalRef.componentInstance.kioskUuid = this.kioskUuid;

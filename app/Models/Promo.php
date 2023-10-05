@@ -119,7 +119,7 @@ class Promo extends Model
     }
 
 
-    function getFreeItem($itemId,$qty)
+    function getFreeItem($itemId, $qty)
     {
         $today = date('D', time());
         $q2 = "SELECT   i.id AS 'promotionItemId', i.*,
@@ -134,8 +134,8 @@ class Promo extends Model
             AND p.$today = 1 AND p.`status` = 1 AND p.presence = 1 AND i.presence = 1 AND i.`status` = 1";
         $free = $this->db->query($q2)->getResultArray();
         $free['q'] = $q2;
-        $data =  $free;
-        
+        $data = $free;
+
 
         return $data;
     }
@@ -182,16 +182,16 @@ class Promo extends Model
         $data[] = [
             "name" => self::select("name", "cso1_promo_fixed", " id = $id"),
             "detail" => self::voucherDiscount($total),
-        ]; 
-        
-        for($i = 100 ; $i<= 103; $i++){ 
+        ];
+
+        for ($i = 100; $i <= 103; $i++) {
             $id = $i;
             $data[] = [
                 "name" => self::select("name", "cso1_promo_fixed", " id = $id"),
-                "detail" => self::promoFixed($total,$id),
+                "detail" => self::promoFixed($total, $id),
             ];
-        }   
-            
+        }
+
 
         return $data;
     }
@@ -232,7 +232,7 @@ class Promo extends Model
             "description" => self::select("concat(icon,description)", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now() AND 
             $total >= targetAmount"),
             "shortDesc" => self::select("shortDesc", "cso1_promo_fixed", "status =1 AND id = $id  AND   expDate > now() AND 
-            $total >= targetAmount"), 
+            $total >= targetAmount"),
             "target" => $target,
             "reminder" => '',
         );
@@ -362,5 +362,26 @@ class Promo extends Model
         }
 
         return $data;
+    }
+
+
+
+    function getPromoFree($itemId)
+    {
+        $today = date('D', time());
+        $q = " SELECT   f.promotionId, f.id as 'promotionFreeId', f.itemId,  f.qty, f.freeItemId, 
+                        f.freeQty , p.startDate, p.endDate, p.$today as '$today' 
+            FROM cso1_promotion_free AS f 
+            LEFT JOIN cso1_promotion AS p ON p.id = f.promotionId
+            WHERE p.startDate < unix_timestamp(NOW()) AND unix_timestamp(NOW()) <= p.endDate
+            AND p.`status` = 1 AND p.presence = 1 AND f.`status` = 1 AND f.presence = 1
+            and f.itemId = '$itemId' and p.$today = 1
+        ";
+
+
+        return count($this->db->query($q)->getResultArray() ) > 0 ?  $this->db->query($q)->getResultArray()[0] : [
+            "qty" => false
+        ];
+
     }
 }

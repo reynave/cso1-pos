@@ -23,3 +23,5 @@ alter TABLE 'cso1_transaction' add  settlementId
 ALTER TABLE `cso1_promotion`
 	CHANGE COLUMN `Thur` `Thu` INT(1) NULL DEFAULT '0' AFTER `Wed`;
 
+ALTER TABLE `cso1_kiosk_cart`
+	ADD COLUMN `promotionFreeId` INT(11) NULL DEFAULT NULL AFTER `promotionItemId`;

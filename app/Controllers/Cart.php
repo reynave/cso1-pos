@@ -10,9 +10,9 @@ class Cart extends BaseController
         $kioskUuid = $this->request->getVar()['kioskUuid'];
 
         $q1 = "SELECT c.barcode, c.itemId, c.qty, c.promotionId , c.total, c.discount, c.originPrice,
-        i.shortDesc, i.description, c.price, c.note , '' as promotionFreeId
+        i.shortDesc, i.description, c.price, '' as promotionFreeId
         FROM (
-            SELECT k.barcode, k.itemId , COUNT(k.barcode) AS 'qty', k.promotionId,  k.note,
+            SELECT k.barcode, k.itemId , COUNT(k.barcode) AS 'qty', k.promotionId, 
             sum(k.price) AS 'total', sum(k.discount) AS 'discount', k.price, k.originPrice
             FROM cso1_kiosk_cart AS k 
             WHERE k.kioskUuid = '$kioskUuid'  AND k.void = 0 and k.presence = 1
@@ -37,7 +37,7 @@ class Cart extends BaseController
             0 AS 'total', 0 AS 'discount',0 AS 'originPrice' , f.promotionFreeId
             FROM cso1_kiosk_cart_free_item AS f 
             WHERE f.kioskUuid =  '$kioskUuid'
-            group BY f.freeItemId , f.promotionFreeId
+            group BY f.freeItemId , f.promotionFreeId, f.promotionId
         ) AS c
         LEFT JOIN cso1_item AS i ON i.id = c.itemId
         ";

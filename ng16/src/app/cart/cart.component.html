@@ -13,9 +13,10 @@
                 <div class="bg-light  p-2 border cart cart-height " #chatContainer>
 
                     <div class="bg-white px-3 py-2 border rounded mb-2 pointer" (click)="selectItem(x);"
-                        *ngFor="let x of items"  [ngClass]="{'active-cart': x.id == activeCart.id && x.price == activeCart.price}">
+                        *ngFor="let x of items"
+                        [ngClass]="{'active-cart': x.id == activeCart.id && x.price == activeCart.price}">
                         <!-- (click)="open(contentAddQty, activeCart)" -->
-                        <div class="row g-1 " >
+                        <div class="row g-1 ">
                             <div class="col-12">
                                 <div>{{x.barcode}} - {{x.description}} <span>{{x.note}}</span> </div>
                                 <div *ngIf="x.promotionId !== '0'">*{{x.promotionDescription}}*</div>
@@ -30,9 +31,9 @@
                             </div>
                         </div>
 
-                        
+
                     </div>
-                   
+
                     <!-- <div *ngIf="freeItem.length>0" class="px-3"> <small>Promo Free Items</small></div>
                     <div class="bg-white px-3 py-2 border rounded mb-2 pointer" *ngFor="let x of freeItem"
                         [ngClass]="{'active-cart': x.id == activeCart.id && x.price == activeCart.price}"> 
@@ -44,11 +45,11 @@
                         </div>
                     </div> -->
 
-                    <div class="me-2 mb-4"> 
+                    <div class="me-2 mb-4">
                         <div *ngFor="let item of promo_fixed" class="mb-1">
                             <span [innerHTML]=" item['detail']['description'] "></span>
                         </div>
-                        <div [innerHTML]="tebus_murah" class="mb-1">  </div>
+                        <div [innerHTML]="tebus_murah" class="mb-1"> </div>
                     </div>
                     <div class="me-2 mb-4">
                         <div *ngFor="let item of promo_fixed" class="mb-1">
@@ -85,7 +86,7 @@
         <div class="col-4">
             <div class="maxHeightWidget  mb-2">
 
-                <div class="border p-3 bg-white rounded mb-2">
+                <div class="border p-2 bg-white rounded mb-1">
                     <div class="row ">
                         <div class="col-7 font-cart">SUB TOTAL:</div>
                         <div class="col-5 text-end font-cart">{{bill['originPrice'] | number}}</div>
@@ -104,20 +105,27 @@
                         class="btn btn-lg  btn-danger text-center fs-6 py-3 mb-2 text-white">
                         CLOSE SUPERVISOR
                     </button>
-                    
-                </div>
-                <button type="button"   (click)="openComponent('itemTebusMurah')"
-                    class="btn btn-lg  btn-info text-center fs-6 py-3 mb-2 text-white">
-                    TEBUS MURAH
-                </button>
 
+                </div>
+                <div class="d-grid">
+                    <button type="button" (click)="goToPayment()"
+                        class="btn btn-lg  btn-danger text-center  fs-6 py-3 mb-1 text-white">
+                        PAYMENT
+                    </button>
+                </div>
+                <!-- <div class="d-grid">
+                    <button type="button" (click)="openComponent('itemTebusMurah')"
+                        class="btn btn-lg  btn-info text-center fs-6 py-3 mb-2 text-white">
+                        TEBUS MURAH
+                    </button>
+                </div> -->
                 <div class="row g-1 mb-2">
                     <div class="col-6" *ngFor="let x of customFunc; let i = index">
                         <div class="d-grid">
-                            <a class="py-2 px-0 btn bg-white border" (click)="callFunction(x)">
-                                <h4 class="mb-0 pb-0">F{{i+1}}</h4>
+                            <a class="py-2 px-0 btn bg-{{x == 0 ? 'white':'primary'}} text-{{x != 0 ? 'white':'dark'}} border"  (click)="callFunction(x)">
+                                <small class="mb-0 pb-0">F{{i+1}}</small>
                                 <div class="lh-sm">
-                                    <small>{{callLabel(x)}}</small>
+                                    <b [innerHTML]="callLabel(x)"></b> 
                                 </div>
                             </a>
                         </div>
@@ -127,7 +135,21 @@
 
 
             </div>
-            <app-widget1></app-widget1>
+            <div class="row g-1">
+                <div class="col-6 d-grid">
+                    <button type="button" class="btn  text-center mb-1 bg-white border py-3 " (click)="back();">
+                        Back
+                    </button>
+                </div>
+
+                <div class="col-6 d-grid">
+                    <button type="button" class="btn  text-center mb-1 bg-white border py-3 "
+                        [routerLink]="[ '/parking' ]">
+                        Parking
+                    </button>
+                </div>
+            </div>
+
         </div>
 
 

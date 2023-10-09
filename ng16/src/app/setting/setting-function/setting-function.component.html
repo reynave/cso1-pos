@@ -2,13 +2,15 @@
 
 <div class="container ">
     <div class="row">
-        <div class="col-12 mb-4">
+        <div class="col-12 col-md-6 mb-4 text-end">
             <a (click)="back();" class="btn  btn-dark  border">Back</a>
+
+            <button type="button" class="btn btn-primary" (click)="save()">Save</button>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-lg-6 col-12">
+        <div class="col-md-6 col-12">
             <div class="border p-1 bg-white">
                 
                 <table class="table table-striped">
@@ -23,13 +25,14 @@
                             <td>F{{i+1}}</td>
                             <td>
                                 <select class="form-control" [(ngModel)]="saveFunc[i]" >
-                                    <option [value]="0"></option>
+                                    <option [value]="0">Emtpy</option>
                                     <option [value]="1">Search Item</option>
                                     <option [value]="2">Add Qty</option>
                                     
                                     <option [value]="3">Payment</option>
                                     <option [value]="4">Edit Qty</option>
                                     <option [value]="5">Cancel Trans</option>
+                                    <option [value]="6">Tebus Murah</option>
                                     
                                     <option [value]="12">Close Admin</option>
                                 </select>

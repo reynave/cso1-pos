@@ -55,7 +55,7 @@ export class CartComponent implements OnInit, OnDestroy {
   newItem: any = [];
   alert: boolean = false;
   func: MyFunction[] = [
-    { id: 0, value: () => { return false; }, label: 'null' },
+    { id: 0, value: () => { return false; }, label: '&nbsp;' },
     { id: 1, value: () => { this.openComponent('items'); }, label: 'Search Items' },
     {
       id: 2, value: () => {
@@ -87,6 +87,8 @@ export class CartComponent implements OnInit, OnDestroy {
       }, label: 'Edit Qty'
     },
     { id: 5, value: () => { this.cancelTrans(); }, label: 'Cancel Trans' },
+    { id: 6, value: () => { this.openComponent('itemTebusMurah'); }, label: 'Tebus Murah' },
+    
     { id: 12, value: () => { this.supervisorMode = false; }, label: 'Close Admin' },
 
   ];
@@ -434,4 +436,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   }
 
+  back(){
+    history.back();
+  }
 }

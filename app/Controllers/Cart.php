@@ -240,23 +240,6 @@ class Cart extends BaseController
                             "updateDate" => time(),
                         );
                         $this->db->table("cso1_kiosk_cart_free_item")->insert($insert);
-
-
-                        // $insert = [
-                        //     "kioskUuid" => $post['kioskUuid'],
-                        //     "itemId" => $freeItem['freeItemId'],
-                        //     "barcode" => $freeItem['freeItemId'],
-                        //     "promotionFreeId" => $freeItem['id'],
-                        //     "promotionId" => $freeItem['promotionId'],
-                        //     "isFreeItem" => 1,
-                        //     "originPrice" => 0,
-                        //     "price" => 0, 
-                        //     "input_date" => date("Y-m-d H:i:s"),
-                        //     "inputDate" => time(),
-                        //     "note" => "",
-                        // ];
-                        // $this->db->table("cso1_kiosk_cart")->insert($insert);
- 
                     }
                     $update = [ 
                         "promotionFreeId" =>  $kioskCartId,  
@@ -418,10 +401,11 @@ class Cart extends BaseController
             $freeItemQty = self::auditFreeItem( $post['item']['itemId'], $post['item']['kioskUuid'],  $post['item']['price'] );
             $updateFreeItem  = false;
             $promotionFree = [];
+            $totalCartFreeItem= 0;
             $promotionFree = model("Promo")->getPromoFree( $post['item']['itemId'] );
             $totalCartFreeItem = (int)model("Core")->select("count(id)","cso1_kiosk_cart_free_item"," promotionId = '".$promotionFree['promotionId']."'  AND promotionFreeId = '".$promotionFree['promotionFreeId']."'  AND barcode = '".$post['item']['itemId']."' and presence = 1");
             
-            if( $freeItemQty >= 0){
+            if( $freeItemQty >= 0 && $promotionFree){
                 $updateFreeItem  = true;
                
                 if( $totalCartFreeItem >  $freeItemQty ){

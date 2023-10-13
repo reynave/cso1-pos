@@ -12,6 +12,7 @@ import { environment } from 'src/environments/environment';
 export class CartDetailComponent implements OnInit {
   @Input() item: any;
   @Input() kioskUuid: any;
+  @Input() totalTebusMurah: number = 0;
 
   @Output() newItemEvent = new EventEmitter<string>();
   search: string = "";
@@ -122,5 +123,7 @@ export class CartDetailComponent implements OnInit {
   
   close() {
     this.modalService.dismissAll();
-  }
+  } 
+
+  
 }

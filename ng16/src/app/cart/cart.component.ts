@@ -92,6 +92,7 @@ export class CartComponent implements OnInit, OnDestroy {
     { id: 12, value: () => { this.supervisorMode = false; }, label: 'Close Admin' },
 
   ];
+  totalTebusMurah : number = 0;
   ilock: number = 0;
   addQty: number = 1;
   item: any = [];
@@ -112,8 +113,7 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.setFunctionSaved();
- 
+    this.setFunctionSaved(); 
     this.supervisorMode = false;
     this.newItem = [];
     this.kioskUuid = this.activatedRoute.snapshot.queryParams['kioskUuid'];
@@ -131,8 +131,7 @@ export class CartComponent implements OnInit, OnDestroy {
     }).subscribe(
       data=>{ 
         //const storedDataString = localStorage.getItem("function.pos");
-        const storedDataString = data['saveFunc'];
-
+        const storedDataString = data['saveFunc']; 
         if (storedDataString) {
           const storedData = JSON.parse(storedDataString);
            this.customFunc = storedData; 
@@ -157,6 +156,7 @@ export class CartComponent implements OnInit, OnDestroy {
     return this.func[index].label;
   }
   tebus_murah : string = "";
+  
   httpCart() {
     this.sendReload();
     this.http.get<any>(environment.api + "cart/index", {
@@ -173,7 +173,7 @@ export class CartComponent implements OnInit, OnDestroy {
         this.bill = data['bill'];
         this.promo_fixed = data['promo_fixed'];
         this.tebus_murah = data['tebus_murah'];
-        
+        this.totalTebusMurah = data['totalTebusMurah'];
         if (data['error'] == true) {
           this.router.navigate(['not-found']);
           this.modalService.dismissAll();
@@ -322,7 +322,7 @@ export class CartComponent implements OnInit, OnDestroy {
       }
     )
   }
-
+ 
   openComponent(comp: any, item: any = []) {
      
     if (comp == 'items') {
@@ -338,6 +338,8 @@ export class CartComponent implements OnInit, OnDestroy {
       const modalRef = this.modalService.open(CartDetailComponent, { size: 'lg' });
       modalRef.componentInstance.item = item;  
       modalRef.componentInstance.kioskUuid = this.kioskUuid;
+      modalRef.componentInstance.totalTebusMurah = this.totalTebusMurah;
+      
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);
         this.httpCart();

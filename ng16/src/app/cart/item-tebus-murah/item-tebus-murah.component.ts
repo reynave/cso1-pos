@@ -12,9 +12,11 @@ import { environment } from 'src/environments/environment';
 export class ItemTebusMurahComponent implements OnInit {  
   @Input() kioskUuid: any; 
   @Output() newItemEvent = new EventEmitter<string>();
-
+  keyword: string = '';
   search: string = "";
   items: any = [];  
+  itemsOrigin: any = [];  
+  
   loading: boolean = false;
   constructor(
     public activeModal: NgbActiveModal,
@@ -36,6 +38,7 @@ export class ItemTebusMurahComponent implements OnInit {
       data=>{
         console.log(data);
         this.items =  data['items'];
+        this.itemsOrigin =  data['items'];
       }
     )
   }
@@ -63,4 +66,16 @@ export class ItemTebusMurahComponent implements OnInit {
   close(){
     this.modalService.dismissAll();
   }
+  onSearchChange() {
+    if (!this.keyword) {
+      this.items = this.itemsOrigin;
+
+    } else {
+      this.items = this.itemsOrigin.filter((item: { searchable: string; }) => {
+        const matchItem = item.searchable.toLowerCase().includes(this.keyword.toLowerCase());
+        return matchItem;
+      });
+    }  
+  }
+
 }

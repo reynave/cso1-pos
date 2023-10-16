@@ -19,6 +19,8 @@ import { SettlementHistoryComponent } from './setting/settlement-history/settlem
 import { VisitorComponent } from './visitor/visitor.component';
 import { ThemesComponent } from './themes/themes.component';
 import { SettingFunctionComponent } from './setting/setting-function/setting-function.component';
+import { RefundComponent } from './refund/refund.component';
+import { RefundTicketHistoryComponent } from './refund/refund-ticket-history/refund-ticket-history.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
@@ -31,6 +33,9 @@ const routes: Routes = [
   { path: "cart", component: CartComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "setup", component: SetupComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "parking", component: ParkingComponent, data: { active: "" },  canActivate:[authGuard]  }, 
+  { path: "refund", component: RefundComponent, data: { active: "" },  canActivate:[authGuard]  }, 
+  { path: "refund/ticketHistory", component: RefundTicketHistoryComponent, data: { active: "" },  canActivate:[authGuard]  }, 
+  
   { path: "payment", component: PaymentComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "printing", component: PrintingComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "printing/history", component: PrintingHistoryComponent, data: { active: "" },  canActivate:[authGuard]  }, 

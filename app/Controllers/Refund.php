@@ -18,6 +18,7 @@ class Refund extends BaseController
         $data = array(
             "error" => false,
             "items" => $items,
+            "maxExchange" => 1,
             "s" => $search,
         );
 
@@ -26,7 +27,7 @@ class Refund extends BaseController
     function transaction_detail()
     {
         $id = strtoupper($this->request->getVar()['id']);
-        $q1 = "SELECT t.id, i.description, t.price , t.refund, t.promotionId, t.promotionFreeId, t.promotionItemId, '' as 'promotion', '' as checkbox
+        $q1 = "SELECT t.id, i.description, t.price , t.refund, t.exchange, t.promotionId, t.promotionFreeId, t.promotionItemId, '' as 'promotion', '' as checkbox
         FROM cso1_transaction_detail AS t
         LEFT JOIN cso1_item AS i ON i.id = t.itemId
         WHERE t.transactionId = '" . $id . "' AND t.void = 0 AND t.presence = 1 ORDER BY t.id ASC;";
@@ -65,13 +66,36 @@ class Refund extends BaseController
                 "id" => $ticket,
                 "transactionId" => $post['transactionId'], 
                 "refundTotalAmount" =>  $post['total'],
-                "terminalId" =>  $post['terminalId'],
-                
+                "terminalId" =>  $post['terminalId'], 
                 "inputDate" => time(),
                 "input_date" => date("Y-m-d H:i:s"),
-                "input_by" => model("Core")->accountId(),
-                
+                "input_by" => model("Core")->accountId(), 
             ]);
+            $data = array(
+                "error" => false, 
+                "ticket" => $ticket,
+            );
+        }
+        return $this->response->setJSON($data);
+    }
+    function fnExchange()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $data = array(
+            "error" => true,
+            "post" => $post,
+        );
+        if ($post) {
+            $ticket = $post['ticket'];
+            foreach ($post['detail'] as $row) {
+                if ($row['checkbox'] == true) { 
+                    $this->db->table("cso1_transaction_detail")->update([
+                        "exchange" => $ticket,
+                        "updateDate" => time(),
+                    ], "id = '" . $row['id'] . "'"); 
+                }
+            }
+           
             $data = array(
                 "error" => false, 
                 "ticket" => $ticket,

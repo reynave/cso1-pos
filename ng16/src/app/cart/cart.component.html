@@ -108,7 +108,7 @@
 
                 </div>
                 <div class="d-grid" >
-                    <button type="button" (click)="goToPayment()" [disabled]="bill['total'] <= 0"
+                    <button type="button" (click)="goToPayment()" [disabled]="items.length <= 0"
                         class="btn btn-lg  btn-danger text-center  fs-6 py-3 mb-1 text-white">
                         PAYMENT
                     </button>

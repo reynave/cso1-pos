@@ -100,18 +100,15 @@ export class PrintingService {
      
     message += "\n";
     bill['promo_fixed'].forEach((el: any) => {
-      message += el['detail']['shortDesc'] + "\n"; 
+      if(el['detail']['shortDesc']){
+        message += el['detail']['shortDesc'] + "\n"; 
+      }
+     
     });
   
  
-    message += bill['template']['footer'].replace("<br>", "\n") + "\n\n\n\n";
-    message += "                                               " + "\n";
-    message += "                                               " + "\n";
-    message += "                                               " + "\n";
-    message += "                                               " + "\n";
-    message += "                                               " + "\n";
-    message += "                                               " + "\n";
-    message += "                                               " + "\n";
+    message += bill['template']['footer'].replace("<br>", "\n") + "\n";
+    message += "                                               " + "\n"; 
 
     console.log(message);
     return message;

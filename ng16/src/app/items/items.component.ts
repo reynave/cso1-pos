@@ -11,11 +11,14 @@ import { environment } from 'src/environments/environment';
 })
 export class ItemsComponent implements OnInit {
   @Input() kioskUuid : any;
+  @Input() exchange : any;
+  
   @Output() newItemEvent = new EventEmitter<string>();
   search : string = "";
   items : any = [];
   isSearch : boolean =false;
   loading : boolean = false;
+  totalExchange : number = 0;
 	constructor(
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
@@ -26,8 +29,17 @@ export class ItemsComponent implements OnInit {
     setTimeout(()=>{
       this.search = "";
     },100); 
+    this.fnExchange();
   }
 
+  fnExchange(){
+     
+    this.exchange.forEach((el: any) => {
+      if(el['checkbox'] == true){
+        this.totalExchange += Number(el['price']);
+      }
+    });
+  }
   
 
   addNewItem(value: string) {
@@ -62,24 +74,45 @@ export class ItemsComponent implements OnInit {
     const body = {
       item : x,
       barcode : x.barcode,
-      kioskUuid : this.kioskUuid
+      kioskUuid : this.kioskUuid,
+      terminalId : localStorage.getItem("terminalId"),
+      totalExchange : this.totalExchange,
     }
     console.log(body);
-    this.http.post<any>(environment.api+"cart/addToCart",body,{
-      headers : this.configService.headers(), 
-    }).subscribe(
-      data=> {
-        console.log(data);
-        this.loading = false;
-        this.modalService.dismissAll();
-        this.addNewItem('add new item');
-      },
-      error=>{
-        console.log(error);
-      }
-    )
+    if(this.kioskUuid == 'exchange'){
+      this.http.post<any>(environment.api+"cart/exchange",body,{
+        headers : this.configService.headers(), 
+      }).subscribe(
+        data=> {
+          console.log(data);
+          this.loading = false;
+          this.modalService.dismissAll();
+          this.addNewItem(data);
+        },
+        error=>{
+          console.log(error);
+        }
+      )
+    }else{
+      this.http.post<any>(environment.api+"cart/addToCart",body,{
+        headers : this.configService.headers(), 
+      }).subscribe(
+        data=> {
+          console.log(data);
+          this.loading = false;
+          this.modalService.dismissAll();
+          this.addNewItem('add new item');
+        },
+        error=>{
+          console.log(error);
+        }
+      )
+    }
+    
   }
   close(){
     this.modalService.dismissAll();
   }
+
+ 
 }

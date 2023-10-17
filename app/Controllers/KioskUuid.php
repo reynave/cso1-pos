@@ -68,17 +68,46 @@ class KioskUuid extends BaseController
         ];
         if ($post) {
 
-            $id = $post['terminalId'] .'.'.date("ymd").'.'.model("Core")->number("pos"); 
-            
+            $id = $post['terminalId'] .'.'.date("ymd").'.'.model("Core")->number("pos");  
+
             $this->db->table("cso1_kiosk_uuid")->insert([
                 "kioskUuid" => $id,
                 "terminalId" => $post['terminalId'],
                 "cashierId" => model("Core")->accountId(), 
                 "update_date" => date("Y-m-d H:i:s"),
                 "input_date" => date("Y-m-d H:i:s"),
-                "inputDate" => time()
-              
+                "inputDate" => time(), 
+                
             ]);
+
+            if(isset($post['exchange'])){
+                $ticket = $post['terminalId'].model("Core")->number("exchange");
+ 
+                $this->db->table("cso1_kiosk_uuid")->update([ 
+                    "exchange" => $ticket,
+                ]," kioskUuid = '$id' ");
+
+                foreach($post['exchange'] as $row){
+                    $insert = [ 
+                        "kioskUuid" => $id,
+                        "itemId" => model("Core")->select("itemId","cso1_transaction_detail","id='".$row['id']."'"),
+                        "barcode" => model("Core")->select("barcode","cso1_transaction_detail","id='".$row['id']."'"),
+                        "originPrice" => $row['price'],
+                        "price" => -1 * $row['price'],
+                        "promotionId" => "0",
+                        "input_date" => date("Y-m-d H:i:s"),
+                        "inputDate" => time(),
+                        "note" => $ticket,
+                    ];
+                    if($row['checkbox'] == true){
+                        $this->db->table("cso1_kiosk_cart")->insert($insert);
+                        
+                        $this->db->table("cso1_transaction_detail")->update([
+                            "exchange" => $ticket,
+                        ]," id = '".$row['id']."' ");
+                    } 
+                }
+            }
  
             $data = array(
                 "error" => false,

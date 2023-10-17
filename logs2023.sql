@@ -25,3 +25,10 @@ ALTER TABLE `cso1_promotion`
 
 ALTER TABLE `cso1_kiosk_cart`
 	ADD COLUMN `promotionFreeId` INT(11) NULL DEFAULT NULL AFTER `promotionItemId`;
+
+
+	ALTER TABLE `cso1_transaction_detail`
+	ADD COLUMN `exchange` VARCHAR(50) NOT NULL DEFAULT '' AFTER `refund`;
+
+ALTER TABLE `cso1_kiosk_uuid`
+	ADD COLUMN `exchange` VARCHAR(50) NOT NULL AFTER `kioskUuid`;

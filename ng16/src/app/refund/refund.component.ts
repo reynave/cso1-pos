@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ItemsComponent } from '../items/items.component';
 
 @Component({
   selector: 'app-refund',
@@ -67,23 +68,23 @@ export class RefundComponent implements OnInit {
           }
         )
       }
-    ) 
+    )
     //this.modalService.open(content, { size: 'lg' });
   }
 
 
-  fnCheckItem(index: any) { 
-    if (this.detail[index]['refund'] == '') {
+  fnCheckItem(index: any) {
+    if (this.detail[index]['refund']+this.detail[index]['exchange']  == '') {
 
       if (this.detail[index]['checkbox'] != true) {
         this.detail[index]['checkbox'] = true;
       } else {
         this.detail[index]['checkbox'] = '';
-      } 
+      }
       this.total();
     }
 
- 
+
   }
 
 
@@ -112,7 +113,7 @@ export class RefundComponent implements OnInit {
       }).subscribe(
         data => {
           console.log(data);
-          this.rounter.navigate(['refund/ticketHistory'], { queryParams:{id:data['ticket']}});
+          this.rounter.navigate(['refund/ticketHistory'], { queryParams: { id: data['ticket'] } });
         },
         error => {
           console.log(error);
@@ -121,7 +122,51 @@ export class RefundComponent implements OnInit {
     }
   }
 
-  fnExchange() {
+  fnExchange(content: any) {
+    this.modalService.open(content, { size: 'xl' });
 
+    const modalRef = this.modalService.open(ItemsComponent, { size: 'lg' });
+    modalRef.componentInstance.kioskUuid = 'exchange';
+    modalRef.componentInstance.exchange = this.detail;
+    
+    modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
+      let kioskUuid = data['kioskUuid'];
+      console.log('newItemEvent', data);
+      const body = {
+        transactionId: this.item.id,
+        detail: this.detail,
+        terminalId: localStorage.getItem("terminalId"), 
+        ticket: data['ticket'],  
+        kioskUuid :kioskUuid,
+      }
+      this.http.post<any>(environment.api + "refund/fnExchange", body, {
+        headers: this.configService.headers()
+      }).subscribe(
+        data => {
+          console.log(data);
+          this.rounter.navigate(["cart"], { queryParams: { kioskUuid: kioskUuid } }); 
+        },
+        error => {
+          console.log(error);
+        }
+      )
+   
+    });
+
+    // const body = {
+    //   terminalId: localStorage.getItem("terminalId"),
+    //   exchange: this.detail,
+    // }
+    // this.http.post<any>(environment.api + "KioskUuid/getKioskUuid", body, {
+    //   headers: this.configService.headers(),
+    // }).subscribe(
+    //   data => {
+    //     console.log(data);
+    //     this.rounter.navigate(["cart"], { queryParams: { kioskUuid: data['id'] } }); 
+    //   },
+    //   error => {
+    //     console.log(error);
+    //   }
+    // );
   }
 }

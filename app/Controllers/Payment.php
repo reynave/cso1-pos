@@ -48,8 +48,7 @@ class Payment extends BaseController
             "freeParking" =>  model("Promo")->freeParking( $data['total']['bill']),
             "voucher" =>   model("Promo")->voucher( $data['total']['bill']),
             "voucherDiscount" =>  model("Promo")->voucherDiscount( $data['total']['bill']),
-            "luckyDip" =>  model("Promo")->luckyDip( $data['total']['bill']),
-            
+            "luckyDip" =>  model("Promo")->luckyDip( $data['total']['bill']), 
             
        ];
         return $this->response->setJSON($data);
@@ -106,13 +105,19 @@ class Payment extends BaseController
 
         $summary = model("Core")->summary($kioskUuid);
         $finalPrice = (int) $summary['final'];
-        if ($closed === true  && $finalPrice > 0 && !model("Core")->select("id", "cso1_transaction", "kioskUuid = '$kioskUuid'")) {
+        //&& $finalPrice > 0
+        if ($closed === true   && !model("Core")->select("id", "cso1_transaction", "kioskUuid = '$kioskUuid'")) {
 
             $this->db->transStart();
             $terminalId = $get['terminalId'];
             $storeOutlesId = "Comingsoon";
 
-            $id =  $terminalId."." .date("ymd"). "." .model("Core")->number("transaction");
+          //  if(model("Core")->select("exchange", "cso1_kiosk_cart", "kioskUuid = '$kioskUuid'")!=''){
+           //     $id = model("Core")->select("exchange", "cso1_kiosk_cart", "kioskUuid = '$kioskUuid'");
+          //  }else{
+                $id =  $terminalId."." .date("ymd"). "." .model("Core")->number("transaction");
+          //  }
+           
             
             $this->db->table("cso1_transaction")->insert([
                 "id" => $id,

@@ -66,6 +66,7 @@ export class HomeComponent implements OnInit {
       }
     )
   }
+  
   sendReload(){
     const msg = {
       to: 'visitor',

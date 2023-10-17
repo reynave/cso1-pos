@@ -33,14 +33,13 @@
                         <th></th>
                         <td>Description</td>
                         <td class="text-end">Price</td>
-                        <td>Refund Ticket</td>
-
+                        <td>Refund Ticket</td> 
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let x of detail; let i = index" (click)="fnCheckItem(i)">
                         <td>
-                            <div *ngIf="x.refund == '' ">
+                            <div *ngIf="x.refund+x.exchange == ''   ">
                                 <i *ngIf="x.checkbox == '' " class="bi bi-square"></i>
                                 <i *ngIf="x.checkbox == true " class="bi bi-check-square-fill text-primary"></i>
 
@@ -48,15 +47,11 @@
                         </td>
 
                         <td>
-                            <div>
-                                {{x.description}}
-                            </div>
-                            <div>
-                                {{x.promotion}}
-                            </div>
+                            <div>  {{x.description}}  </div>
+                            <div>  {{x.promotion}}  </div>
                         </td>
                         <td class="text-end">{{x.price | number}}</td>
-                        <td class="">{{x.refund}}</td>
+                        <td class="">{{x.refund}}{{x.exchange}}</td>
 
                     </tr>
 
@@ -81,7 +76,7 @@
                         <div class="col">
                             <div class="d-grid">
                                 <button type="button" [disabled]="total() <= 0" class="btn btn-warning m-2"
-                                    (click)="fnExchange()">
+                                    (click)="fnExchange(content)">
                                     EXCHANGE
                                 </button>
                             </div>
@@ -100,3 +95,16 @@
 
     </div>
 </div>
+
+<ng-template #content let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+		 
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+	</div>
+</ng-template>

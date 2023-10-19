@@ -130,7 +130,9 @@ export class RefundComponent implements OnInit {
         data => {
           console.log(data);
           this.modalService.dismissAll();
-          this.rounter.navigate(['refund/ticketHistory'], { queryParams: { id: data['ticket'] } });
+        //  this.rounter.navigate(['refund/ticketHistory'], { queryParams: { id: data['ticket'] } });
+          this.rounter.navigate(['printing'], { queryParams: { id: data['id'] } });
+          
         },
         error => {
           console.log(error);
@@ -139,52 +141,7 @@ export class RefundComponent implements OnInit {
     }
   }
 
-  fnExchangeDEL(content: any) {
-    this.modalService.open(content, { size: 'xl' });
-
-    const modalRef = this.modalService.open(ItemsComponent, { size: 'lg' });
-    modalRef.componentInstance.kioskUuid = 'exchange';
-    modalRef.componentInstance.exchange = this.detail;
-    
-    modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
-      let kioskUuid = data['kioskUuid'];
-      console.log('newItemEvent', data);
-      const body = {
-        transactionId: this.item.id,
-        detail: this.detail,
-        terminalId: localStorage.getItem("terminalId"), 
-        ticket: data['ticket'],  
-        kioskUuid :kioskUuid,
-      }
-      this.http.post<any>(environment.api + "refund/fnExchange", body, {
-        headers: this.configService.headers()
-      }).subscribe(
-        data => {
-          console.log(data);
-          this.rounter.navigate(["cart"], { queryParams: { kioskUuid: kioskUuid } }); 
-        },
-        error => {
-          console.log(error);
-        }
-      )
-   
-    }); 
-    // const body = {
-    //   terminalId: localStorage.getItem("terminalId"),
-    //   exchange: this.detail,
-    // }
-    // this.http.post<any>(environment.api + "KioskUuid/getKioskUuid", body, {
-    //   headers: this.configService.headers(),
-    // }).subscribe(
-    //   data => {
-    //     console.log(data);
-    //     this.rounter.navigate(["cart"], { queryParams: { kioskUuid: data['id'] } }); 
-    //   },
-    //   error => {
-    //     console.log(error);
-    //   }
-    // );
-  }
+  
 
   fnExchange() {
     if (confirm("Are you sure want to exchange this item ?")) {

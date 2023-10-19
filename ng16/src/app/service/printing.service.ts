@@ -59,7 +59,8 @@ export class PrintingService {
     items.forEach((el: any) => {
      let disc =  (el['totalDiscount'] > 0 ? this.stringfix("(DISC " + this.numberFormat(el['totalDiscount']) + "", 14, 'f') + ")" : "");
 
-      message += el['barcode'] + " " + el['shortDesc'] + disc +' '+ (el['promotionId'] == 'Exchanges' ?el['promotionId'] : '') +"\n";
+      message += el['barcode'] + " " + el['shortDesc'] + disc +' '+ 
+      ( ( el['promotionId'] == 'EXCHANGES' || el['promotionId'] == 'REFUND' )  ? el['promotionId']  : '') +"\n";
       message +=
         this.stringfix(el['qty'], 4) + " X " +  
         this.stringfix(this.numberFormat(el['price']), 10, 'f') + " "  + this.stringfix(" ", 14, 'f') +  

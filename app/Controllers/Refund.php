@@ -78,7 +78,7 @@ class Refund extends BaseController
                         "transactionId" => $id,  
                         "itemId" => model("Core")->select("itemId","cso1_transaction_detail","id='".$row['id']."'"),
                         "barcode" => model("Core")->select("barcode","cso1_transaction_detail","id='".$row['id']."'"),
-                        
+                        "promotionId" => "REFUND",
                         "originPrice" => (int)$row['price'] * -1,
                         "price" =>(int)$row['price'] * -1, 
                         "note" => $ticket,
@@ -137,6 +137,7 @@ class Refund extends BaseController
             $data = array(
                 "error" => false,
                 "ticket" => $ticket,
+                "id" => $id,
             );
         }
         return $this->response->setJSON($data);
@@ -169,7 +170,7 @@ class Refund extends BaseController
                     //new Transaction 
                     $this->db->table("cso1_kiosk_cart")->insert([
                         "kioskUuid" => $kioskUuid,  
-                        "promotionId" => "Exchanges",
+                        "promotionId" => "EXCHANGES",
                         "itemId" => model("Core")->select("itemId","cso1_transaction_detail","id='".$row['id']."'"),
                         "barcode" => model("Core")->select("barcode","cso1_transaction_detail","id='".$row['id']."'"), 
                         "originPrice" => (int)$row['price'] * -1,
@@ -180,8 +181,7 @@ class Refund extends BaseController
                         "updateDate" =>  time(),
                     ]);
 
-
-
+ 
                     $this->db->table("cso1_transaction_detail")->update([
                         "exchange" => $ticket,
                         "updateDate" => time(),

@@ -76,14 +76,14 @@
                         <div class="col">
                             <div class="d-grid">
                                 <button type="button" [disabled]="total() <= 0" class="btn btn-warning m-2"
-                                    (click)="fnExchange(content)">
+                                    (click)="fnExchange()">
                                     EXCHANGE
                                 </button>
                             </div>
                         </div>
                         <div class="col">
                             <div class="d-grid">
-                                <button type="button" class="btn btn-danger m-2" (click)="fnRefund()">
+                                <button type="button" class="btn btn-danger m-2" (click)="open(content)">
                                     REFUND
                                 </button>
                             </div>
@@ -98,13 +98,19 @@
 
 <ng-template #content let-modal>
 	<div class="modal-header">
-		<h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+		<strong class="modal-title" id="modal-basic-title">Select Payment Type for refund</strong>
 		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
 	</div>
 	<div class="modal-body">
-		 
+        <div class="row">
+            <div class="col-4 d-grid mb-3" *ngFor="let x of paymentMethod"> 
+                <button type="button" class="btn btn-lg rounded-0 btn-primary" (click)="fnRefund(x)">{{x.label}}</button>
+            </div>
+        </div>
+        
 	</div>
 	<div class="modal-footer">
-		<button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+		<button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Cancel</button>
 	</div>
 </ng-template>
+

@@ -196,6 +196,7 @@ class Core extends Model
         );
 
         $summary['final'] = $summary['total'] - $summary['discount'] - $summary['memberDiscount'];
+    //    $summary['final'] =  $summary['final'] < 0 ? 1 :  $summary['final'];
         return $summary;
     }
     function barcode($code)

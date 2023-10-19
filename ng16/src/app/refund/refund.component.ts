@@ -13,7 +13,8 @@ import { ItemsComponent } from '../items/items.component';
 })
 export class RefundComponent implements OnInit {
   searchTrans: string = "";
-  items: any = [];
+  items: any = []; 
+  paymentMethod : any = [];
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
@@ -31,6 +32,21 @@ export class RefundComponent implements OnInit {
     if (this.searchTrans != '') {
       this.fnSearch();
     }
+    this.httpPaymentMethod();
+
+  }
+
+  httpPaymentMethod() {
+    this.http.get<any>(environment.api + "payment/method", {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => {
+        this.paymentMethod = data['items']; 
+      },
+      error => {
+        console.log(error);
+      }
+    )
   }
 
   fnSearch() {
@@ -99,20 +115,21 @@ export class RefundComponent implements OnInit {
     return total;
   }
 
-  fnRefund() {
+  fnRefund(x:any) {
     if (confirm("Are you sure want to refund ?")) {
       const body = {
         detail: this.detail,
         terminalId: localStorage.getItem("terminalId"),
         transactionId: this.item.id,
         total: this.total(),
-
+        paymentMethod : x,
       }
       this.http.post<any>(environment.api + "refund/fnRefund", body, {
         headers: this.configService.headers()
       }).subscribe(
         data => {
           console.log(data);
+          this.modalService.dismissAll();
           this.rounter.navigate(['refund/ticketHistory'], { queryParams: { id: data['ticket'] } });
         },
         error => {
@@ -122,7 +139,7 @@ export class RefundComponent implements OnInit {
     }
   }
 
-  fnExchange(content: any) {
+  fnExchangeDEL(content: any) {
     this.modalService.open(content, { size: 'xl' });
 
     const modalRef = this.modalService.open(ItemsComponent, { size: 'lg' });
@@ -151,8 +168,7 @@ export class RefundComponent implements OnInit {
         }
       )
    
-    });
-
+    }); 
     // const body = {
     //   terminalId: localStorage.getItem("terminalId"),
     //   exchange: this.detail,
@@ -169,4 +185,30 @@ export class RefundComponent implements OnInit {
     //   }
     // );
   }
+
+  fnExchange() {
+    if (confirm("Are you sure want to exchange this item ?")) {
+      const body = {
+        transactionId: this.item.id,
+        detail: this.detail,
+        terminalId: localStorage.getItem("terminalId"),  
+      }
+      this.http.post<any>(environment.api + "refund/fnExchange", body, {
+        headers: this.configService.headers()
+      }).subscribe(
+        data => {
+          console.log(data);
+          this.rounter.navigate(["cart"], { queryParams: { kioskUuid: data['kioskUuid'] } }); 
+        },
+        error => {
+          console.log(error);
+        }
+      )
+    }
+  }
+
+  open(content: any) {
+		this.modalService.open(content, { size: 'lg' });
+	}
+
 }

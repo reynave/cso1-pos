@@ -25,8 +25,9 @@ class Printing extends BaseController
     {
         $data = [];
 
-        $id = str_replace(["'", '"', "-"], "", $this->request->getVar()['id']);
-        if ($id) {
+    
+        if ($this->request->getVar()['id']   && $this->request->getVar()['id']  != "undefined") {
+            $id = str_replace(["'", '"', "-"], "", $this->request->getVar()['id']);
             $isId = model("Core")->select("endDate", "cso1_transaction", "id='" . $id . "'");
 
             $items = model("Core")->sql("SELECT t1.*, i.description, i.shortDesc, i.id as 'itemId'
@@ -51,6 +52,7 @@ class Printing extends BaseController
 
 
             $data = array(
+                "get" => $this->request->getVar(),
                 "id" => $id,
                 "printable" => $isId ? true : false,
                 "date" => model("Core")->select("endDate", "cso1_transaction", "id='" . $id . "'"),

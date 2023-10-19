@@ -59,11 +59,10 @@ export class PrintingService {
     items.forEach((el: any) => {
      let disc =  (el['totalDiscount'] > 0 ? this.stringfix("(DISC " + this.numberFormat(el['totalDiscount']) + "", 14, 'f') + ")" : "");
 
-      message += el['barcode'] + " " + el['shortDesc'] + disc + "\n";
+      message += el['barcode'] + " " + el['shortDesc'] + disc +' '+ (el['promotionId'] == 'Exchanges' ?el['promotionId'] : '') +"\n";
       message +=
         this.stringfix(el['qty'], 4) + " X " +  
-        this.stringfix(this.numberFormat(el['price']), 10, 'f') + " "  + this.stringfix(" ", 14, 'f') +
-        
+        this.stringfix(this.numberFormat(el['price']), 10, 'f') + " "  + this.stringfix(" ", 14, 'f') +  
         this.stringfix(this.numberFormat(el['totalPrice']), 15, 'f') +
         "\n";
     });
@@ -73,7 +72,7 @@ export class PrintingService {
     message += "DISCOUNT              :" + this.stringfix(this.numberFormat(summary['discount']), 24, 'f') + "\n";
     message += "DISCOUNT MEMBER       :" + this.stringfix(this.numberFormat(summary['discountMember']), 24, 'f') + "\n";
     message += "VOUCHER               :" + this.stringfix(this.numberFormat(summary['voucher']), 24, 'f') + "\n";
-    message += "TOTAL (SETELAH PAJAK) :" + this.stringfix(this.numberFormat(summary['final']), 24, 'f') + "\n";
+    message += "TOTAL (SETELAH PAJAK) :" + this.stringfix(this.numberFormat( Number(summary['final']) < 0 ? 1 : summary['final'])  , 24, 'f') + "\n";
     //console.log("123456789-123456789-123456789-123456789-12345678"+"\n");
     message += "\n";
     message += "        BKP         PPN         DPP     NON BKP" + "\n";

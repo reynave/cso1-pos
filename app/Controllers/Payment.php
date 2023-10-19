@@ -32,12 +32,13 @@ class Payment extends BaseController
         WHERE a.kioskUuid = '$kioskUuid' ";
         $kioskPaid = $this->db->query($q1)->getResultArray();
 
-        $bill = (int) model("Core")->select("sum(price)", "cso1_kiosk_cart", "kioskUuid = '$kioskUuid'");
+        $bill = (int) model("Core")->select("sum(price)", "cso1_kiosk_cart", "kioskUuid = '$kioskUuid'") ;
+        $bill =   $bill < 0  ? 1 :   $bill;
         $paid = (int) model("Core")->select("sum(paid)", "cso1_kiosk_paid_pos", "kioskUuid = '$kioskUuid'");
         $data = array(
             "error" => false,
             "total" => array(
-                "bill" => $bill,
+                "bill" => $bill ,
                 "remaining" => $bill - $paid,
                 "paid" => $paid,
             ),
@@ -99,7 +100,8 @@ class Payment extends BaseController
 
         $paid = (int) model("Core")->select("sum(paid)", "cso1_kiosk_paid_pos", "kioskUuid = '$kioskUuid'");
         $invoiced = (int) model("Core")->select("sum(price)", "cso1_kiosk_cart", "kioskUuid = '$kioskUuid' and presence = 1 and void = 0");
-
+        $invoiced = $invoiced < 0 ? 1 : $invoiced;
+        
         $closed = ($paid - $invoiced) == 0 ? true : false;
         $summary = [];
 
@@ -221,7 +223,7 @@ class Payment extends BaseController
             $this->db->table("cso2_balance")->update([ 
                 "transactionId" =>  $id,   
             ]," kioskUuid = '$kioskUuid' ");
-             
+              
             $this->db->transComplete();
 
             $data = array(

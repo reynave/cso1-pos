@@ -57,7 +57,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     this.kioskUuid = this.activatedRoute.snapshot.queryParams['kioskUuid'];
     this.httpCart();
     this.httpPaymentMethod();
-    this.httpPaymentInvoice();
+     this.httpPaymentInvoice();
     this.terminalId = localStorage.getItem("terminalId");
   
   }
@@ -84,6 +84,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
       }
     }).subscribe(
       data => {
+        console.log('httpCart',data);
         this.items = data['items'];
         this.promo_fixed = data['promo_fixed'];
       },
@@ -114,6 +115,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
       }
     }).subscribe(
       data => { 
+        console.log('payment/invoice',data);
         this.total = data['total'];
         this.kioskPaid = data['kioskPaid'];
         this.close = data['close'];

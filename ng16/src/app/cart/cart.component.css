@@ -17,3 +17,7 @@ small{
     font-size: 0.8rem;
 
 }
+
+.style1{
+    font-family: var(--font-roboto-mono);
+}

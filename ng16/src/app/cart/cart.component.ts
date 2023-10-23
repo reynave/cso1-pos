@@ -8,6 +8,7 @@ import { CartDetailComponent } from './cart-detail/cart-detail.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MyFunction } from './functions';
 import { ItemTebusMurahComponent } from './item-tebus-murah/item-tebus-murah.component';
+import { CartUpdatePriceComponent } from './cart-update-price/cart-update-price.component';
 
 @Component({
   selector: 'app-cart',
@@ -34,7 +35,7 @@ export class CartComponent implements OnInit, OnDestroy {
   @HostListener('document:keypress', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     this.key = event.key;
-  //  console.log(event);
+    //  console.log(event);
 
     // BISA DI DALAM Loop!
     if (event.charCode == 70) {
@@ -88,17 +89,29 @@ export class CartComponent implements OnInit, OnDestroy {
     },
     { id: 5, value: () => { this.cancelTrans(); }, label: 'Cancel Trans' },
     { id: 6, value: () => { this.openComponent('itemTebusMurah'); }, label: 'Tebus Murah' },
-    
+    {
+      id: 7, value: () => {
+        if (this.activeCart.length != 0 && ( this.activeCart.price < 2  && this.activeCart.price > 0 )) {
+          this.openComponent('updatePrice');
+        }else{
+          alert("Item ini tidak bisa update harga");
+        }
+      
+      }, label: 'Update Price Rp 1'
+    },
+
     { id: 12, value: () => { this.supervisorMode = false; }, label: 'Close Admin' },
 
   ];
-  totalTebusMurah : number = 0;
+
+  tebus_murah: string = "";
+  totalTebusMurah: number = 0;
   ilock: number = 0;
   addQty: number = 1;
   item: any = [];
-  activeCart: any = []; 
-  promo_fixed : any = [];
-  freeItem : any = [];
+  activeCart: any = [];
+  promo_fixed: any = [];
+  freeItem: any = [];
   private _docSub: any;
   constructor(
     private configService: ConfigService,
@@ -113,38 +126,38 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.setFunctionSaved(); 
+    this.setFunctionSaved();
     this.supervisorMode = false;
     this.newItem = [];
     this.kioskUuid = this.activatedRoute.snapshot.queryParams['kioskUuid'];
     this.httpCart();
     this._docSub = this.configService.getMessage().subscribe(
       (data: { [x: string]: any; }) => {
-       // console.log(data);
+        // console.log(data);
       }
     );
   }
 
-  setFunctionSaved() { 
-    this.http.get<any>(environment.api+"setting/getFunc",{
-      headers : this.configService.headers(),
+  setFunctionSaved() {
+    this.http.get<any>(environment.api + "setting/getFunc", {
+      headers: this.configService.headers(),
     }).subscribe(
-      data=>{ 
+      data => {
         //const storedDataString = localStorage.getItem("function.pos");
-        const storedDataString = data['saveFunc']; 
+        const storedDataString = data['saveFunc'];
         if (storedDataString) {
           const storedData = JSON.parse(storedDataString);
-           this.customFunc = storedData; 
+          this.customFunc = storedData;
         } else {
-          const storedDataString = localStorage.setItem("function.pos", JSON.stringify(this.customFunc)); 
+          const storedDataString = localStorage.setItem("function.pos", JSON.stringify(this.customFunc));
           console.log("Data tidak ditemukan di localStorage.");
         }
       }
     )
-   
+
   }
 
-  callFunction(id: number) {  
+  callFunction(id: number) {
     const item = this.func.find((x: { id: number; }) => x.id === id);
     console.log(id, item)
     if (item && item.value && typeof item.value === 'function') {
@@ -155,8 +168,7 @@ export class CartComponent implements OnInit, OnDestroy {
     const index = this.func.findIndex((item: { id: number }) => item.id === id);
     return this.func[index].label;
   }
-  tebus_murah : string = "";
-  
+
   httpCart() {
     this.sendReload();
     this.http.get<any>(environment.api + "cart/index", {
@@ -166,7 +178,7 @@ export class CartComponent implements OnInit, OnDestroy {
       }
     }).subscribe(
       data => {
-      //   console.log(data);
+        //   console.log(data);
         this.items = data['items'];
         this.ilock = data['ilock'];
         this.itemsFree = data['itemsFree'];
@@ -189,7 +201,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   scrollToBottom() {
     setTimeout(() => {
-       
+
       try {
         this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
       } catch (err) { }
@@ -214,7 +226,7 @@ export class CartComponent implements OnInit, OnDestroy {
       action: 'cart',
       kioskUuid: this.kioskUuid
     }
-    this.configService.sendMessage(msg); 
+    this.configService.sendMessage(msg);
   }
 
   addToCart() {
@@ -279,7 +291,7 @@ export class CartComponent implements OnInit, OnDestroy {
   open(content: any, item: any) {
     this.addQty = 1;
     this.item = item;
-    this.modalService.open(content);
+    this.modalService.open(content, { size: 'lg' });
   }
 
   checkNumber() {
@@ -291,11 +303,11 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
 
-  selectItem(x: any) { 
-    this.activeCart  = []
-    if(x.total > 0){
+  selectItem(x: any) {
+    this.activeCart = []
+    if (x.total > 0) {
       this.activeCart = x;
-    } 
+    }
   }
 
   onSubmitQty() {
@@ -322,9 +334,9 @@ export class CartComponent implements OnInit, OnDestroy {
       }
     )
   }
- 
+
   openComponent(comp: any, item: any = []) {
-     
+
     if (comp == 'items') {
       const modalRef = this.modalService.open(ItemsComponent, { size: 'lg' });
       modalRef.componentInstance.kioskUuid = this.kioskUuid;
@@ -336,10 +348,21 @@ export class CartComponent implements OnInit, OnDestroy {
 
     if (comp == 'cartDetail') {
       const modalRef = this.modalService.open(CartDetailComponent, { size: 'lg' });
-      modalRef.componentInstance.item = item;  
+      modalRef.componentInstance.item = item;
       modalRef.componentInstance.kioskUuid = this.kioskUuid;
       modalRef.componentInstance.totalTebusMurah = this.totalTebusMurah;
-      
+
+      modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
+        console.log('modalRef.componentInstance.newItemEvent', data);
+        this.httpCart();
+      });
+    }
+
+    if (comp == 'updatePrice') {
+      const modalRef = this.modalService.open(CartUpdatePriceComponent, { size: 'lg' });
+      modalRef.componentInstance.activeCart = this.activeCart;
+      modalRef.componentInstance.kioskUuid = this.kioskUuid;
+
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);
         this.httpCart();
@@ -347,7 +370,7 @@ export class CartComponent implements OnInit, OnDestroy {
     }
 
     if (comp == 'itemTebusMurah') {
-      const modalRef = this.modalService.open(ItemTebusMurahComponent, { size: 'xl' }); 
+      const modalRef = this.modalService.open(ItemTebusMurahComponent, { size: 'xl' });
       modalRef.componentInstance.kioskUuid = this.kioskUuid;
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('itemTebusMurah', data);
@@ -438,7 +461,47 @@ export class CartComponent implements OnInit, OnDestroy {
 
   }
 
-  back(){
+  back() {
     history.back();
+  }
+
+  addAmount(val: string) {
+    let amount: number = 0;
+    let tempAmount = this.activeCart.price.toString();
+    this.activeCart.price = Number.parseInt(tempAmount + val);
+  }
+
+  paymentCutLastOne() {
+    let tempAmount = this.activeCart.price.toString().slice(0, -1);
+    let amount = Number.parseInt(tempAmount);
+
+    this.activeCart.price = (Number.isNaN(amount)) ? 0 : amount;
+  }
+  paymentAdd(val: number) {
+    this.activeCart.price = this.activeCart.price + val;
+  }
+
+  paymentAC() {
+    this.activeCart.price = 0;
+  }
+  updatePrice() {
+    const body = {
+      activeCart: this.activeCart,
+      kioskUuid: this.kioskUuid
+    }
+    console.log(body);
+    this.http.post<any>(environment.api + "cart/updatePrice", body, {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => {
+        console.log(data);
+        this.sendReload();
+        this.httpCart();
+        this.modalService.dismissAll();
+      },
+      error => {
+        console.log(error);
+      }
+    )
   }
 }

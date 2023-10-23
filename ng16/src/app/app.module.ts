@@ -33,6 +33,7 @@ import { SettingFunctionComponent } from './setting/setting-function/setting-fun
 import { ItemTebusMurahComponent } from './cart/item-tebus-murah/item-tebus-murah.component';
 import { RefundComponent } from './refund/refund.component';
 import { RefundTicketHistoryComponent } from './refund/refund-ticket-history/refund-ticket-history.component';
+import { CartUpdatePriceComponent } from './cart/cart-update-price/cart-update-price.component';
 
 const config: SocketIoConfig = { url: environment.socket_url, options: { transports: ['websocket'] } };
 @NgModule({
@@ -62,7 +63,8 @@ const config: SocketIoConfig = { url: environment.socket_url, options: { transpo
     SettingFunctionComponent,
     ItemTebusMurahComponent,
     RefundComponent,
-    RefundTicketHistoryComponent
+    RefundTicketHistoryComponent,
+    CartUpdatePriceComponent
   ],
   imports: [
     BrowserModule,

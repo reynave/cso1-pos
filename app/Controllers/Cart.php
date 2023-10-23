@@ -127,6 +127,9 @@ class Cart extends BaseController
 
     function addToCart()
     {
+        $getPromoFree  = "";
+        $freeItemMod  = "";
+        $qtyItemId = 0;
         $weight = 1;
         $i = 1;
         $isItem = true;
@@ -517,16 +520,16 @@ class Cart extends BaseController
             "error" => true,
             "post" => $post,
         );
-        if ($post) {
+        if ($post) { 
             $this->db->table("cso1_kiosk_cart")->update([
-                "price" => $post['detail']['price'] - $post['detail']['discount'],
-                "discount" => $post['detail']['discount'],
+                "price" => $post['activeCart']['price'],
+                "discount" => 0,
                 "isPriceEdit" => 1,
                 "updateDate" => time(),
                 "update_date" => date("Y-m-d H:i:s"),
                 "updateBy" => "",
 
-            ], "barcode = " . $post['detail']['barcode'] . " and kioskUuid =  '" . $post['kioskUuid'] . "' ");
+            ], "barcode = " . $post['activeCart']['barcode'] . " AND price < 2 AND kioskUuid =  '" . $post['kioskUuid'] . "' ");
 
 
             $data = array(

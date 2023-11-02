@@ -34,6 +34,7 @@ import { ItemTebusMurahComponent } from './cart/item-tebus-murah/item-tebus-mura
 import { RefundComponent } from './refund/refund.component';
 import { RefundTicketHistoryComponent } from './refund/refund-ticket-history/refund-ticket-history.component';
 import { CartUpdatePriceComponent } from './cart/cart-update-price/cart-update-price.component';
+import { KeyNumComponent } from './global/key-num/key-num.component';
 
 const config: SocketIoConfig = { url: environment.socket_url, options: { transports: ['websocket'] } };
 @NgModule({
@@ -64,7 +65,8 @@ const config: SocketIoConfig = { url: environment.socket_url, options: { transpo
     ItemTebusMurahComponent,
     RefundComponent,
     RefundTicketHistoryComponent,
-    CartUpdatePriceComponent
+    CartUpdatePriceComponent,
+    KeyNumComponent
   ],
   imports: [
     BrowserModule,

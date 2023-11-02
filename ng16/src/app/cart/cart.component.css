@@ -4,8 +4,9 @@
 }
 
 .active-cart{
-    background-color: #FFFFDD !important;
-    border: 1px solid #000 !important;
+    background-color: #b9b904 !important;
+    color: #fff !important;
+   
 }
 
 .maxHeightWidget{

@@ -8,7 +8,17 @@
                Terminal : {{terminalId}}  {{item ? " - Cart :"+item:""}}
             </div>
             <div class="col-3 text-end align-content-center">
-            
+           
+                <span class="mx-3">
+                    <span *ngIf="statusServer == 'ON'">
+                        <i class="bi bi-wifi"></i>
+                    </span>
+    
+                    <span *ngIf="statusServer == 'OFF'">
+                        <i class="bi bi-wifi-off"></i>
+                    </span>
+                    
+                </span>
                 <button type="button" class="btn btn-warning py-0 mx-1" [routerLink]="[ '/setting' ]">Setting</button>
                 <button type="button" class="btn btn-dark py-0" (click)="logout();">Logout</button>
             </div>

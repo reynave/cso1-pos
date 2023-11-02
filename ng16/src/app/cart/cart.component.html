@@ -3,7 +3,7 @@
 <div class="container-fluid">
     <div class="row g-2">
 
-        <div class="col-8">
+        <div class="col-5">
             <div *ngIf="ilock != 1">
                 <div class="mb-1">
                     <input type="text" class="form-control form-control-lg text-end px-4 font-cart"
@@ -12,7 +12,17 @@
                 </div>
                 <div class="bg-light  p-2 border cart cart-height " #chatContainer>
 
-                    <div class="bg-white px-3 py-2 border rounded mb-2 pointer" (click)="selectItem(x);"
+                    <div class="row g-1 mb-1" [ngClass]="{'active-cart': x.id == activeCart.id && x.price == activeCart.price}" *ngFor="let x of items"  (click)="selectItem(x);">
+                        <div class="col-8">
+                            <div>{{x.barcode}} - {{x.description}} <span>{{x.note}}</span> </div>
+                                <div *ngIf="x.promotionId !== '0'">*{{x.promotionId}} {{x.promotionDescription}}*</div>
+                        </div>
+                        <div class="col-4 text-end">{{x.total | number}}</div>
+                    </div>
+
+ 
+
+                    <!-- <div class="bg-white px-3 py-2 border rounded mb-2 pointer" (click)="selectItem(x);"
                         *ngFor="let x of items"
                         [ngClass]="{'active-cart': x.id == activeCart.id && x.price == activeCart.price}"> 
                         <div class="row g-1 ">
@@ -31,11 +41,11 @@
                         </div>
  
 
-                    </div>
+                    </div> -->
 
                     
 
-                    <div class="me-2 mb-4">
+                    <div class="me-2 my-4">
                         <div *ngFor="let item of promo_fixed" class="mb-1">
                             <span [innerHTML]=" item['detail']['description'] "></span>
                         </div>
@@ -72,6 +82,7 @@
             </div>
         </div>
 
+       
         <div class="col-4">
             <div class="maxHeightWidget  mb-2">
 
@@ -89,41 +100,8 @@
                         <div class="col-6 text-end font-cart"><strong>{{bill['total'] | number}}</strong></div>
                     </div>
                 </div>
-                <div class="d-grid" *ngIf="ilock != 1">
-                    <button type="button" *ngIf="supervisorMode == true" (click)="supervisorMode = false;"
-                        class="btn btn-lg  btn-danger text-center fs-6 py-3 mb-2 text-white">
-                        CLOSE SUPERVISOR
-                    </button>
-
-                </div>
-                <div class="d-grid" >
-                    <button type="button" (click)="goToPayment()" [disabled]="items.length <= 0"
-                        class="btn btn-lg  btn-danger text-center  fs-6 py-3 mb-1 text-white">
-                        PAYMENT
-                    </button>
-                </div>
-                <!-- <div class="d-grid">
-                    <button type="button" (click)="openComponent('itemTebusMurah')"
-                        class="btn btn-lg  btn-info text-center fs-6 py-3 mb-2 text-white">
-                        TEBUS MURAH
-                    </button>
-                </div> -->
-                <div class="row g-1 mb-2">
-                    <div class="col-6" *ngFor="let x of customFunc; let i = index">
-                        <div class="d-grid">
-                            <a class="py-2 px-0 btn bg-{{x == 0 ? 'white':'primary'}} text-{{x != 0 ? 'white':'dark'}} border"  
-                                (click)="callFunction(x)">
-                                <small class="mb-0 pb-0">F{{i+1}}</small>
-                                <div class="lh-sm">
-                                    <b [innerHTML]="callLabel(x)"></b> 
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    
-                </div>
-
-
+                
+                 <app-key-num></app-key-num>
 
             </div>
             <div class="row g-1">
@@ -142,6 +120,43 @@
             </div>
 
         </div>
+        <div class="col-3">
+            <div class="   mb-2">
+ 
+                <div class="row g-1 mb-2">
+                    <div class="col-6" *ngFor="let x of customFunc; let i = index">
+                        <div class="d-grid">
+                            <a class="py-2 px-0 btn bg-{{x == 0 ? 'white':'primary'}} text-{{x != 0 ? 'white':'dark'}} border"  
+                                (click)="callFunction(x)">
+                                <small class="mb-0 pb-0">F{{i+1}}</small>
+                                <div class="lh-sm">
+                                    <b [innerHTML]="callLabel(x)"></b> 
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="d-grid" *ngIf="ilock != 1">
+                    <button type="button" *ngIf="supervisorMode == true" (click)="supervisorMode = false;"
+                        class="btn btn-lg  btn-danger text-center fs-6 py-3 mb-2 text-white">
+                        CLOSE SUPERVISOR
+                    </button>
+
+                </div>
+                <div class="d-grid" >
+                    <button type="button" (click)="goToPayment()" [disabled]="items.length <= 0"
+                        class="btn btn-lg  btn-danger text-center  fs-6 py-3 mb-1 text-white">
+                        PAYMENT
+                    </button>
+                </div>
+
+
+
+            </div>
+        </div>
+      
 
 
     </div>

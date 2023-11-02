@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ConfigService } from '../../service/config.service';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -13,9 +15,11 @@ export class HeaderComponent implements OnInit{
   account : any = []
   terminalId : any;
   kioskUuid : any;
+  statusServer : string = '';
   constructor(
     private configService : ConfigService,
     private router: Router,
+    private http : HttpClient,
   ){}
   ngOnInit() {
     this.account = this.configService.account();
@@ -33,6 +37,20 @@ export class HeaderComponent implements OnInit{
       this.router.navigate(['setup']);
     }else{  this.terminalId = localStorage.getItem("terminalId");  }
 
+    this.conServer();
+  }
+
+  conServer(){
+    this.http.get<any>(environment.server).subscribe(
+      data=>{
+        console.log(data);
+        this.statusServer = 'ON';
+      },
+      e=>{
+        this.statusServer = 'OFF';
+        console.log(e);
+      }
+    )
   }
 
   logout(){

@@ -132,17 +132,21 @@
 
         </div>
         <div class="col-3">
-            <div class="   mb-2">
+            <div class="mb-2">
 
                 <div class="row g-1 mb-2">
                     <div class="col-6" *ngFor="let x of customFunc; let i = index">
                         <div class="d-grid">
-                            <a class="btn btn-lg  bg-{{x == 0 ? 'white':'primary'}} text-{{x != 0 ? 'white':'dark'}} border"
-                                (click)="callFunction(x)">
-                                <!-- <small class="mb-0 pb-0">F{{i+1}}</small> -->
-                                <div class="lh-sm">
-                                    <span [innerHTML]="callLabel(x)"></span>
-                                </div>
+                            <a class="btn px-1 py-2 border rounded-0 bg-white" style="min-height: 50px;"  (click)="callFunction(x)"> 
+                                <div class="row g-1">
+                                    <div class="col-3 align-self-center"> 
+                                        <img src="./assets/icon/icons8-plus-96.png" width="100%">
+                                    </div>
+                                    <div class="col-9 lh-sm text-start">
+                                        <small [innerHTML]="callLabel(x)"></small>
+                                    </div>
+                                </div> 
+                               
                             </a>
                         </div>
                     </div>

@@ -1,4 +1,9 @@
-button{
+.btn-key{
     background-color: #fff;
     border-radius: 0px;
+}
+
+.btn-key:hover, .btn-key:focus , .btn-key:visited, .btn-key:active  {
+    background-color: #1D5B79;
+    color: #fff;
 }

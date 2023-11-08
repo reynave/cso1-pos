@@ -26,10 +26,10 @@ export class ItemsComponent implements OnInit {
     public http : HttpClient
   ) {}
   ngOnInit(): void {
-    setTimeout(()=>{
-      this.search = "";
-    },100); 
-    this.fnExchange();
+    // setTimeout(()=>{
+    //   this.search = "";
+    // },100); 
+    // this.fnExchange();
   }
 
   fnExchange(){

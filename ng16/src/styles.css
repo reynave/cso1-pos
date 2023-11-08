@@ -41,6 +41,19 @@
     --font-poppins-extra-bold: 'Poppins-ExtraBold';
 
     --bg-color-gray: #f8f9fdff;
+
+
+    --colorhunt-1 : #0C356A;
+    --colorhunt-2 : #0174BE;
+    --colorhunt-3 : #FFC436;
+    --colorhunt-4 : #FFF0CE;
+    
+    --color-denger-1:#E74646;
+    --color-denger-2:#FA9884; 
+    
+}
+.bg-header{
+    background-color: var(--colorhunt-1);
 }
 
 .bg-warning {
@@ -55,6 +68,9 @@
     background-color: #CEE6F3 !important;
 }
 
+.alert-warning{
+    background-color: var(--colorhunt-3);
+}
 .btn-primary{
     background-color: #0A6EBD;
     border-color: #0A6EBD;
@@ -78,7 +94,7 @@
 }
 
 body {
-    background-color: var(--bg-color-gray);
+    background-color: var(--colorhunt-4);
     font-family: var(--font-poppins);
     /* background: url('./assets/bgn/bgn1.jpg') repeat;
     background-size: 30% auto; */

@@ -45,7 +45,7 @@ export class CartComponent implements OnInit, OnDestroy {
   key: any;
   password: string = "";
   barcode: string = "";
-  callServer: any;
+  callCursor: any;
   varkioskUuid: string = "kioskUuid";
   kioskUuid: any;
   supervisorMode: boolean = false;
@@ -57,7 +57,9 @@ export class CartComponent implements OnInit, OnDestroy {
   alert: boolean = false;
   func: MyFunction[] = [
     { id: 0, value: () => { return false; }, label: '&nbsp;' },
-    { id: 1, value: () => { this.openComponent('items'); }, label: 'Search Items' },
+    { id: 1, value: () => { 
+      this.openComponent('items') }, 
+      label: 'Search Items' },
     {
       id: 2, value: () => {
         if (this.activeCart['barcode'] !== undefined) {
@@ -127,6 +129,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.setFunctionSaved();
+    this.setCursor();
     this.supervisorMode = false;
     this.newItem = [];
     this.kioskUuid = this.activatedRoute.snapshot.queryParams['kioskUuid'];
@@ -136,6 +139,27 @@ export class CartComponent implements OnInit, OnDestroy {
         // console.log(data);
       }
     );
+  }
+
+  addItem(newItem: string) {
+    console.log(newItem);
+    if(newItem == 'BS'){
+      this.barcode =  this.barcode.slice(0,-1);
+    }
+    else if(newItem == 'AC'){
+      this.barcode =  '';
+    }
+    else if(newItem == 'ENTER'){
+      if(this.barcode != ""){
+        this.addToCart();
+        this.barcode =  '';
+      } 
+    }
+    else{
+      this.barcode =  this.barcode + newItem.toString();  
+    }
+  
+
   }
 
   setFunctionSaved() {
@@ -201,21 +225,21 @@ export class CartComponent implements OnInit, OnDestroy {
 
   scrollToBottom() {
     setTimeout(() => {
-
+ 
       try {
         this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
       } catch (err) { }
     }, 0);
   }
 
-  callHttpServer() {
-    this.callServer = setInterval(() => {
+  setCursor() {
+    this.callCursor = setInterval(() => {
       this.rows.nativeElement.focus();
     }, 300);
   }
 
   ngOnDestroy() {
-    clearInterval(this.callServer);
+    clearInterval(this.callCursor);
     this._docSub.unsubscribe();
   }
 
@@ -291,7 +315,15 @@ export class CartComponent implements OnInit, OnDestroy {
   open(content: any, item: any) {
     this.addQty = 1;
     this.item = item;
-    this.modalService.open(content, { size: 'lg' });
+    this.modalService.open(content, { size: 'lg' }).result.then(
+      (result)=>{
+        clearInterval(this.callCursor);
+        console.log('   clearInterval(this.callCursor); ');
+      },
+      (reason) => {
+				 console.log('CLOSE');
+			},
+    )
   }
 
   checkNumber() {
@@ -336,9 +368,18 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   openComponent(comp: any, item: any = []) {
-
+    clearInterval(this.callCursor);
     if (comp == 'items') {
       const modalRef = this.modalService.open(ItemsComponent, { size: 'lg' });
+      modalRef.result.then(
+        (result)=>{
+          //clearInterval(this.callCursor);
+          console.log('   clearInterval(this.callCursor); ');
+        },
+        (reason) => {
+           console.log('CLOSE');
+        },
+      );
       modalRef.componentInstance.kioskUuid = this.kioskUuid;
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);

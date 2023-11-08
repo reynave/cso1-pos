@@ -93,11 +93,11 @@ class Printing extends BaseController
                     "voucher" => (int) model("Core")->select("voucher", "cso1_transaction", "id='$id'"),
                     "final" => (int) model("Core")->select("finalPrice", "cso1_transaction", "id='$id'"),
                 ),
-                "paymentMethod" => model("Core")->sql("SELECT tp.id, tp.amount,  p.label, tp.input_date
+                "paymentMethod" => model("Core")->sql("SELECT tp.id, tp.amount, tp.paymentTypeId, p.label, tp.input_date, tp.voucherNumber
                 FROM cso1_transaction_payment AS tp 
                 LEFT JOIN cso1_payment_type AS p ON p.id = tp.paymentTypeId
-                WHERE tp.transactionId = '$id' AND tp.presence = 1"),
-
+                WHERE tp.transactionId = '$id' AND tp.presence = 1"),  
+                
                 "balance" => model("Core")->sql("SELECT SUM(cashIn) AS 'caseIn', SUM(cashOut)*-1 AS 'caseOut'
                     FROM cso2_balance 
                     WHERE transactionId = '$id'
@@ -113,7 +113,16 @@ class Printing extends BaseController
                 "copy" => (int) model("Core")->sql(" select count(id) as 'copy' from cso1_transaction_printlog where transactionId ='$id'")[0]['copy'],
 
             ); 
+             $i = 0;
+            foreach($data['paymentMethod'] as $rec){
+                if($rec['paymentTypeId'] == 'VOUCHER'){
+                    $voucherNumber = $rec['voucherNumber'];
+                    $data['paymentMethod'][$i]['label'] = $rec['label']." ".number_format(model("Core")->select("amount","voucher","number= '$voucherNumber' ")); 
+                }
+                $i++;
+            }
             
+
             $data['promo_fixed'] =  model("Promo")->promo_fixed($data['summary']['total']);
         }
         return $this->response->setJSON($data);

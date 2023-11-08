@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConfigService } from '../service/config.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -6,16 +6,14 @@ import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxCurrencyDirective } from "ngx-currency";
 
-export class Payment {
-
+export class Payment { 
   constructor(
     public paymentMethodId: string,
     public amount: number,
     public deviceId: string,
     public externalTransId: string,
     public cardId: string,
-  ) { }
-
+  ) { } 
 }
 @Component({
   selector: 'app-payment',
@@ -23,6 +21,7 @@ export class Payment {
   styleUrls: ['./payment.component.css'],
 })
 export class PaymentComponent implements OnInit, OnDestroy {
+  @ViewChild('formRow') rows: ElementRef | any;
   kioskUuid: any;
   note: string = "";
   varkioskUuid: string = "kioskUuid";
@@ -40,6 +39,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
   promo_fixed : any = [];
   kioskPaid: any = [];
   close: boolean = false;
+  voucherCode : string = "";
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
@@ -51,6 +51,10 @@ export class PaymentComponent implements OnInit, OnDestroy {
     config.backdrop = 'static';
     config.keyboard = false;
   }
+  key1 : any = ['Q','W','E','R','T','Y','U','I','O','P'];
+  key2 : any = ['A','S','D','F','G','H','J','K','L',''];
+  key3 : any = ['Z','X','C','V','B','N','M','','',''];
+  
   private _docSub: any;
   ngOnInit() {
    
@@ -63,6 +67,37 @@ export class PaymentComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy() { 
     
+  }
+
+  addVoucher(){
+    console.log(this.voucherCode);
+    const body = {
+      voucherCode : this.voucherCode,
+      kioskUuid : this.kioskUuid,
+    }
+    this.http.post<any>(environment.api+"voucher/addVoucher",body,{
+      headers : this.configService.headers(),
+    }).subscribe(
+      data=>{
+        console.log(data);
+        if(data['error'] == false){
+          this.voucherCode = "";
+          this.modalService.dismissAll();
+          this.sendReload();
+          this.httpPaymentInvoice();  
+        }else{
+          alert(data['note']);
+        }
+      },
+      error=>{
+        console.log(error);
+      }
+    )
+
+  }
+
+  fnVoucherAC(){
+    this.voucherCode = "";
   }
   sendReload(){
     const msg = {
@@ -128,9 +163,17 @@ export class PaymentComponent implements OnInit, OnDestroy {
     )
   }
  
-  open(content: any, x: any) {
+  open(content: any, x: any, _size : string = 'lg') {
     this.paymentMethodDetail = x;
-    this.modalService.open(content, { size: 'lg' });
+    this.modalService.open(content, { size: _size });
+   // this.setCursor();
+  }
+  callCursor :any;
+
+  setCursor() {
+    this.callCursor = setInterval(() => {
+      this.rows.nativeElement.focus();
+    }, 300);
   }
 
   addAmount(val : string){

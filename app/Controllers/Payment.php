@@ -32,7 +32,7 @@ class Payment extends BaseController
         WHERE a.kioskUuid = '$kioskUuid' ";
         $kioskPaid = $this->db->query($q1)->getResultArray();
 
-        $bill = (int) model("Core")->select("sum(price)", "cso1_kiosk_cart", "kioskUuid = '$kioskUuid'") ;
+        $bill = (int) model("Core")->select("sum(price)", "cso1_kiosk_cart", "kioskUuid = '$kioskUuid' and presence = 1") ;
         $bill =   $bill < 0  ? 1 :   $bill;
         $paid = (int) model("Core")->select("sum(paid)", "cso1_kiosk_paid_pos", "kioskUuid = '$kioskUuid'");
         $data = array(
@@ -146,7 +146,7 @@ class Payment extends BaseController
                     "update_date" => date("Y-m-d H:i:s"), 
                 ]); 
 
-                $q = model("Core")->sql("SELECT * FROM cso1_kiosk_cart WHERE kioskUuid = '$kioskUuid' order by input_date ASC");
+                $q = model("Core")->sql("SELECT * FROM cso1_kiosk_cart WHERE kioskUuid = '$kioskUuid' and presence = 1 order by input_date ASC");
                 foreach ($q as $row) {
                     $insertDetail = array(
                         "transactionId" => $id,

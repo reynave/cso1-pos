@@ -112,7 +112,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
 
   httpCart() {
     this.sendReload();
-    this.http.get<any>(environment.api + "cart/index", {
+    this.http.get<any>(environment.api + "cart/index?step=payment", {
       headers: this.configService.headers(),
       params: {
         kioskUuid: this.kioskUuid,
@@ -216,7 +216,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
 
   isCloseTransaction() {
     if (this.close == true) {
-      console.log("isCloseTransaction"); 
+      console.log("isCloseTransaction",this.close); 
       this.http.get<any>(environment.api + "payment/isCloseTransaction", {
         headers: this.configService.headers(),
         params: {
@@ -225,11 +225,11 @@ export class PaymentComponent implements OnInit, OnDestroy {
         }
       }).subscribe(
         data => { 
-          console.log('isCloseTransaction',data);
+          console.log('isCloseTransaction subscribe',data);
           this.note = data['note'];
           this.transactionId = data['transactionId'];
         // http://localhost:4200/#/printing?id=T02.230828.0004
-          this.rounter.navigate(['printing'],{ queryParams:{id : data['transactionId']}} );
+           this.rounter.navigate(['printing'],{ queryParams:{id : data['transactionId']}} );
           this.sendReload();
         },
         error => {

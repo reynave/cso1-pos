@@ -52,6 +52,12 @@
     --color-denger-2:#FA9884; 
     
 }
+
+.btn{
+    -webkit-border-radius: 0px;
+    -moz-border-radius:  0px;
+    border-radius: 0px;
+}
 .bg-header{
     background-color: var(--colorhunt-1);
 }
@@ -115,7 +121,10 @@ h1{
 .font-cart {
     font-family: var(--font-roboto-mono);
 }
-
+.font-xl{
+    font-size: 2rem;
+    font-family: var(--font-poppins-bold);
+}
 .cart,
 .cart div {
     font-family: var(--font-roboto-mono);
@@ -142,7 +151,7 @@ a {
 .notif {
     position: fixed;
 
-    bottom: 10px;
+    bottom: 35px;
     left: 0px;
     width: 100%;
     height: auto;
@@ -150,6 +159,6 @@ a {
 
 .notif .content {
     position: relative;
-    width: 400px;
-    margin: 0px auto;
+    width: 400px; 
+    margin-left: 25px;
 }

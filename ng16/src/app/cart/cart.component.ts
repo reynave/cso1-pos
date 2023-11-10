@@ -87,7 +87,7 @@ export class CartComponent implements OnInit, OnDestroy {
           this.alert = true;
           setTimeout(() => (this.alert = false), 2000);
         }
-      }, label: 'Edit Qty'
+      }, label: 'Reduce Qty'
     },
     { id: 5, value: () => { this.cancelTrans(); }, label: 'Cancel Trans' },
     { id: 6, value: () => { this.openComponent('itemTebusMurah'); }, label: 'Tebus Murah' },
@@ -99,7 +99,7 @@ export class CartComponent implements OnInit, OnDestroy {
           alert("Item ini tidak bisa update harga");
         }
       
-      }, label: 'Update Price Rp 1'
+      }, label: 'Update Rp 1'
     },
 
     { id: 12, value: () => { this.supervisorMode = false; }, label: 'Close Admin' },
@@ -109,7 +109,7 @@ export class CartComponent implements OnInit, OnDestroy {
   tebus_murah: string = "";
   totalTebusMurah: number = 0;
   ilock: number = 0;
-  addQty: number = 1;
+  addQty: string = '1';
   item: any = [];
   activeCart: any = [];
   promo_fixed: any = [];
@@ -202,7 +202,7 @@ export class CartComponent implements OnInit, OnDestroy {
       }
     }).subscribe(
       data => {
-        //   console.log(data);
+            console.log(data);
         this.items = data['items'];
         this.ilock = data['ilock'];
         this.itemsFree = data['itemsFree'];
@@ -271,13 +271,14 @@ export class CartComponent implements OnInit, OnDestroy {
 
         if (data['error'] == false) {
           if (data['result'] == 'SUPERVISOR') {
-
+            clearInterval(this.callCursor);
             this.modalService.open(this.contentPassword, { size: 'md' }).result.then(
               (result) => {
-
+               
               },
               (reason) => {
                 this.barcode = "";
+                this.setCursor();
               },
             );
 
@@ -313,24 +314,26 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   open(content: any, item: any) {
-    this.addQty = 1;
+    clearInterval(this.callCursor);
+    this.addQty = '';
     this.item = item;
     this.modalService.open(content, { size: 'lg' }).result.then(
-      (result)=>{
+      (result)=>{ 
         clearInterval(this.callCursor);
         console.log('   clearInterval(this.callCursor); ');
       },
       (reason) => {
 				 console.log('CLOSE');
+         this.setCursor();
 			},
     )
   }
 
   checkNumber() {
 
-    if (this.addQty < 1) {
-      this.addQty = 1;
-    }
+    // if (this.addQty < 1) {
+    //   this.addQty = 1;
+    // }
 
   }
 
@@ -355,7 +358,7 @@ export class CartComponent implements OnInit, OnDestroy {
     }).subscribe(
       data => {
 
-        this.addQty = 0;
+        this.addQty = '';
         console.log(data);
         this.modalService.dismissAll();
 
@@ -378,17 +381,31 @@ export class CartComponent implements OnInit, OnDestroy {
         },
         (reason) => {
            console.log('CLOSE');
+           this.setCursor();
+          
         },
       );
       modalRef.componentInstance.kioskUuid = this.kioskUuid;
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);
         this.httpCart();
+        this.setCursor();
       });
     }
 
     if (comp == 'cartDetail') {
-      const modalRef = this.modalService.open(CartDetailComponent, { size: 'lg' });
+      const modalRef = this.modalService.open(CartDetailComponent, { size: 'md' });
+      modalRef.result.then(
+        (result)=>{
+          //clearInterval(this.callCursor);
+          console.log('   clearInterval(this.callCursor); ');
+        },
+        (reason) => {
+           console.log('CLOSE');
+           this.setCursor(); 
+        },
+      );
+      modalRef.componentInstance.activeCart = this.activeCart;
       modalRef.componentInstance.item = item;
       modalRef.componentInstance.kioskUuid = this.kioskUuid;
       modalRef.componentInstance.totalTebusMurah = this.totalTebusMurah;
@@ -396,17 +413,32 @@ export class CartComponent implements OnInit, OnDestroy {
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);
         this.httpCart();
+        this.setCursor();
+        
+        this.activeCart = [];
       });
     }
 
     if (comp == 'updatePrice') {
       const modalRef = this.modalService.open(CartUpdatePriceComponent, { size: 'lg' });
+      modalRef.result.then(
+        (result)=>{
+          //clearInterval(this.callCursor);
+          console.log('   clearInterval(this.callCursor); ');
+        },
+        (reason) => {
+           console.log('CLOSE');
+           this.setCursor();
+          
+        },
+      );
       modalRef.componentInstance.activeCart = this.activeCart;
       modalRef.componentInstance.kioskUuid = this.kioskUuid;
 
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);
         this.httpCart();
+        this.setCursor();
       });
     }
 
@@ -416,6 +448,7 @@ export class CartComponent implements OnInit, OnDestroy {
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('itemTebusMurah', data);
         this.httpCart();
+        this.setCursor();
       });
     }
 
@@ -544,5 +577,31 @@ export class CartComponent implements OnInit, OnDestroy {
         console.log(error);
       }
     )
+  }
+
+
+  fnAddQty(newItem:any){
+    console.log(newItem);
+   
+    if(newItem == 'BS'){
+      this.addQty = this.addQty.slice(0, -1);
+    }
+    else if(newItem == 'AC'){
+      this.addQty =  '';
+    }
+    else if(newItem == 'ENTER'){
+      if(this.addQty != ""){
+        this.onSubmitQty();
+        this.addQty =  '';
+      } 
+    }
+    else{
+      if(parseInt(this.addQty) <= 0){
+        this.addQty =  newItem;
+      }else{
+        this.addQty = this.addQty + newItem;
+      }
+      
+    }
   }
 }

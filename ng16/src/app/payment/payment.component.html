@@ -2,13 +2,10 @@
 
 <div class="container-fluid" *ngIf="close === true">
     <div class="row">
-        <div class="col-1">
-            <app-widget1></app-widget1>
-        </div>
-        <div class="offset-2 col-6">
+        <div class="  col-12">
             <div class="alert alert-warning text-center">
                 <div> {{note}} </div>
-                <div> <a [routerLink]="[ '/printing' ]" [queryParams]="{id : transactionId }">Print Receipt
+                <div> <a [routerLink]="[ '/printing' ]" class="btn btn-lg btn-primary" [queryParams]="{id : transactionId }">Print Receipt
                         Transaction</a> </div>
             </div>
         </div>
@@ -17,9 +14,9 @@
 </div>
 
 <div class="container-fluid" *ngIf="close !== true">
-    <div class="row g-2">
+    <div class="row ">
 
-        <div class="col-5">
+        <div class="col-lg-5 col-12">
 
             <div class="row g-2">
                 <div class="col-4 align-self-center">
@@ -68,65 +65,22 @@
                 </div>
             </div>
 
-            <!-- <div class="bg-white  p-2 border cart cart-height">
-                <div class="bg-white px-3 py-2 border rounded mb-2 pointer" *ngFor="let x of items">
-
-                    <div class="row g-1 ">
-                        <div class="col-12">
-                            <div>{{x.barcode}} - {{x.description}} </div>
-                            <div *ngIf="x.promotionId !== '0'">*{{x.promotionId}}{{x.promotionDescription}}*</div>
-                        </div>
-                        <div class="col-10">
-                            <div>{{x.qty}} x {{x.originPrice | number}}
-                                <span class="me-4" *ngIf="x.discount > 0"> DISC ({{x.discount | number}})</span>
-                            </div>
-                        </div>
-                        <div class="col-2 text-end">
-                            {{x.total | number}}
-                        </div>
-                    </div>
-                </div>
-                <div class=" m-2">
-                    <div *ngFor="let item of promo_fixed" class="mb-1">
-                       <span [innerHTML]="item['detail']['description']"></span>
-                    </div>
-                </div>
-                <hr>
-                <div *ngIf="kioskPaid.length > 0">
-                    <div class="mb-2">
-                        <b>PAID</b>
-                    </div>
-                    <div class="mb-2">
-                        <div class="p-2 border bg-white">
-
-                            <div class="row g-1 mb-2" *ngFor="let x of kioskPaid">
-                                <div class="col-7 lh-1">
-                                    <small>{{x.label}}</small>
-                                </div>
-                                <div class="col-5 text-end lh-1">
-                                    <small> Rp {{x.paid | number}}</small>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
-
             <div class="bg-white p-2 border cart cart-height ">
 
                 <div class="row g-1 mb-2" *ngFor="let x of items">
                     <div class="col-8">
                         <div>{{x.barcode}} - {{x.description}} <span>{{x.note}}</span> </div>
                         <div *ngIf="x.promotionId !== '0'">*{{x.promotionId}} {{x.promotionDescription}}*</div>
+                        <div>
+                            {{ x.price | number}} X {{ x.qty }}
+                        </div>
                     </div>
                     <div class="col-4 text-end">{{x.total | number}}</div>
                 </div>
 
                 <div class="me-2 my-4">
-                    <div *ngFor="let item of promo_fixed" class="mb-1">
-                        {{ item['detail']['reminder'] }}
+                    <div *ngFor="let item of promo_fixed" class="mb-2">
+                        <span [innerHTML]="item['detail']['description']"></span>
                     </div>
                 </div>
 
@@ -136,7 +90,7 @@
                     </div>
                     <div class="mb-2">
                         <div class="row g-1 mb-2" *ngFor="let x of kioskPaid">
-                            <div class="col-7">  {{x.label}} {{x.note}} {{x.voucherNumber}}</div>
+                            <div class="col-7"> {{x.label}} {{x.note}} {{x.voucherNumber}}</div>
                             <div class="col-5 text-end "> {{x.paid | number}} </div>
                         </div>
                     </div>
@@ -146,35 +100,52 @@
         </div>
 
 
-
-        <div class="col-2">
+        <div class="col-lg-7 col-12">
             <div class="mb-2">
-                <div class="mb-1 border bg-warning px-2 py-1 text-end font-cart">
-                    <small>BILL</small>
-                    <h5>{{total.bill | number}}</h5>
+                <div class="row g-1">
+                    <div class="col-md-4 col-12">
+                        <div class="mb-1   bg-white px-2 py-1 text-end font-cart">
+                            <small>BILL</small>
+                            <h5>{{total.bill | number}}</h5>
+                        </div>
+                    </div>
+                    <div class="col-md-4  col-12">
+                        <div class="mb-1   bg-white px-2 py-1 text-end font-cart">
+                            <small> PAID</small>
+                            <h5>{{total.paid | number}}</h5>
+                        </div>
+                    </div>
+                    <div class="col-md-4  col-12">
+                        <div class="mb-1   bg-white px-2 py-1 text-end font-cart">
+                            <small> REMAINING</small>
+                            <h5>{{total.bill - (total.paid) | number}}</h5>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-1 border bg-success px-2 py-1 text-end font-cart">
-                    <small> PAID</small>
-                    <h5>{{total.paid | number}}</h5>
-                </div>
-                <div class="mb-1 border bg-danger px-2 py-1 text-end font-cart">
-                    <small> REMAINING</small>
-                    <h5>{{total.bill - (total.paid) | number}}</h5>
-                </div>
+
                 <small>Status Paid : {{close}}</small>
             </div>
-        </div>
 
-        <div class="col-2">
+            <div class="row g-1">
+                <div class="col-12 mb-2">
+                    <strong>SELECT PAYMENT METHOD</strong>
+                </div>
+                <div class="col-3" *ngFor="let x of paymentMethod">
+                    <div class="d-grid mb-1 ">
+                        <button type="button" class="btn  btn-warning align-self-center" style="height: 4rem;"
+                            (click)="open(contentPaymentMethod, x)">{{x.label}}</button>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="d-grid mb-1">
+                        <button type="button" class="btn  btn-warning align-self-center" style="height: 4rem;"
+                            (click)="open(contentVoucher, [],'xl')">Voucher</button>
+                    </div>
+                </div>
+            </div>
 
-            <div class="d-grid mb-1" *ngFor="let x of paymentMethod">
-                <button type="button" class="btn btn-lg rounded-0 btn-secondary"
-                    (click)="open(contentPaymentMethod, x)">{{x.label}}</button>
-            </div>
-            <div class="d-grid mb-1">
-                <button type="button" class="btn btn-lg rounded-0 btn-success"
-                    (click)="open(contentVoucher, [],'xl')">Voucher</button>
-            </div>
+
+
         </div>
 
     </div>

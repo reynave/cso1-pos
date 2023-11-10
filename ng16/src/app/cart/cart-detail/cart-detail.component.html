@@ -1,19 +1,41 @@
 <div class="modal-header">
-    <strong class="modal-title" id="modal-basic-title">REMOVE QTY</strong>
+    <strong class="modal-title" id="modal-basic-title">REDUCE QTY</strong>
     <a class="btn-close" (click)="close()"></a>
 </div>
-<div class="">
-    totalTebusMurah : {{totalTebusMurah}}
-    <div class="row">
-       
+<div class="modal-body">
+    <!-- totalTebusMurah : {{totalTebusMurah}} -->
+
+    <div class="row g-1 mb-2">
         <div class="col-12">
+            <div class="cart p-1 border"> 
+                <div>{{activeCart.barcode}} - {{activeCart.description}} <span>{{activeCart.note}}</span>  </div>
+                <div>
+                    {{ activeCart.price | number}}  X   {{ activeCart.qty }} 
+                </div>
+                <div *ngIf="activeCart.promotionId !== '0'">*{{activeCart.promotionId}} {{activeCart.promotionDescription}}*</div> 
+            </div> 
+        </div>  
+    </div>
+    <div class="row g-1">
+        <div class="col-5 d-grid">
+            <input type="text" class="form-control form-control-lg text-end font-xl" readonly disabled [value]="activeCart.qty">
+        </div>
+        <div class="col-2 text-end">
+            <img src="./assets/icon/icons8-advance-96.png" width="100%">
+        </div>
+        <div class="col-5 d-grid">
+            <input type="text" class="form-control form-control-lg text-end font-xl" [(ngModel)]="addQty">
+        </div>
+    </div>
+
+    <div class="row">
+          <!-- <div class="col-12">
             <div class=" p-1 maxHeight">
                 <table class="table table-sm table-hover" *ngIf="loading != true">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>DESCRIPTION</th>
-
                             <th class="text-end">FINAL PRICE</th>
                             <th class="text-center">ACTION</th>
                         </tr>
@@ -34,9 +56,12 @@
                     loading
                 </div>
             </div>
+        </div> -->
+ 
+        <div class="col-12">
+            <app-key-num (newItemEvent)="fnAddQty($event)"></app-key-num>
         </div>
-
-        
+ 
     </div>
 
 </div>

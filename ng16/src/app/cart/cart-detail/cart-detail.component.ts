@@ -13,6 +13,7 @@ export class CartDetailComponent implements OnInit {
   @Input() item: any;
   @Input() kioskUuid: any;
   @Input() totalTebusMurah: number = 0;
+ @Input() activeCart: any;
 
   @Output() newItemEvent = new EventEmitter<string>();
   search: string = "";
@@ -20,6 +21,7 @@ export class CartDetailComponent implements OnInit {
   isSearch: boolean = false;
   detail: any = [];
   loading: boolean = false;
+  addQty : string = "0";
   constructor(
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
@@ -79,27 +81,6 @@ export class CartDetailComponent implements OnInit {
     )
   }
   
-
-  updatePrice(){
-    const body = {
-      detail: this.detail,
-      kioskUuid : this.kioskUuid, 
-    }
-    console.log(body);
-    this.http.post<any>(environment.api + "cart/updatePrice", body, {
-      headers: this.configService.headers(),
-    }).subscribe(
-      data => {
-        console.log(data);
-        this.httpGet(); 
-        this.addNewItem('update Price items');
-      },
-      error => {
-        console.log(error);
-      }
-    )
-  }
-
   fnVoidAllCartItems(){
     const body = {
       detail: this.detail,
@@ -125,5 +106,56 @@ export class CartDetailComponent implements OnInit {
     this.modalService.dismissAll();
   } 
 
-  
+  fnReduceCart(){
+    const body = {
+      item: this.activeCart,
+      addQty : this.addQty,
+      kioskUuid : this.kioskUuid,
+    }
+    console.log(body);
+    this.http.post<any>(environment.api + "cart/fnReduceCart", body, {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => {
+        console.log(data);  
+        this.addNewItem('void items');
+        this.close();
+      },
+      error => {
+        console.log(error);
+      }
+    )
+  }
+
+  fnAddQty(newItem:any){
+    console.log(newItem);
+   
+    if(newItem == 'BS'){
+      this.addQty = this.addQty.slice(0, -1);
+    }
+    else if(newItem == 'AC'){
+      this.addQty =  '';
+    }
+    else if(newItem == 'ENTER'){
+      if(this.addQty != ""){
+        //this.voidCart();
+        this.fnReduceCart();
+        this.addQty =  '';
+      } 
+    }
+    else{
+      if(parseInt(this.addQty) <= 0){
+        this.addQty =  newItem;
+      }else{
+        this.addQty = this.addQty + newItem;
+      }
+      
+    }
+
+    if(parseInt(this.addQty) > this.activeCart.qty){
+      this.addQty = this.activeCart.qty.toString();
+    }
+
+  }
+
 }

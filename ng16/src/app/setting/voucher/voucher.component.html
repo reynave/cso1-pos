@@ -1,0 +1,41 @@
+<app-header></app-header>
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-4 ">
+            <a (click)="back();" class="btn  btn-dark  border">Back</a>
+        </div>
+        <div class="col-8 text-end">
+            <h1 class="lh-sm mb-0 pb-0">HISTORY USED VOUCHER </h1>
+            <strong>TODAY AND YESTERDAY</strong>
+        </div>
+    </div>
+    <div class="row">
+        
+        <div class="col-12">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Code</th>
+                        <th class="text-end">Amount</th>
+                        <th>Kiosk ID</th>
+                        <th>Transaction ID / BIll</th>
+                       
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let x of items">
+                        <td>{{x.update_date | date:'medium'}}</td>
+                        <td>{{x.number}}</td>
+                        <td class="text-end">{{x.amount | number}}</td>
+                        <td>{{x.kioskUuid}}</td>
+                        <td>{{x.transactionId}}</td>
+                     
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

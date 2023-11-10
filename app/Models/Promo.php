@@ -136,42 +136,44 @@ class Promo extends Model
         }
     }
 
-    function promo_fixed($total = 0)
+    function promo_fixed($total = 0, $step = "")
     {
-        $data = array();
-        $id = 1;
-        $data[] = [
-            "name" => self::select("name", "cso1_promo_fixed", " id = $id"),
-            "detail" => self::freeParking($total),
-        ];
+        
 
-        $id = 10;
-        $data[] = [
-            "name" => self::select("name", "cso1_promo_fixed", " id = $id"),
-            "detail" => self::luckyDip($total),
-        ];
-
-        $id = 20;
-        $data[] = [
-            "name" => self::select("name", "cso1_promo_fixed", " id = $id"),
-            "detail" => self::voucher($total),
-        ];
-
-        $id = 21;
-        $data[] = [
-            "name" => self::select("name", "cso1_promo_fixed", " id = $id"),
-            "detail" => self::voucherDiscount($total),
-        ];
-
-        for ($i = 100; $i <= 103; $i++) {
-            $id = $i;
+            $data = array();
+            $id = 1;
             $data[] = [
                 "name" => self::select("name", "cso1_promo_fixed", " id = $id"),
-                "detail" => self::promoFixed($total, $id),
+                "detail" => self::freeParking($total),
             ];
-        }
 
+            $id = 10;
+            $data[] = [
+                "name" => self::select("name", "cso1_promo_fixed", " id = $id"),
+                "detail" => self::luckyDip($total),
+            ];
 
+            $id = 20;
+            $data[] = [
+                "name" => self::select("name", "cso1_promo_fixed", " id = $id"),
+                "detail" => self::voucher($total),
+            ];
+
+            $id = 21;
+            $data[] = [
+                "name" => self::select("name", "cso1_promo_fixed", " id = $id"),
+                "detail" => self::voucherDiscount($total),
+            ];
+
+            for ($i = 100; $i <= 103; $i++) {
+                $id = $i;
+                $data[] = [
+                    "name" => self::select("name", "cso1_promo_fixed", " id = $id"),
+                    "detail" => self::promoFixed($total, $id),
+                ];
+            }
+
+        
         return $data;
     }
 
@@ -346,7 +348,7 @@ class Promo extends Model
 
 
     function getPromoFree($itemId = "")
-    { 
+    {
         $today = date('D', time());
         $q = " SELECT   f.promotionId, f.id as 'promotionFreeId', f.itemId,  f.qty, f.freeItemId, 
                         f.freeQty , p.startDate, p.endDate, p.$today as '$today' 
@@ -358,16 +360,16 @@ class Promo extends Model
             and p.$today = 1
         ";
 
-      
-        return count($this->db->query($q)->getResultArray() ) > 0 ?  $this->db->query($q)->getResultArray()[0] : [
+
+        return count($this->db->query($q)->getResultArray()) > 0 ? $this->db->query($q)->getResultArray()[0] : [
             "qty" => false
         ];
 
     }
 
-    
+
     function getFreeItem($itemId, $qty)
-    { 
+    {
         $today = date('D', time());
         $q2 = "SELECT   i.id AS 'promotionItemId', i.*,
         p.typeOfPromotion,
@@ -382,7 +384,7 @@ class Promo extends Model
         $free = $this->db->query($q2)->getResultArray();
         $free['q'] = $q2;
         $data = $free;
- 
+
         return $data;
     }
 

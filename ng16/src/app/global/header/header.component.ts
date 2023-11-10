@@ -42,8 +42,7 @@ export class HeaderComponent implements OnInit{
 
   conServer(){
     this.http.get<any>(environment.server).subscribe(
-      data=>{
-        console.log(data);
+      data=>{ 
         this.statusServer = 'ON';
       },
       e=>{

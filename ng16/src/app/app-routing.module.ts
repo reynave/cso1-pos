@@ -21,6 +21,7 @@ import { ThemesComponent } from './themes/themes.component';
 import { SettingFunctionComponent } from './setting/setting-function/setting-function.component';
 import { RefundComponent } from './refund/refund.component';
 import { RefundTicketHistoryComponent } from './refund/refund-ticket-history/refund-ticket-history.component';
+import { VoucherComponent } from './setting/voucher/voucher.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
@@ -45,7 +46,8 @@ const routes: Routes = [
   { path: "setting/settlement/print", component: SettlementPrintComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "setting/settlement/history", component: SettlementHistoryComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "setting/function", component: SettingFunctionComponent, data: { active: "" },  canActivate:[authGuard]  }, 
-  
+  { path: "setting/voucher", component: VoucherComponent, data: { active: "" },  canActivate:[authGuard]  }, 
+ 
   { path: "setting/balance/cashIn", component: BalanceCashInComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "themes", component: ThemesComponent, data: { active: "" }  }, 
  

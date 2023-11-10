@@ -6,6 +6,19 @@ use CodeIgniter\Model;
 
 class Voucher extends BaseController
 {
+    function index() {
+        $q1 = "SELECT * FROM voucher
+        where status = 1 AND UPDATE_date >= DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+        ORDER BY update_date DESC ";
+        $items = $this->db->query($q1)->getResultArray();
+
+        $data = array(
+            "error" => false,
+            "items" => $items, 
+        );
+
+        return $this->response->setJSON($data);
+    }
     function getVoucher()
     {
         $q1 = "SELECT p.*, t.name, t.label, t.image FROM cso2_payment_method AS p 
@@ -74,8 +87,7 @@ class Voucher extends BaseController
         }
         return $this->response->setJSON($data);
     }
-
-
+  
     function isCloseTransaction()
     {
         $get = $this->request->getVar();
@@ -236,4 +248,5 @@ class Voucher extends BaseController
 
         return $this->response->setJSON($data);
     }
+
 }

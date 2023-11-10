@@ -1,6 +1,7 @@
 .btn-key{
     background-color: #fff;
     border-radius: 0px;
+    border:1px solid #eee;
 }
 
 .btn-key:hover, .btn-key:focus , .btn-key:visited, .btn-key:active  {

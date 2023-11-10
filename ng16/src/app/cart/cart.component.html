@@ -55,16 +55,24 @@
             </div>
             <div class="bg-white  p-2 border cart cart-height " #chatContainer>
 
-                <div class="row g-1 mb-1"
+                <div class="row g-1 py-1"
                     [ngClass]="{'active-cart': x.id == activeCart.id && x.price == activeCart.price}"
                     *ngFor="let x of items" (click)="selectItem(x);">
                     <div class="col-8">
-                        <div>{{x.barcode}} - {{x.description}} <span>{{x.note}}</span> </div>
+                        <div>{{x.barcode}} - {{x.description}} <span>{{x.note}}</span>  </div>
+                        <div>
+                            {{ x.price | number}}  X   {{ x.qty }} 
+                        </div>
                         <div *ngIf="x.promotionId !== '0'">*{{x.promotionId}} {{x.promotionDescription}}*</div>
                     </div>
                     <div class="col-4 text-end">{{x.total | number}}</div>
                 </div>
- 
+
+                <div class="me-2 my-4">
+                    <div *ngFor="let item of promo_fixed" class="mb-2">
+                        <span [innerHTML]="item['detail']['reminder']"></span> 
+                    </div>
+                </div>
 
                 <div class="me-2 my-4">
                     <div *ngFor="let item of promo_fixed" class="mb-1">
@@ -73,7 +81,7 @@
                     <div [innerHTML]="tebus_murah" class="mb-1"> </div>
                 </div>
                 <div class="me-2 mb-4">
-                    <div *ngFor="let item of promo_fixed" class="mb-1">
+                    <div *ngFor="let item of promo_fixed" class="mb-2">
                         {{ item['detail']['reminder'] }}
                     </div>
                 </div>
@@ -95,9 +103,9 @@
 
 
         <div class="col-4">
-            <div class="maxHeightWidget  mb-2">
+            <div class="  mb-2">
 
-                <div class="border p-2 bg-white rounded mb-1">
+                <div class="border p-2 bg-white mb-1">
                     <div class="row ">
                         <div class="col-7 font-cart">SUB TOTAL:</div>
                         <div class="col-5 text-end font-cart">{{bill['originPrice'] | number}}</div>
@@ -137,16 +145,24 @@
                 <div class="row g-1 mb-2">
                     <div class="col-6" *ngFor="let x of customFunc; let i = index">
                         <div class="d-grid">
-                            <a class="btn px-1 py-2 border rounded-0 bg-white" style="min-height: 50px;"  (click)="callFunction(x)"> 
+                            <a class="btn px-1 py-2 border rounded-0 bg-white" style="min-height: 50px;"
+                                (click)="callFunction(x)">
                                 <div class="row g-1">
-                                    <div class="col-3 align-self-center"> 
-                                        <img src="./assets/icon/icons8-plus-96.png" width="100%">
+                                    <div class="col-3 align-self-center">
+                                        <img *ngIf="x=='1'" src="./assets/icon/icons8-search-more-96.png" width="100%">
+                                        <img *ngIf="x=='2'" src="./assets/icon/icons8-plus-96.png" width="100%">
+                                        <img *ngIf="x=='3'" src="./assets/icon/icons8-card-payment-96.png" width="100%">
+                                        <img *ngIf="x=='4'" src="./assets/icon/icons8-edit-96.png" width="100%">
+                                        <img *ngIf="x=='5'" src="./assets/icon/icons8-cancel-96.png" width="100%">
+                                        <img *ngIf="x=='6'" src="./assets/icon/icons8-bonus-96.png" width="100%">
+                                        <img *ngIf="x=='7'" src="./assets/icon/icons8-price-96.png" width="100%">
+                                        <img *ngIf="x=='12'" src="./assets/icon/icons8-back-96.png" width="100%">
                                     </div>
-                                    <div class="col-9 lh-sm text-start">
-                                        <small [innerHTML]="callLabel(x)"></small>
+                                    <div class="col-9 lh-sm text-start  align-self-center">
+                                        <small [innerHTML]="callLabel(x)"></small>  
                                     </div>
-                                </div> 
-                               
+                                </div>
+
                             </a>
                         </div>
                     </div>
@@ -216,34 +232,47 @@
 
 
 <ng-template #contentAddQty let-modal let-c="close" let-d="dismiss">
-    <div class="modal-header">
-        <strong class="modal-title" id="modal-basic-title">Add Qty</strong>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
+    
     <div class="modal-body">
-
-        <div class="mb-2">
-            <div>
-                {{activeCart.barcode}} - {{activeCart.description}}
+        <div class="row">
+            <div class="col-12">
+                <strong>ADD QTY</strong>
             </div>
-            <div *ngIf="activeCart.promotionDescription != null ">
-                *{{activeCart.promotionDescription}}*
-            </div>
-            <div>
-                Rp {{activeCart.price |number}}
-            </div>
-
         </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">QTY</span>
-            <input type="number" class="form-control form-control-lg text-center" maxlength="4" [(ngModel)]="addQty"
-                placeholder="0">
+        <div class="row g-1 mb-3 cart">
+
+            <div class="col-8">
+                <div class="border bg-light py-1 px-2">
+                    <div>
+                        <strong>
+                            {{activeCart.barcode}} - {{activeCart.description}}
+                        </strong>
+                    </div>
+                    <div>
+                        <strong *ngIf="activeCart.promotionDescription != null ">
+                            *{{activeCart.promotionDescription}}*
+                        </strong>
+                    </div>
+                 
+                    <h4>
+                        Rp {{activeCart.price |number}}
+                    </h4>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="input-group mb-3"> 
+                    <input type="number" class="form-control form-control-lg text-center" maxlength="4"
+                        [(ngModel)]="addQty" placeholder="0">
+                </div>
+            </div>
+            <div class="col-1  text-center">
+                <button type="button" class="btn-close" aria-label="Close"
+                    (click)="modal.dismiss('Cross click')"></button>
+            </div>
+        </div> 
+        <div class="row">
+            <app-key-num  (newItemEvent)="fnAddQty($event)"></app-key-num>
         </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-lg btn-outline-dark mx-2"
-            (click)="modal.close('Save click')">Close</button>
-        <button type="button" class="btn btn-lg btn-warning" (click)="onSubmitQty()">ENTER</button>
     </div>
 </ng-template>
 

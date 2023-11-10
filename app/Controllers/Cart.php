@@ -71,9 +71,11 @@ class Cart extends BaseController
             "freeItem" => $freeItem,
             "totalTebusMurah" => $totalTebusMurah
         );
+       
+        $data['promo_fixed'] = model("Promo")->promo_fixed($data['bill']['total'], isset($this->request->getVar()['step']) );
 
-        $data['promo_fixed'] = model("Promo")->promo_fixed($data['bill']['total']);
-
+      
+       
         // $data['bill']['total']
         $tb = model("Core")->select("count(id)", "cso1_tebus_murah", "status= 1 and  " . $data['bill']['total'] . " >=  minTransaction");
 
@@ -508,6 +510,37 @@ class Cart extends BaseController
                 "freeItemQty" => $freeItemQty,
                 "promotionFree" => $promotionFree,
                 "totalCartFreeItem" => $totalCartFreeItem,
+            );
+        }
+        return $this->response->setJSON($data);
+    }
+
+    function fnReduceCart(){
+        $post = json_decode(file_get_contents('php://input'), true);
+        $data = array(
+            "error" => true,
+            "post" => $post,
+        );
+        if ($post) { 
+           
+            $kioskUuid = $post['kioskUuid'];
+            $itemId =  $post['item']['itemId'];
+            $barcode = $post['item']['barcode'];
+            $where = " presence = 1 and kioskUuid = '$kioskUuid' and itemId = '$itemId' and barcode = '$barcode' ";
+
+            $total = model("Core")->select("count(id)","cso1_kiosk_cart",  $where ) - $post['addQty'];
+            for($i = 0; $i < $total; $i++){
+                $id = model("Core")->select("id","cso1_kiosk_cart",$where);
+                $this->db->table("cso1_kiosk_cart")->update([
+                    "void" => 0,
+                    "presence" => 0,
+                ]," id = $id ");
+            }
+
+            $data = array(
+                "error" => false,
+                "post" => $post,
+                "total" => $total,
             );
         }
         return $this->response->setJSON($data);

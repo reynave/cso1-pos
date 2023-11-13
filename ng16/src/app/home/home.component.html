@@ -4,14 +4,13 @@
 
     <div class="container">
         <div class="row g-2">
-            <div class="col-12 text-center">
-                
+            <div class="col-12 text-center"> 
                 <small>POS Ver {{env.ver}}</small>
                 <h1> Welcome Back</h1>
             </div>
             <div class="col">
                 <a (click)="getKioskUuid();">
-                    <img src="./assets/img/2123.jpg" class="border shadow-sm rounded" width="100%">
+                    <img src="./assets/img/2123.jpg" class="border shadow-sm rounded" [ngClass]="{'img-disable': this.cashIn <= 0}" width="100%">
                     <div class="text-center">
                        <strong> OPEN NEW CART</strong>
                     </div>

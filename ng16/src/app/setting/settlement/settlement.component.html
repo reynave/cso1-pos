@@ -20,13 +20,13 @@
         
         <div class="col-12">
             
-            <table class="table table-bordered">
-                <thead>
+            <table class="table table-sm cart">
+                <thead class="sticky-top">
                     <tr>
                         <th>#</th>
                         <th>Date</th>
                         <th>ID</th>
-                        <th>Total</th>
+                        <th class="text-end">Total</th>
                         <th>Cashier ID</th> 
                     </tr>
                 </thead>
@@ -36,7 +36,7 @@
                         <td>{{x.transaction_date}}</td>
                         <td>{{x.id}}</td>
                         <td class="text-end">Rp {{x.total | number}}</td> 
-                        <td><code>{{x.cashierId}}</code></td>
+                        <td>{{x.cashierId}}</td>
                     </tr>
                 </tbody>
             </table>

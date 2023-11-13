@@ -13,7 +13,20 @@ class Home extends BaseController
         $data = array(
             "error" => false,
             "con" => 200,
-            "items" => $items
+            "items" => $items,
+
+        );
+        return $this->response->setJSON($data);
+    }
+
+ 
+    public function start()
+    {
+      
+        $data = array(
+            "error" => false,
+            "cashIn" => (int)model("Core")->select("cashIn","cso2_balance"," close = 0 AND transactionId = '_S1' "), 
+            
         );
         return $this->response->setJSON($data);
     }

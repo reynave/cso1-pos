@@ -11,6 +11,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class BalanceCashInComponent implements OnInit {
   items: any = [];
+  cashIn: string = '0';
+  totalCashIn : string = "";
+  totalCashOut : string = "";
+  startBalance : string = "";
+  startDate : string = "";
+  
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
@@ -33,29 +39,31 @@ export class BalanceCashInComponent implements OnInit {
       data => {
         console.log(data);
         this.items = data['items'];
+        this.totalCashIn = data['cashIn'];
+        this.totalCashOut = data['cashOut'];
+        this.startBalance = data['startBalance'];
+        this.startDate = data['startDate'];
+        
       },
       error => {
         console.log(error);
       }
     )
   }
-  cashIn: number = 0;
+  
   onCashIn() {
-    if (this.cashIn > 0) {
-
-
+    if (parseInt(this.cashIn) > 0) {
       const body = {
         cashIn: this.cashIn,
         terminalId : localStorage.getItem("terminalId"),
       }
-
       this.http.post<any>(environment.api + "balance/onCashIn", body, {
         headers: this.configService.headers(),
       }).subscribe(
         data => {
           console.log(data);
           this.httpGet();
-          this.cashIn = 0;
+          this.cashIn = '0';
         },
         error => {
           console.log(error);
@@ -66,5 +74,33 @@ export class BalanceCashInComponent implements OnInit {
 
   back(){
     history.back();
+  }
+
+  addNumber(newItem:any){
+     
+    console.log(newItem);
+   
+    if(newItem == 'BS'){
+      this.cashIn = this.cashIn.slice(0, -1);
+    }
+    else if(newItem == 'AC'){
+      this.cashIn =  '';
+    }
+    else if(newItem == 'ENTER'){
+      if(this.cashIn != ""){ 
+        this.onCashIn();
+        this.cashIn =  '';
+      } 
+    }
+    else{
+      if(parseInt(this.cashIn) <= 0){
+        this.cashIn =  newItem;
+      }else{
+        this.cashIn = this.cashIn + newItem;
+      }
+      
+    }
+
+   
   }
 }

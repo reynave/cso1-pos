@@ -13,7 +13,7 @@ export class CartDetailComponent implements OnInit {
   @Input() item: any;
   @Input() kioskUuid: any;
   @Input() totalTebusMurah: number = 0;
- @Input() activeCart: any;
+  @Input() activeCart: any;
 
   @Output() newItemEvent = new EventEmitter<string>();
   search: string = "";
@@ -21,7 +21,7 @@ export class CartDetailComponent implements OnInit {
   isSearch: boolean = false;
   detail: any = [];
   loading: boolean = false;
-  addQty : string = "0";
+  addQty: string = "0";
   constructor(
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
@@ -43,7 +43,7 @@ export class CartDetailComponent implements OnInit {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        console.log("cart/detail",data);
+        console.log("cart/detail", data);
         this.detail = data['detail'];
         this.items = data['items'];
       },
@@ -71,7 +71,7 @@ export class CartDetailComponent implements OnInit {
         this.items.splice(objIndex, 1);
 
         this.addNewItem('void items');
-        if(this.items.length < 1 ){
+        if (this.items.length < 1) {
           this.close();
         }
       },
@@ -80,11 +80,11 @@ export class CartDetailComponent implements OnInit {
       }
     )
   }
-  
-  fnVoidAllCartItems(){
+
+  fnVoidAllCartItems() {
     const body = {
       detail: this.detail,
-      kioskUuid : this.kioskUuid, 
+      kioskUuid: this.kioskUuid,
     }
     console.log(body);
     this.http.post<any>(environment.api + "cart/fnVoidAllCartItems", body, {
@@ -92,7 +92,7 @@ export class CartDetailComponent implements OnInit {
     }).subscribe(
       data => {
         console.log(data);
-        this.modalService.dismissAll(); 
+        this.modalService.dismissAll();
         this.addNewItem('update Price items');
       },
       error => {
@@ -101,23 +101,23 @@ export class CartDetailComponent implements OnInit {
     )
   }
 
-  
+
   close() {
     this.modalService.dismissAll();
-  } 
+  }
 
-  fnReduceCart(){
+  fnReduceCart() {
     const body = {
       item: this.activeCart,
-      addQty : this.addQty,
-      kioskUuid : this.kioskUuid,
+      addQty: this.addQty,
+      kioskUuid: this.kioskUuid,
     }
     console.log(body);
     this.http.post<any>(environment.api + "cart/fnReduceCart", body, {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        console.log(data);  
+        console.log(data);
         this.addNewItem('void items');
         this.close();
       },
@@ -127,32 +127,32 @@ export class CartDetailComponent implements OnInit {
     )
   }
 
-  fnAddQty(newItem:any){
+  fnAddQty(newItem: any) {
     console.log(newItem);
-   
-    if(newItem == 'BS'){
+
+    if (newItem == 'BS') {
       this.addQty = this.addQty.slice(0, -1);
     }
-    else if(newItem == 'AC'){
-      this.addQty =  '';
+    else if (newItem == 'AC') {
+      this.addQty = '';
     }
-    else if(newItem == 'ENTER'){
-      if(this.addQty != ""){
+    else if (newItem == 'ENTER') {
+      if (this.addQty != "") {
         //this.voidCart();
         this.fnReduceCart();
-        this.addQty =  '';
-      } 
+        this.addQty = '';
+      }
     }
-    else{
-      if(parseInt(this.addQty) <= 0){
-        this.addQty =  newItem;
-      }else{
+    else {
+      if (parseInt(this.addQty) <= 0) {
+        this.addQty = newItem;
+      } else {
         this.addQty = this.addQty + newItem;
       }
-      
+
     }
 
-    if(parseInt(this.addQty) > this.activeCart.qty){
+    if (parseInt(this.addQty) > this.activeCart.qty) {
       this.addQty = this.activeCart.qty.toString();
     }
 

@@ -57,9 +57,7 @@ export class CartComponent implements OnInit, OnDestroy {
   alert: boolean = false;
   func: MyFunction[] = [
     { id: 0, value: () => { return false; }, label: '&nbsp;' },
-    { id: 1, value: () => { 
-      this.openComponent('items') }, 
-      label: 'Search Items' },
+    { id: 1, value: () => { this.openComponent('items'); }, label: 'Search Items' },
     {
       id: 2, value: () => {
         if (this.activeCart['barcode'] !== undefined) {
@@ -93,12 +91,12 @@ export class CartComponent implements OnInit, OnDestroy {
     { id: 6, value: () => { this.openComponent('itemTebusMurah'); }, label: 'Tebus Murah' },
     {
       id: 7, value: () => {
-        if (this.activeCart.length != 0 && ( this.activeCart.price < 2  && this.activeCart.price > 0 )) {
+        if (this.activeCart.length != 0 && (this.activeCart.price < 2 && this.activeCart.price > 0)) {
           this.openComponent('updatePrice');
-        }else{
+        } else {
           alert("Item ini tidak bisa update harga");
         }
-      
+
       }, label: 'Update Rp 1'
     },
 
@@ -143,22 +141,22 @@ export class CartComponent implements OnInit, OnDestroy {
 
   addItem(newItem: string) {
     console.log(newItem);
-    if(newItem == 'BS'){
-      this.barcode =  this.barcode.slice(0,-1);
+    if (newItem == 'BS') {
+      this.barcode = this.barcode.slice(0, -1);
     }
-    else if(newItem == 'AC'){
-      this.barcode =  '';
+    else if (newItem == 'AC') {
+      this.barcode = '';
     }
-    else if(newItem == 'ENTER'){
-      if(this.barcode != ""){
+    else if (newItem == 'ENTER') {
+      if (this.barcode != "") {
         this.addToCart();
-        this.barcode =  '';
-      } 
+        this.barcode = '';
+      }
     }
-    else{
-      this.barcode =  this.barcode + newItem.toString();  
+    else {
+      this.barcode = this.barcode + newItem.toString();
     }
-  
+
 
   }
 
@@ -188,6 +186,7 @@ export class CartComponent implements OnInit, OnDestroy {
       item.value(); // Panggil fungsi
     }
   }
+
   callLabel(id: number) {
     const index = this.func.findIndex((item: { id: number }) => item.id === id);
     return this.func[index].label;
@@ -202,7 +201,7 @@ export class CartComponent implements OnInit, OnDestroy {
       }
     }).subscribe(
       data => {
-            console.log(data);
+        console.log(data);
         this.items = data['items'];
         this.ilock = data['ilock'];
         this.itemsFree = data['itemsFree'];
@@ -225,7 +224,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   scrollToBottom() {
     setTimeout(() => {
- 
+
       try {
         this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
       } catch (err) { }
@@ -235,6 +234,7 @@ export class CartComponent implements OnInit, OnDestroy {
   setCursor() {
     this.callCursor = setInterval(() => {
       this.rows.nativeElement.focus();
+     // console.log( new Date().getSeconds())
     }, 300);
   }
 
@@ -274,11 +274,11 @@ export class CartComponent implements OnInit, OnDestroy {
             clearInterval(this.callCursor);
             this.modalService.open(this.contentPassword, { size: 'md' }).result.then(
               (result) => {
-               
+
               },
               (reason) => {
                 this.barcode = "";
-                this.setCursor();
+             //   this.setCursor();
               },
             );
 
@@ -315,17 +315,17 @@ export class CartComponent implements OnInit, OnDestroy {
 
   open(content: any, item: any) {
     clearInterval(this.callCursor);
-    this.addQty = '';
+    this.addQty = '1';
     this.item = item;
     this.modalService.open(content, { size: 'lg' }).result.then(
-      (result)=>{ 
+      (result) => {
         clearInterval(this.callCursor);
         console.log('   clearInterval(this.callCursor); ');
       },
       (reason) => {
-				 console.log('CLOSE');
-         this.setCursor();
-			},
+        console.log('CLOSE');
+        this.setCursor();
+      },
     )
   }
 
@@ -339,6 +339,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
 
   selectItem(x: any) {
+    console.log(x);
     this.activeCart = []
     if (x.total > 0) {
       this.activeCart = x;
@@ -371,38 +372,43 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   openComponent(comp: any, item: any = []) {
+
+
     clearInterval(this.callCursor);
+
+
     if (comp == 'items') {
       const modalRef = this.modalService.open(ItemsComponent, { size: 'lg' });
       modalRef.result.then(
-        (result)=>{
+        (result) => {
           //clearInterval(this.callCursor);
           console.log('   clearInterval(this.callCursor); ');
         },
         (reason) => {
-           console.log('CLOSE');
-           this.setCursor();
-          
+          console.log('CLOSE 1001');
+         this.setCursor();
+
         },
       );
       modalRef.componentInstance.kioskUuid = this.kioskUuid;
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);
         this.httpCart();
-        this.setCursor();
+      //  this.setCursor();
+
       });
     }
 
     if (comp == 'cartDetail') {
       const modalRef = this.modalService.open(CartDetailComponent, { size: 'md' });
       modalRef.result.then(
-        (result)=>{
+        (result) => {
           //clearInterval(this.callCursor);
           console.log('   clearInterval(this.callCursor); ');
         },
         (reason) => {
-           console.log('CLOSE');
-           this.setCursor(); 
+          console.log('CLOSE');
+       //   this.setCursor();
         },
       );
       modalRef.componentInstance.activeCart = this.activeCart;
@@ -413,8 +419,8 @@ export class CartComponent implements OnInit, OnDestroy {
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);
         this.httpCart();
-        this.setCursor();
-        
+       // this.setCursor();
+
         this.activeCart = [];
       });
     }
@@ -422,14 +428,14 @@ export class CartComponent implements OnInit, OnDestroy {
     if (comp == 'updatePrice') {
       const modalRef = this.modalService.open(CartUpdatePriceComponent, { size: 'lg' });
       modalRef.result.then(
-        (result)=>{
+        (result) => {
           //clearInterval(this.callCursor);
           console.log('   clearInterval(this.callCursor); ');
         },
         (reason) => {
-           console.log('CLOSE');
-           this.setCursor();
-          
+          console.log('CLOSE');
+         // this.setCursor();
+
         },
       );
       modalRef.componentInstance.activeCart = this.activeCart;
@@ -438,7 +444,7 @@ export class CartComponent implements OnInit, OnDestroy {
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);
         this.httpCart();
-        this.setCursor();
+       // this.setCursor();
       });
     }
 
@@ -448,7 +454,7 @@ export class CartComponent implements OnInit, OnDestroy {
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('itemTebusMurah', data);
         this.httpCart();
-        this.setCursor();
+       // this.setCursor();
       });
     }
 
@@ -580,28 +586,28 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
 
-  fnAddQty(newItem:any){
+  fnAddQty(newItem: any) {
     console.log(newItem);
-   
-    if(newItem == 'BS'){
+
+    if (newItem == 'BS') {
       this.addQty = this.addQty.slice(0, -1);
     }
-    else if(newItem == 'AC'){
-      this.addQty =  '';
+    else if (newItem == 'AC') {
+      this.addQty = '';
     }
-    else if(newItem == 'ENTER'){
-      if(this.addQty != ""){
+    else if (newItem == 'ENTER') {
+      if (this.addQty != "") {
         this.onSubmitQty();
-        this.addQty =  '';
-      } 
+        this.addQty = '';
+      }
     }
-    else{
-      if(parseInt(this.addQty) <= 0){
-        this.addQty =  newItem;
-      }else{
+    else {
+      if (parseInt(this.addQty) <= 0) {
+        this.addQty = newItem;
+      } else {
         this.addQty = this.addQty + newItem;
       }
-      
+
     }
   }
 }

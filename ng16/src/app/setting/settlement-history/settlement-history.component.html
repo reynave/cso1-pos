@@ -23,7 +23,9 @@
                         <th>ID</th>
                         <th class="text-end">Total</th>
                         <th class="text-end">Amount</th> 
+                        <th>Print</th>
                         <th></th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -33,6 +35,7 @@
                         <td class="text-end">{{x.total | number}}</td> 
                         <td class="text-end">Rp {{x.amount | number}}</td> 
                         <td><a target="_blank" [routerLink]="[ '/setting/settlement/print' ]" [queryParams]="{id:x.id}">Reprint</a></td>  
+                        <td><a target="_blank" href="{{api}}/settlement/print?id={{x.id}}">JSON</a></td>  
                     </tr>
                 </tbody>
             </table>

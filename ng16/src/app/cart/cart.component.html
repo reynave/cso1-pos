@@ -55,8 +55,8 @@
             </div>
             <div class="bg-white  p-2 border cart cart-height " #chatContainer>
 
-                <div class="row g-1 py-1"
-                    [ngClass]="{'active-cart': x.id == activeCart.id && x.price == activeCart.price}"
+                <div class="row g-1 py-1"  
+                    [ngClass]="{'active-cart': x.barcode == activeCart.barcode && x.price == activeCart.price}"
                     *ngFor="let x of items" (click)="selectItem(x);">
                     <div class="col-8">
                         <div>{{x.barcode}} - {{x.description}} <span>{{x.note}}</span>  </div>
@@ -68,11 +68,11 @@
                     <div class="col-4 text-end">{{x.total | number}}</div>
                 </div>
 
-                <div class="me-2 my-4">
+                <!-- <div class="me-2 my-4">
                     <div *ngFor="let item of promo_fixed" class="mb-2">
                         <span [innerHTML]="item['detail']['reminder']"></span> 
                     </div>
-                </div>
+                </div> -->
 
                 <div class="me-2 my-4">
                     <div *ngFor="let item of promo_fixed" class="mb-1">
@@ -261,8 +261,7 @@
             </div>
             <div class="col-3">
                 <div class="input-group mb-3"> 
-                    <input type="number" class="form-control form-control-lg text-center" maxlength="4"
-                        [(ngModel)]="addQty" placeholder="0">
+                    <input type="number" class="form-control form-control-lg text-center" maxlength="4"  [(ngModel)]="addQty" placeholder="0">
                 </div>
             </div>
             <div class="col-1  text-center">

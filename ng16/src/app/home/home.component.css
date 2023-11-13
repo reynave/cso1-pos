@@ -7,3 +7,8 @@ a{
     color: #333;
     text-decoration: none;
 }
+
+.img-disable{
+    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
+}

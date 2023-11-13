@@ -2,8 +2,8 @@
 
 class CSVHelper {
 
-    public static function arrayToCsv($data, $filename) {
-        $dateFolder = date('Y-m-d'); // Mendapatkan tanggal hari ini dalam format 'YYYY-MM-DD'
+    public static function arrayToCsv($data, $filename, $dateFolder = "temp"  ) {
+       // $dateFolder = date('Y-m-d'); // Mendapatkan tanggal hari ini dalam format 'YYYY-MM-DD'
         $folderPath = FCPATH . './../output/' . $dateFolder . '/';
 
         // Membuat folder jika belum ada

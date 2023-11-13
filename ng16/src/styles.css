@@ -162,3 +162,7 @@ a {
     width: 400px; 
     margin-left: 25px;
 }
+
+.table-sm td{
+     font-size: 0.8rem;
+}

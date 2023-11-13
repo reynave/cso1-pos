@@ -41,21 +41,57 @@ class Settlement extends BaseController
         if ($post) {
             $q1 = "SELECT *  FROM cso2_settlement  
             where id = '" . $post['id'] . "'";
-            $item = $this->db->query($q1)->getResultArray();
+            $cso2_settlement = $this->db->query($q1)->getResultArray();
 
             $q2 = "SELECT *  FROM cso2_balance  
             where settlementId = '" . $post['id'] . "' order by input_date ASC";
-            $balance = $this->db->query($q2)->getResultArray();
+            $cso2_balance = $this->db->query($q2)->getResultArray();
+
+ 
+            $q2 = "SELECT *  FROM cso1_transaction  
+            where settlementId = '" . $post['id'] . "' order by input_date ASC";
+            $cso1_transaction = $this->db->query($q2)->getResultArray();
+
+            $q2 = "SELECT t.settlementId, d.* FROM cso1_transaction_detail AS d
+            LEFT JOIN cso1_transaction AS t ON t.id = d.transactionId
+            WHERE t.settlementId =  '" . $post['id'] . "'  ORDER BY t.inputDate ASC";
+            $cso1_transaction_detail = $this->db->query($q2)->getResultArray();
+
+            $q2 = "SELECT a.* , t.id
+            FROM cso1_transaction_payment AS a
+            LEFT JOIN cso1_transaction AS t ON t.id = a.transactionId
+            WHERE t.settlementId = '".$post['id']."';
+            ";
+            $cso1_transaction_payment = $this->db->query($q2)->getResultArray();
+
+            $settlementId = $post['id']; 
+         
+            $date = strtotime(model("Core")->select("input_date","cso2_settlement"," id = '$settlementId' "));
+            $date  = date("Y-m-d", $date);
 
             $data = array(
                 "error" => false,
                 "post" => $post,
-                "item" => $item[0],
-                "balance" => $balance,
+                "csv" => array(
+                    "cso1_transaction" => CSVHelper::arrayToCsv($cso1_transaction, $settlementId.'_pos_transaction' , $date),
+                    "cso1_transaction_detail" => CSVHelper::arrayToCsv($cso1_transaction_detail, $settlementId.'_pos_transaction_detail', $date), 
+                    "cso2_settlement" => CSVHelper::arrayToCsv($cso2_settlement, $settlementId.'_pos_settlement', $date),  
+                    "cso2_balance" => CSVHelper::arrayToCsv($cso2_balance, $settlementId.'_pos_balance', $date),
+                    "cso1_transaction_payment" => CSVHelper::arrayToCsv($cso1_transaction_payment, $settlementId.'_pos_transaction_payment', $date),
+                    
+                    //"voucher" => CSVHelper::arrayToCsv($cso2_balance, 'pos_balance_' . $settlementId, $date),
+                
+                ),
+                "cso1_transaction" => $cso1_transaction, 
+                "cso2_settlement" => $cso2_settlement,
+                "cso2_balance" => $cso2_balance, 
+              
             );
         }
         return $this->response->setJSON($data);
     }
+
+
 
     function onSetSettlement()
     {
@@ -67,18 +103,11 @@ class Settlement extends BaseController
         if ($post) {
             $this->db->transStart();
             $settlementId = $post['terminalId'] . model("Core")->number("settlement");
-
-            $q1 = "SELECT t.*, u.name  FROM cso1_transaction as t
-            left join cso1_user as u on u.id = t.cashierId
-            where t.presence  = 1 and t.locked = 1 and t.settlementId = '' order by t.inputDate DESC";
-            $items = $this->db->query($q1)->getResultArray();
-
-            foreach ($items as $row) {
-                $this->db->table("cso1_transaction")->update([
-                    "settlementId" => $settlementId,
-                ], " id = '" . $row['id'] . "'");
-            }
-
+ 
+            $this->db->table("cso1_transaction")->update([
+                "settlementId" => $settlementId,
+            ], "   presence  = 1 AND locked = 1 AND settlementId = '' ");
+ 
             $this->db->table("cso2_balance")->update([
                 "settlementId" => $settlementId,
                 "close" => 1,
@@ -90,49 +119,33 @@ class Settlement extends BaseController
                 "total" => model("Core")->select("count(id)", "cso1_transaction", "settlementId = '$settlementId' "),
                 "input_date" => date("Y-m-d H:i:s")
             ]);
+  
 
+            $q1 = "SELECT * FROM cso1_transaction 
+            WHERE settlementId = '$settlementId'
+            order by inputDate DESC";
+            $cso1_transaction = $this->db->query($q1)->getResultArray();
 
+            $q1 = "SELECT * FROM cso1_transaction 
+            WHERE settlementId = '$settlementId'
+            order by inputDate DESC";
+            $cso2_balance = $this->db->query($q1)->getResultArray();
 
-            $q = "SELECT *  FROM cso1_transaction  
-            where  settlementId = '$settlementId' order by id ASC";
-            $data = $this->db->query($q)->getResultArray();
-            $filePath1 = CSVHelper::arrayToCsv($data, 'cso1_transaction.' . $settlementId);
+            $q1 = "SELECT * FROM cso1_transaction 
+            WHERE settlementId = '$settlementId'
+            order by inputDate DESC";
+            $cso2_settlement = $this->db->query($q1)->getResultArray();
 
-            foreach ($data as $row) {
-                $q = "SELECT *  FROM cso1_transaction_detail  
-                WHERE  transactionId = '" . $row['id'] . "' order by id ASC";
-                $transaction_detail = $this->db->query($q)->getResultArray();
-                $filePath2 = CSVHelper::arrayToCsv($transaction_detail, 'cso1_transaction_detail.' . $settlementId);
-
-                $q = "SELECT *  FROM cso1_transaction_payment  
-                WHERE  transactionId = '" . $row['id'] . "' order by id ASC";
-                $transaction_payment = $this->db->query($q)->getResultArray();
-                $filePath3 = CSVHelper::arrayToCsv($transaction_payment, 'cso1_transaction_payment.' . $settlementId);
-
-            }
-
-            $filePath4 = false;
-            $q = "SELECT *  FROM cso2_balance  
-                where  settlementId = '$settlementId' order by id ASC";
-            $data = $this->db->query($q)->getResultArray();
-            if (count($data) > 0) {
-                $filePath4 = CSVHelper::arrayToCsv($data, 'cso2_balance.' . $settlementId);
-
-            }
 
             $csv = array(
-                "cso1_transaction" => $filePath1,
-                "cso1_transaction_detail" => $filePath2,
-                "cso1_transaction_payment" => $filePath3,
-                "cso2_balance" => $filePath4,
-
+                "cso1_transaction" => $cso1_transaction, 
+                "cso2_settlement" => $cso2_settlement,
+                "cso2_balance" => $cso2_balance, 
             );
 
             $this->db->transComplete();
-
-
-
-
+ 
+           
             $data = array(
                 "error" => false,
                 "id" => $settlementId,
@@ -144,9 +157,7 @@ class Settlement extends BaseController
 
         return $this->response->setJSON($data);
     }
-
-
-
+ 
     function testCSV()
     {
         $data = [

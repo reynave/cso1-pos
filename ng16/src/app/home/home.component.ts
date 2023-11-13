@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfigService } from '../service/config.service';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment'; 
-import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -10,26 +10,43 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  parking : any = [];
-  parkingTotal : number = 0;
-  env : any = environment;
+  parking: any = [];
+  parkingTotal: number = 0;
+  env: any = environment;
+  cashIn: number = 0;
   constructor(
     private configService: ConfigService,
-    private http: HttpClient, 
-    private router : Router
+    private http: HttpClient,
+    private router: Router,
+    private activeRouter : ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-      this.httpParking();
-      this.sendReload();
+    this.httpGet();
+    this.httpParking();
+    this.sendReload();
   }
 
-  httpParking(){
-    this.http.get<any>(environment.api + "parking/index", {
-      headers: this.configService.headers(), 
+  httpGet() {
+    this.http.get<any>(environment.api + "home/start", {
+      headers: this.configService.headers(),
     }).subscribe(
       data => {
-        console.log(data); 
+        console.log(data);
+        this.cashIn = data['cashIn'];
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+
+  httpParking() {
+    this.http.get<any>(environment.api + "parking/index", {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => {
+        console.log(data);
         this.parkingTotal = data['parkingTotal'];
         this.parking = data['items'];
       },
@@ -39,39 +56,45 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  getKioskUuid(){
+  getKioskUuid() {
     const body = {
-      terminalId : localStorage.getItem("terminalId"),
+      terminalId: localStorage.getItem("terminalId"),
     }
-    this.http.post<any>(environment.api + "KioskUuid/getKioskUuid", body, {
-      headers: this.configService.headers(), 
-    }).subscribe(
-      data => {
-        console.log(data); 
-        this.router.navigate(["cart"],{queryParams:{kioskUuid:data['id']}});
-        this.httpParking()
-      },
-      error => {
-        console.log(error);
-      }
-    );
+    if (this.cashIn > 0) {
+ 
+      this.http.post<any>(environment.api + "KioskUuid/getKioskUuid", body, {
+        headers: this.configService.headers(),
+      }).subscribe(
+        data => {
+          console.log(data);
+          this.router.navigate(["cart"], { queryParams: { kioskUuid: data['id'] } });
+          this.httpParking()
+        },
+        error => {
+          console.log(error);
+        }
+      );
+    }else{
+      alert("Please input begining balance!");
+      this.router.navigate(['./setting/balance/cashIn']);
+    }
   }
 
-  setCart(x : any){
+  setCart(x: any) {
     console.log(x);
     this.configService.setKioskUuid(x.kioskUuid).subscribe(
-      data=>{
-        console.log(data); 
-        this.router.navigate(['cart'],{ queryParams: { kioskUuid : x.kioskUuid}});
+      data => {
+        console.log(data);
+        this.router.navigate(['cart'], { queryParams: { kioskUuid: x.kioskUuid } });
       }
     )
   }
-  
-  sendReload(){
+
+  sendReload() {
     const msg = {
       to: 'visitor',
       msg: 'welcome',
-      action : 'home', 
+      action: 'home',
     }
     this.configService.sendMessage(msg);
     console.log("sendReload");

@@ -52,8 +52,7 @@ export class SettlementComponent implements OnInit {
       data=>{
         console.log(data); 
         this.httpGet();  
-        window.open(host+'/#/setting/settlement/print?id='+data['id'], '_blank');
-
+        window.open(host+'/#/setting/settlement/print?id='+data['id'], '_blank'); 
       },
       error=>{
         console.log(error);

@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class SettlementHistoryComponent implements OnInit {
   items: any = []; 
+  api : string = environment.api;
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
@@ -39,4 +40,6 @@ export class SettlementHistoryComponent implements OnInit {
     history.back();
   }
 
+
+  
 }

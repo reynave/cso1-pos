@@ -25,7 +25,7 @@ class EndOfDay extends BaseController
 
             $data = [
                 "error" => false,
-                "uploadToServer" => self::uploadToServer(date("Y-m-d")),
+            //    "uploadToServer" => self::uploadToServer(date("Y-m-d")),
                 "post" => $post,
             ];
         }
@@ -45,8 +45,7 @@ class EndOfDay extends BaseController
             if ($file != "." && $file != "..") {
                 $fileList[] =  new CURLFile( $folderPath.$file);
             }
-        }
-
+        } 
        
         $ch = curl_init();  
         curl_setopt($ch, CURLOPT_URL, $serverUrl);
@@ -72,7 +71,7 @@ class EndOfDay extends BaseController
    
         $folderSpec = '2023-08-25'; 
         $folderPath = FCPATH . "./../output/$folderSpec/";
-     // $uploadFilePath = FCPATH . './../output/2023-08-25/cso1_transaction.T02SET000016.csv';
+        // $uploadFilePath = FCPATH . './../output/2023-08-25/cso1_transaction.T02SET000016.csv';
         $files = scandir($folderPath);
         $fileList = [];
 

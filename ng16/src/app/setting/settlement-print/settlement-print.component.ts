@@ -13,6 +13,11 @@ export class SettlementPrintComponent implements OnInit {
   item: any = [];
   id: string = "";
   balance : any = [];
+
+  cso1_transaction : any = [];
+  cso2_settlement : any = [];
+  cso2_balance : any = [];
+   
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
@@ -33,8 +38,9 @@ export class SettlementPrintComponent implements OnInit {
     }).subscribe(
       data => {
         console.log(data);
-        this.item = data['item'];
-        this.balance = data['balance'];
+        this.cso1_transaction = data['cso1_transaction'];
+        this.cso2_settlement = data['cso2_settlement'];
+        this.cso2_balance = data['cso2_balance']; 
       },
       error => {
         console.log(error);

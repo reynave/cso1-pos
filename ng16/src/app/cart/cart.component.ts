@@ -194,6 +194,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   httpCart() {
     this.sendReload();
+    this.activeCart = [];
     this.http.get<any>(environment.api + "cart/index", {
       headers: this.configService.headers(),
       params: {
@@ -386,7 +387,7 @@ export class CartComponent implements OnInit, OnDestroy {
         },
         (reason) => {
           console.log('CLOSE 1001');
-         this.setCursor();
+          this.setCursor();
 
         },
       );

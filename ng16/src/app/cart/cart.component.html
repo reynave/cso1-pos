@@ -55,8 +55,7 @@
             </div>
             <div class="bg-white  p-2 border cart cart-height " #chatContainer>
 
-                <div class="row g-1 py-1"  
-                    [ngClass]="{'active-cart': x.barcode == activeCart.barcode && x.price == activeCart.price}"
+                <div class="row g-1 py-1"  [ngClass]="{'active-cart': x.barcode == activeCart.barcode && x.price == activeCart.price}"
                     *ngFor="let x of items" (click)="selectItem(x);">
                     <div class="col-8">
                         <div>{{x.barcode}} - {{x.description}} <span>{{x.note}}</span>  </div>

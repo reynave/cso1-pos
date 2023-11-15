@@ -43,6 +43,7 @@ export class PrintingService {
   template(bill: any) {
     let items = bill['items'];
     let summary = bill['summary'];
+    let totalCopy = bill['copy'];
 
     let message = "";
     console.log(items);
@@ -51,7 +52,7 @@ export class PrintingService {
     message += bill['template']['companyAddress'] + "\n";
     message += bill['template']['companyPhone'] + "\n";
     if(bill['copy'] > 0){
-      message += "COPY STRUCK" + "\n";
+      message += totalCopy+" X COPY STRUCK" + "\n";
       message += "BUKAN MERUPAKAN BUKTI PEMBAYARAN" + "\n"; 
     }
    

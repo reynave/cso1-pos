@@ -83,10 +83,18 @@ connection.connect((err) => {
 
         })
         .catch((error) => {
-            console.log(error);
+            //  console.log(error);
+            let message = `
+//
+// SERVER OFFLINE!                     
+// URL : ${url}                         
+//
+            `;
+            console.log(message);
+            connection.end();
         }).finally(() => {
-            //connection.end();
-            console.log("DONE SYNC VOUCHER");
+           
+            console.log("END");
         });
 
 

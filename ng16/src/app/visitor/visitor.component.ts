@@ -39,6 +39,9 @@ export class VisitorComponent implements OnInit, OnDestroy {
   action: string = "home";
   account: any = []; itemsFree: any = [];
   bill: any = []; timeout: any;
+  promo_fixed: any = [];
+  tebus_murah: any = [];
+
   constructor(
     private configService: ConfigService,
     private printing: PrintingService,
@@ -92,6 +95,8 @@ export class VisitorComponent implements OnInit, OnDestroy {
         this.items = data['items'];
         this.itemsFree = data['itemsFree'];
         this.bill = data['bill'];
+        this.promo_fixed = data['promo_fixed'];
+        this.tebus_murah = data['tebus_murah'];
         console.log(data);
       },
       error => {
@@ -127,9 +132,9 @@ export class VisitorComponent implements OnInit, OnDestroy {
       }
     )
   }
-
-
-  transactionDate : string= "";
+  copy: number = 0;
+  outputPrint: string = "";
+  transactionDate: string = "";
   httpBill() {
     this.http.get<any>(environment.api + "printing/detail", {
       headers: this.configService.headers(),
@@ -154,23 +159,25 @@ export class VisitorComponent implements OnInit, OnDestroy {
             promotionId: el['promotionId'],
             note: el['note'],
             isSpecialPrice: el['isSpecialPrice'],
-            total: el['totalPrice'], 
+            total: el['totalPrice'],
           }
           this.items.push(temp);
-        });
-
-
+        }); 
         this.paymentMethod = data['paymentMethod'];
         this.summary = data['summary'];
+
+
+        this.copy = data['copy'];
+        console.log('httpBill',data);
+        this.items = data['items'];
+        this.outputPrint = this.printing.template(data);  
       },
       error => {
         console.log(error);
       }
     )
   }
-
-
-
+ 
   isCloseTransaction() {
 
   }
@@ -179,4 +186,8 @@ export class VisitorComponent implements OnInit, OnDestroy {
     this._docSub.unsubscribe();
     this.timeout = null;
   }
+
+
+
+   
 }

@@ -16,8 +16,8 @@ class Login extends BaseController
             "error" => true,
             "post" => $post,
         ];
-        $id = model("Core")->select("id","cso1_user","id = '".$post['id']."' ");
-        if ($post &&  $id) {   
+        $id = model("Core")->select("id", "cso1_user", "id = '" . $post['id'] . "' ");
+        if ($post && $id) {
             $key = $_ENV['SECRETKEY'];
             $payload = [
                 'iss' => 'http://localhost',
@@ -26,8 +26,8 @@ class Login extends BaseController
                 'nbf' => time(),
                 'exp' => strtotime('+8 hours'),
                 "account" => array(
-                    "id" =>  $id,
-                    'name' => model("Core")->select("name","cso1_user","id = '$id' "),
+                    "id" => $id,
+                    'name' => model("Core")->select("name", "cso1_user", "id = '$id' "),
                 ),
             ];
             $jwt = JWT::encode($payload, $key, 'HS256');
@@ -38,7 +38,18 @@ class Login extends BaseController
                 "id" => $id,
                 "jwtToken" => $jwt,
             );
-        }else{
+
+            for ($i = 1; $i <= 12; $i++) { 
+                if(!model("Core")->select("id","cso1_user_func","sorting = $i and userId = '$id' ") ){
+                    $this->db->table("cso1_user_func")->insert([
+                        "userId" => $id,
+                        "sorting" => $i,
+                    ]);
+                } 
+            }
+
+
+        } else {
             $data = [
                 "error" => true,
                 "post" => $post,

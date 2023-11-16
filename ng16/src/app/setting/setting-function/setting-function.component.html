@@ -1,55 +1,38 @@
 <app-header></app-header>
 
 <div class="container ">
-    <div class="row">
-        <div class="col-12 col-md-6 mb-4 text-end">
-            <a (click)="back();" class="btn  btn-dark  border">Back</a>
-
+    <div class="row mb-3">
+        <div class="col-6">
+            <a (click)="back();" class="btn  btn-dark  border me-2">Back</a> 
+        </div>
+        <div class="col-6 text-end">  
             <button type="button" class="btn btn-primary" (click)="save()">Save</button>
         </div>
     </div>
+ 
+    <div class="row g-1">
+         
+        <div class="col-3" *ngFor="let x of items; ; let i = index">
+            <div class="border bg-white p-2">
+                <div class="mb-2">
+                    <strong>Function {{i+1}} :</strong>
+                </div>
+                <select class="form-control" [(ngModel)]="x.number">
+                    <option [value]="0">Emtpy</option>
+                    <option [value]="1">Search Item</option>
+                    <option [value]="2">Add Qty</option>
 
-    <div class="row">
-        <div class="col-md-6 col-12">
-            <div class="border p-1 bg-white">
-                
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th width="100px">Number</th>
-                            <th>Function</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- <tr *ngFor="let i of items">
-                            <td>F{{i+1}}</td>
-                            <td>
-                                <select class="form-control" [(ngModel)]="saveFunc[i]" >
-                                    <option [value]="0">Emtpy</option>
-                                    <option [value]="1">Search Item</option>
-                                    <option [value]="2">Add Qty</option>
-                                    
-                                    <option [value]="3">Payment</option>
-                                    <option [value]="4">Edit Qty</option>
-                                    <option [value]="5">Cancel Trans</option>
-                                    <option [value]="6">Tebus Murah</option>
-                                    <option [value]="7">Update Price</option>
-                                    
-                                    <option [value]="12">Close Admin</option>
-                                </select>
-                            </td>
-                        </tr> -->
-                    </tbody>
-                    <tfoot>
-                        <tr> 
-                            <td colspan="2" class="text-end">
-                                <button type="button" class="btn btn-primary" (click)="save()">Save</button>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
+                    <option [value]="3">Payment</option>
+                    <option [value]="4">Edit Qty</option>
+                    <option [value]="5">Cancel Trans</option>
+                    <option [value]="6">Tebus Murah</option>
+                    <option [value]="7">Update Price</option>
+
+                    <option [value]="12">Close Admin</option>
+                </select>
             </div>
         </div>
+ 
     </div>
 
 </div>

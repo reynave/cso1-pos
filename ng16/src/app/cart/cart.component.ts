@@ -161,19 +161,32 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   setFunctionSaved() {
-    this.http.get<any>(environment.api + "setting/getFunc", {
+    let storedData : any = [];
+    this.http.get<any>(environment.api + "func/index", {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
+        console.log(data);
+
+        // [1,2,4,3,5,0,0,0,0,0,0,0]
+
+        data['items'].forEach((el: { [x: string]: any; }) => {
+          storedData.push( parseInt(el['number'] ) );
+        });
+
+      //  console.log(storedData);
+
+         this.customFunc = storedData;
+
         //const storedDataString = localStorage.getItem("function.pos");
-        const storedDataString = data['saveFunc'];
-        if (storedDataString) {
-          const storedData = JSON.parse(storedDataString);
-          this.customFunc = storedData;
-        } else {
-          const storedDataString = localStorage.setItem("function.pos", JSON.stringify(this.customFunc));
-          console.log("Data tidak ditemukan di localStorage.");
-        }
+        // const storedDataString = data['saveFunc'];
+        // if (storedDataString) {
+        //   const storedData = JSON.parse(storedDataString);
+        //   this.customFunc = storedData;
+        // } else {
+        //   const storedDataString = localStorage.setItem("function.pos", JSON.stringify(this.customFunc));
+        //   console.log("Data tidak ditemukan di localStorage.");
+        // }
       }
     )
 

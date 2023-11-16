@@ -71,11 +71,11 @@ class Cart extends BaseController
             "freeItem" => $freeItem,
             "totalTebusMurah" => $totalTebusMurah
         );
-       
-        $data['promo_fixed'] = model("Promo")->promo_fixed($data['bill']['total'], isset($this->request->getVar()['step']) );
 
-      
-       
+        $data['promo_fixed'] = model("Promo")->promo_fixed($data['bill']['total'], isset($this->request->getVar()['step']));
+
+
+
         // $data['bill']['total']
         $tb = model("Core")->select("count(id)", "cso1_tebus_murah", "status= 1 and  " . $data['bill']['total'] . " >=  minTransaction");
 
@@ -129,8 +129,8 @@ class Cart extends BaseController
 
     function addToCart()
     {
-        $getPromoFree  = "";
-        $freeItemMod  = "";
+        $getPromoFree = "";
+        $freeItemMod = "";
         $qtyItemId = 0;
         $weight = 1;
         $i = 1;
@@ -276,7 +276,6 @@ class Cart extends BaseController
         return $this->response->setJSON($data);
     }
 
-
     function exchange()
     {
         $weight = 1;
@@ -319,21 +318,21 @@ class Cart extends BaseController
                     "itemId" => $itemId,
                     "barcode" => $post['barcode'],
                     "originPrice" => $originPrice,
-                    "price" =>   $deff < 0 ? 0 :  $deff  ,
+                    "price" => $deff < 0 ? 0 : $deff,
                     "promotionId" => "0",
                     "input_date" => date("Y-m-d H:i:s"),
                     "inputDate" => time(),
                     "note" => "note 123",
                 ];
-                $this->db->table("cso1_kiosk_cart")->insert($insert); 
+                $this->db->table("cso1_kiosk_cart")->insert($insert);
             }
 
             $item['barcode'] = $post['barcode'];
 
             $data = array(
-                "error"     => false,
-                "post"      => $post,
-                "ticket"    => $ticket, 
+                "error" => false,
+                "post" => $post,
+                "ticket" => $ticket,
                 "kioskUuid" => $kioskUuid,
             );
         }
@@ -430,7 +429,6 @@ class Cart extends BaseController
         }
         return $this->response->setJSON($data);
     }
-
     private function auditFreeItem($itemId, $kioskUuid, $price)
     {
         $q1 = "SELECT c.*, i.description, i.shortDesc 
@@ -514,27 +512,29 @@ class Cart extends BaseController
         }
         return $this->response->setJSON($data);
     }
-
-    function fnReduceCart(){
+    function fnReduceCart()
+    {
         $post = json_decode(file_get_contents('php://input'), true);
         $data = array(
             "error" => true,
             "post" => $post,
         );
-        if ($post) { 
-           
-            $kioskUuid = $post['kioskUuid'];
-            $itemId =  $post['item']['itemId'];
-            $barcode = $post['item']['barcode'];
-            $where = " presence = 1 and kioskUuid = '$kioskUuid' and itemId = '$itemId' and barcode = '$barcode' ";
+        if ($post) {
 
-            $total = model("Core")->select("count(id)","cso1_kiosk_cart",  $where ) - $post['addQty'];
-            for($i = 0; $i < $total; $i++){
-                $id = model("Core")->select("id","cso1_kiosk_cart",$where);
+            $kioskUuid = $post['kioskUuid'];
+            $itemId = $post['item']['itemId'];
+            $barcode = $post['item']['barcode'];
+            $price = $post['item']['price'];
+            
+            $where = " presence = 1 and kioskUuid = '$kioskUuid' and itemId = '$itemId' and barcode = '$barcode' AND  price = '$price' ";
+
+            $total = model("Core")->select("count(id)", "cso1_kiosk_cart", $where) - $post['addQty'];
+            for ($i = 0; $i < $total; $i++) {
+                $id = model("Core")->select("id", "cso1_kiosk_cart", $where);
                 $this->db->table("cso1_kiosk_cart")->update([
                     "void" => 0,
                     "presence" => 0,
-                ]," id = $id ");
+                ], " id = $id ");
             }
 
             $data = array(
@@ -553,7 +553,7 @@ class Cart extends BaseController
             "error" => true,
             "post" => $post,
         );
-        if ($post) { 
+        if ($post) {
             $this->db->table("cso1_kiosk_cart")->update([
                 "price" => $post['activeCart']['price'],
                 "discount" => 0,
@@ -637,6 +637,32 @@ class Cart extends BaseController
                 "ilock" => 1,
                 "update_date" => date("Y-m-d H:i:s"),
             ], "  kioskUuid =  '" . $post['kioskUuid'] . "' ");
+
+            $data = array(
+                "error" => false,
+                "post" => $post,
+            );
+        }
+        return $this->response->setJSON($data);
+    }
+
+    function removeItem()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $data = array(
+            "error" => true,
+            "post" => $post,
+        );
+        if ($post) {
+            $this->db->table("cso1_kiosk_cart")->update([
+                "void" => 1,
+                "presence" => 0,
+                "update_date" => date("Y-m-d H:i:s"),
+            ], "  kioskUuid =  '" . $post['kioskUuid'] . "' 
+                AND  itemId = '".$post['activeCart']['itemId']."' 
+                AND  barcode = '".$post['activeCart']['barcode']."'
+                AND  price = '".$post['activeCart']['price']."' 
+            ");
 
             $data = array(
                 "error" => false,

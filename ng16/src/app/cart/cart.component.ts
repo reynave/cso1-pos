@@ -611,4 +611,26 @@ export class CartComponent implements OnInit, OnDestroy {
 
     }
   }
+
+
+  removeItem(){
+    console.log(this.activeCart);
+
+    const body = {
+      activeCart: this.activeCart,
+      kioskUuid: this.kioskUuid
+    }
+    console.log(body);
+    this.http.post<any>(environment.api + "cart/removeItem", body, {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => {
+        console.log(data); 
+        this.httpCart(); 
+      },
+      error => {
+        console.log(error);
+      }
+    )
+  }
 }

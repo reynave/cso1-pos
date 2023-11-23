@@ -75,8 +75,11 @@ export class PrintingComponent implements OnInit {
     }).subscribe(
       data => {
         this.copy = data['copy'];
-        this.printing.dotMetix()
+        //this.printing.dotMetix();
+       // let url = "./#/printf?id="+this.id;
+       // window.open( url, "_blank", "resizable=no, toolbar=no, scrollbars=no, menubar=no, status=no, directories=no, location=no, width=1000, height=600, left=10 top=100 " );
         this.httpBill();
+        print();
       },
       error => {
         console.log(error);

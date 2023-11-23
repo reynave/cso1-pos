@@ -94,8 +94,8 @@ export class PrintingService {
     });
 
     if(bill['balance'].length > 0){
-      message += "PEMBAYARAN CASH        : "+this.stringfix(this.numberFormat(bill['balance'][0]['caseIn']), 24, 'f') + "\n";
-      message += "KEMBALI                : "+this.stringfix(this.numberFormat(bill['balance'][0]['caseOut']), 24, 'f') + "\n";
+      message += "PEMBAYARAN CASH      : "+this.stringfix(this.numberFormat(bill['balance'][0]['caseIn']), 24, 'f') + "\n";
+      message += "KEMBALI              : "+this.stringfix(this.numberFormat(bill['balance'][0]['caseOut']), 24, 'f') + "\n";
     
     }
      

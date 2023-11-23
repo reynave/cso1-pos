@@ -22,6 +22,7 @@ import { SettingFunctionComponent } from './setting/setting-function/setting-fun
 import { RefundComponent } from './refund/refund.component';
 import { RefundTicketHistoryComponent } from './refund/refund-ticket-history/refund-ticket-history.component';
 import { VoucherComponent } from './setting/voucher/voucher.component';
+import { PrintfComponent } from './printing/printf/printf.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
@@ -39,6 +40,8 @@ const routes: Routes = [
   
   { path: "payment", component: PaymentComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "printing", component: PrintingComponent, data: { active: "" },  canActivate:[authGuard]  }, 
+  { path: "printf", component: PrintfComponent, data: { active: "" },  canActivate:[authGuard]  }, 
+
   { path: "printing/history", component: PrintingHistoryComponent, data: { active: "" },  canActivate:[authGuard]  }, 
 
   { path: "setting", component: SettingComponent, data: { active: "" },  canActivate:[authGuard]  }, 

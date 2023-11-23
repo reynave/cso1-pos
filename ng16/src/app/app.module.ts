@@ -36,6 +36,7 @@ import { RefundTicketHistoryComponent } from './refund/refund-ticket-history/ref
 import { CartUpdatePriceComponent } from './cart/cart-update-price/cart-update-price.component';
 import { KeyNumComponent } from './global/key-num/key-num.component';
 import { VoucherComponent } from './setting/voucher/voucher.component';
+import { PrintfComponent } from './printing/printf/printf.component';
 
 const config: SocketIoConfig = { url: environment.socket_url, options: { transports: ['websocket'] } };
 @NgModule({
@@ -68,7 +69,8 @@ const config: SocketIoConfig = { url: environment.socket_url, options: { transpo
     RefundTicketHistoryComponent,
     CartUpdatePriceComponent,
     KeyNumComponent,
-    VoucherComponent
+    VoucherComponent,
+    PrintfComponent
   ],
   imports: [
     BrowserModule,

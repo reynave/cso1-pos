@@ -10,82 +10,93 @@
                 </div>
             </div>
         </div>
-       
+
+    </div>
+    <div class="row" *ngIf="loading">
+        <div class="col-12 text-center py-5">
+            Loading..
+        </div>
     </div>
 
+    <div class="row g-1" *ngIf="!loading">
+        <div class="col-12" *ngIf="total <= 0">
+            <div class="offset-lg-3 col-lg-6 col-12 text-end">
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-lg" autofocus currencyMask [(ngModel)]="cashIn"
+                        required>
+                    <button type="button" class="btn  btn-lg btn-primary" (click)="onCashIn();">Add Balance</button>
+                </div>
 
-    <div class="row g-1" *ngIf="items.length <= 0">
-        <div class="offset-lg-3 col-lg-6 col-12 text-end" >
-            <div class="input-group">
-                <input type="text" class="form-control form-control-lg" autofocus currencyMask [(ngModel)]="cashIn" required>
-                <button type="button" class="btn  btn-lg btn-primary" (click)="onCashIn();">Add Balance</button>
+                <div class="mt-2">
+                    <app-key-num (newItemEvent)="addNumber($event)"></app-key-num>
+                </div>
             </div>
-           
-            <div class="mt-2">
-                <app-key-num (newItemEvent)="addNumber($event)"></app-key-num>
+        </div>
+
+        <div class="col-12" *ngIf="total > 0">
+            <div class="row g-1">
+
+                <div class="col-7 cart">
+                    <div class="bg-white" style="max-height: 80vh; overflow-y: auto; border: 1px solid #ccc;">
+                        <table class="table table-sm">
+                            <thead class="sticky-top">
+                                <tr>
+                                    <th>Date</th>
+                                    <th class="text-end">cash In</th>
+                                    <th class="text-end">cash Out</th>
+                                    <th>transactionId</th>
+                                    <th>cashierId</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let x of items; let i = index">
+                                    <td>{{x.input_date}}</td>
+                                    <td class="text-end"> {{x.cashIn | number}}</td>
+                                    <td class="text-end"> {{x.cashOut | number}}</td>
+                                    <td>{{x.transactionId}}</td>
+                                    <td>{{x.cashierId}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-5">
+                    <div class="bg-white p-2 border">
+                        <div class="row g-2 mb-2">
+                            <div class="col-4 align-self-center">Start Date </div>
+                            <div class="col-8">
+                                <div class="form-control text-end">&nbsp; {{startDate | date:'medium'}}</div>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-2">
+                            <div class="col-4 align-self-center">Start Balance </div>
+                            <div class="col-8">
+                                <div class="form-control text-end">&nbsp; {{startBalance | number}}</div>
+                            </div>
+                        </div>
+
+
+                        <div class="row g-2 mb-2">
+                            <div class="col-4 align-self-center">Total Cash In </div>
+                            <div class="col-8">
+                                <div class="form-control text-end"> &nbsp; {{totalCashIn | number}}</div>
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mb-2">
+                            <div class="col-4 align-self-center">Total Cash Out </div>
+                            <div class="col-8">
+                                <div class="form-control text-end">&nbsp; {{totalCashOut | number}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
 
 
-    <div class="row g-1" *ngIf="items.length > 0">
-
-        <div class="col-7 cart">
-            <div class="bg-white" style="max-height: 80vh; overflow-y: auto; border: 1px solid #ccc;"> 
-                <table class="table table-sm">
-                    <thead class="sticky-top">
-                        <tr>
-                            <th>Date</th>
-                            <th class="text-end">cash In</th>
-                            <th class="text-end">cash Out</th>
-                            <th>transactionId</th>
-                            <th>cashierId</th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let x of items; let i = index">
-                            <td>{{x.input_date}}</td>
-                            <td class="text-end"> {{x.cashIn | number}}</td>
-                            <td class="text-end"> {{x.cashOut | number}}</td>
-                            <td>{{x.transactionId}}</td>
-                            <td>{{x.cashierId}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="col-5">
-             <div class="bg-white p-2 border">
-                <div class="row g-2 mb-2">
-                    <div class="col-4 align-self-center">Start Date </div>
-                    <div class="col-8">
-                        <div  class="form-control text-end" >&nbsp; {{startDate | date:'medium'}}</div>
-                    </div>
-                </div>
-                <div class="row g-2 mb-2">
-                    <div class="col-4 align-self-center">Start Balance </div>
-                    <div class="col-8">
-                        <div  class="form-control text-end" >&nbsp; {{startBalance | number}}</div>
-                    </div>
-                </div>
-              
-
-                <div class="row g-2 mb-2">
-                    <div class="col-4 align-self-center">Total Cash In </div>
-                    <div class="col-8">
-                        <div  class="form-control text-end" > &nbsp; {{totalCashIn | number}}</div>
-                    </div>
-                </div>
-
-                <div class="row g-2 mb-2">
-                    <div class="col-4 align-self-center">Total Cash Out </div>
-                    <div class="col-8">
-                        <div  class="form-control text-end" >&nbsp; {{totalCashOut | number}}</div>
-                    </div>
-                </div>
-             </div>
-        </div>
-    </div>
 </div>

@@ -1,7 +1,12 @@
+declare var api : any;
+declare var server : any;
+declare var socket_url : any;
+
+
 export const environment = {
     production: true,
     ver : 2.2,
-    api : 'http://128.199.94.89/cso1/public/',
-    server : 'http://128.199.94.89/cso1/server7',
-    socket_url: 'http://128.199.94.89:3000',
+    api : api,
+    server : server,
+    socket_url: socket_url,
 };

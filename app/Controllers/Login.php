@@ -8,6 +8,23 @@ use Firebase\JWT\Key;
 
 class Login extends BaseController
 {
+    function index(){
+        $key = $_ENV['SECRETKEY'];
+        $payload = [
+            'iss' => 'http://localhost',
+            'aud' => 'http://localhost',
+            'iat' => time(),
+            'nbf' => time(),
+            'exp' => strtotime('+8 hours'), 
+           
+        ];
+        $jwt = JWT::encode($payload, $key, 'HS256');
+        $data = array(
+            "error" => false, 
+            "jt" => $jwt,
+        );
+        return $this->response->setJSON($data);
+    }
     public function auth()
     {
         $json = file_get_contents('php://input');

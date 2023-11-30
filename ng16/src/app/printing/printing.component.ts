@@ -17,6 +17,8 @@ export class PrintingComponent implements OnInit {
   items: any = [];
   outputPrint: string = "";
   copy: number = 0;
+  cashDrawer : number = 0;
+  isCash : number = 0;
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
@@ -55,15 +57,41 @@ export class PrintingComponent implements OnInit {
     }).subscribe(
       data => {
         this.copy = data['copy'];
-        console.log('httpBill',data);
+        this.isCash = data['isCash'];
         this.items = data['items'];
+        this.cashDrawer = data['detail']['cashDrawer'];
         this.outputPrint = this.printing.template(data); 
+        console.log('httpBill',data,  this.cashDrawer);
+
+
+        if(data['isCash'] > 0 && data['copy'] === 0){ 
+          this.fnOpenCashDrawerAndPrinting();
+        }
+
         this.sendReload();
       },
       error => {
         console.log(error);
       }
     )
+  }
+
+  fnOpenCashDrawerAndPrinting(){
+    const body ={
+      outputPrint : this.outputPrint,
+    }
+    this.http.post<any>(environment.api+"printing/fnOpenCashDrawerAndPrinting",body,{
+      headers:this.configService.headers()
+    }).subscribe(
+      data=>{
+        console.log(data);
+      },
+      error=>{
+        console.log(error);
+      }
+    )
+    
+
   }
 
   fnPrinting() {

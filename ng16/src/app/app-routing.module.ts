@@ -23,6 +23,8 @@ import { RefundComponent } from './refund/refund.component';
 import { RefundTicketHistoryComponent } from './refund/refund-ticket-history/refund-ticket-history.component';
 import { VoucherComponent } from './setting/voucher/voucher.component';
 import { PrintfComponent } from './printing/printf/printf.component';
+import { SyncComponent } from './setting/sync/sync.component';
+import { ConfigurationComponent } from './setting/configuration/configuration.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
@@ -45,6 +47,9 @@ const routes: Routes = [
   { path: "printing/history", component: PrintingHistoryComponent, data: { active: "" },  canActivate:[authGuard]  }, 
 
   { path: "setting", component: SettingComponent, data: { active: "" },  canActivate:[authGuard]  }, 
+  { path: "setting/sync", component: SyncComponent, data: { active: "" },  canActivate:[authGuard]  }, 
+  { path: "setting/configuration", component: ConfigurationComponent, data: { active: "" },  canActivate:[authGuard]  }, 
+  
   { path: "setting/settlement", component: SettlementComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "setting/settlement/print", component: SettlementPrintComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "setting/settlement/history", component: SettlementHistoryComponent, data: { active: "" },  canActivate:[authGuard]  }, 

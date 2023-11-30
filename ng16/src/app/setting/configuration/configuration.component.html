@@ -1,0 +1,48 @@
+<app-header></app-header>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <a (click)="back();" class="btn  btn-dark  border">Back</a>
+        </div>
+
+        <div class="col-12">
+            <div class="bg-white p-2">
+                <div style="max-height: 70vh; overflow-y: auto;">
+                    <table class="table table-lg table-striped ">
+                        <thead class="sticky-top">
+                            <tr>
+                                <th> No </th>
+                                <th> Name </th>
+                                <th> Value </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let x of items; let i = index">
+                                <td> {{i+1}}</td>
+                                <td> {{x.name}}</td>
+                                <td><input type="text" class="form-control" [(ngModel)]="x.value"> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class=" mt-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <small><a  href="https://github.com/reynave/chandra#2-setup-driver-printer-manual-and-required"
+                                    target="_blank">Setup driver Printer (manual and required)</a></small>
+                        </div>
+                        <div class="col-6 text-end">
+                            {{note}}
+                            <button type="button" class="btn btn-primary btn-lg" (click)="onUpdate();">UPDATE</button>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

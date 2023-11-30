@@ -11,12 +11,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class BalanceCashInComponent implements OnInit {
   items: any = [];
+  total :  number = 0;
   cashIn: string = '0';
   totalCashIn : string = "";
   totalCashOut : string = "";
   startBalance : string = "";
   startDate : string = "";
-  
+  loading : boolean = true;
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
@@ -33,17 +34,19 @@ export class BalanceCashInComponent implements OnInit {
   }
 
   httpGet() {
+    this.loading = true;
     this.http.get<any>(environment.api + "balance/index", {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
+        this.loading = false;
         console.log(data);
         this.items = data['items'];
         this.totalCashIn = data['cashIn'];
         this.totalCashOut = data['cashOut'];
         this.startBalance = data['startBalance'];
         this.startDate = data['startDate'];
-        
+        this.total = data['total'];
       },
       error => {
         console.log(error);

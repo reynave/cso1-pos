@@ -7,8 +7,17 @@
         </div>
     </div>
     <div class="row g-2">
+        <div class="col-4 d-grid"> 
+            <a class="btn  btn-light rounded-0 py-2 " [routerLink]="[ '/' ]">
+                <img src="./assets/icon/icons8-home-page-96.png" width="64" >
+                <div>HOME</div>
+            </a>
+        </div>
         <div class="col-4 d-grid">
-            <button class="btn btn-lg btn-primary rounded-0 py-4 " [routerLink]="[ '/' ]">HOME</button>
+            <button class="btn btn-lg btn-primary rounded-0 py-4 " [routerLink]="[ '/setting/configuration' ]">CONFIGURATION</button>
+        </div>
+        <div class="col-4 d-grid">
+            <button class="btn btn-lg btn-primary rounded-0 py-4 " [routerLink]="[ '/setting/sync' ]">SYNC DATA</button>
         </div>
         <div class="col-4 d-grid">
             <button class="btn btn-lg btn-primary rounded-0 py-4 " [routerLink]="[ '/setting/function' ]">FUNCTION</button>
@@ -20,8 +29,7 @@
             <button class="btn btn-lg btn-primary rounded-0 py-4" [routerLink]="[ '/printing/history' ]">PRINTING HISTORY</button>
         </div>
         <div class="col-4  d-grid">
-            <button class="btn btn-lg btn-primary rounded-0 py-4" [routerLink]="[ '/setting/balance/cashIn' ]">BEGINNING
-                BALANCE</button>
+            <button class="btn btn-lg btn-primary rounded-0 py-4" [routerLink]="[ '/setting/balance/cashIn' ]">BEGINNING BALANCE</button>
         </div>
         <div class="col-4  d-grid">
             <button class="btn btn-lg btn-primary rounded-0 py-4" [routerLink]="[ '/setting/settlement' ]">SETTLEMENT </button> 
@@ -33,9 +41,8 @@
             <button class="btn btn-lg btn-primary rounded-0 py-4" [routerLink]="[ '/setting/voucher' ]">VOUCHER</button> 
         </div>
         <div class="col-4  d-grid">
-            <button class="btn btn-lg btn-{{isEndOfday ? 'primary':'warning'}} rounded-0 py-4" (click)="endOfDay()">END
-                OF DAY </button>
-
+            <button class="btn btn-lg btn-{{isEndOfday ? 'primary':'warning'}} rounded-0 py-4" (click)="endOfDay()">END  OF DAY </button> 
         </div>
+        
     </div>
 </div>

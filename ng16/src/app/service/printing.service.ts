@@ -86,7 +86,7 @@ export class PrintingService {
     message += "\n\n";
     message += "BILL                  : " + bill['id'] + "\n";
     message += "DATE                  : " + bill['date'] + "\n";
-    message += "UNIT / OUTLET ID      : " + bill['detail']['terminalId'] + "/" + bill['detail']['storeOutlesId'] + " \n";
+    message += "UNIT / OUTLET ID      : " + bill['detail']['terminalId'] + "/" + bill['template']['outletId'] + " \n";
     message += "PAYMENT PAID METHOD " + "\n";
 
     bill['paymentMethod'].forEach((el: any) => {
@@ -102,9 +102,8 @@ export class PrintingService {
     message += "\n";
     bill['promo_fixed'].forEach((el: any) => {
       if(el['detail']['shortDesc']){
-        message += el['detail']['shortDesc'] + "\n"; 
-      }
-     
+        message += el['detail']['shortDesc'] + ". "; 
+      } 
     });
   
  

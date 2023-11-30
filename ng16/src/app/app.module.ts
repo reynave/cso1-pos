@@ -37,6 +37,8 @@ import { CartUpdatePriceComponent } from './cart/cart-update-price/cart-update-p
 import { KeyNumComponent } from './global/key-num/key-num.component';
 import { VoucherComponent } from './setting/voucher/voucher.component';
 import { PrintfComponent } from './printing/printf/printf.component';
+import { SyncComponent } from './setting/sync/sync.component';
+import { ConfigurationComponent } from './setting/configuration/configuration.component';
 
 const config: SocketIoConfig = { url: environment.socket_url, options: { transports: ['websocket'] } };
 @NgModule({
@@ -70,7 +72,9 @@ const config: SocketIoConfig = { url: environment.socket_url, options: { transpo
     CartUpdatePriceComponent,
     KeyNumComponent,
     VoucherComponent,
-    PrintfComponent
+    PrintfComponent,
+    SyncComponent,
+    ConfigurationComponent
   ],
   imports: [
     BrowserModule,

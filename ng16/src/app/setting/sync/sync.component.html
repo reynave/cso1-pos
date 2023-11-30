@@ -1,0 +1,54 @@
+<app-header></app-header>
+
+<div class="container ">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <a (click)="back();" class="btn  btn-dark  border">Back</a>
+        </div>
+
+        <div class="col-lg-6 col-12  g-2">
+            <div class="row g-2 mb-3">
+                <div class="col d-grid">
+                    <button type="button" class="btn btn-lg btn-primary " (click)="onSyncItem();">SYNC
+                        ITEMS</button>
+                </div>
+                <div class="col d-grid">
+                    <button type="button" class="btn btn-lg btn-success">SYNC PROMOS</button>
+                </div> 
+            </div>
+            <div class="bg-white p-3">
+                <div class="text-center" *ngIf="loading"> 
+                    <img class="my-4" src="./assets/gif/icons8-sync.gif">
+                    <div>Sync data...</div>
+                </div> 
+                <pre>{{logs | json}} </pre>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-12">
+            <div class="p-2 border shadow-sm bg-white">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Name File</th>
+                            <th>Last Sync</th>
+                            <th>Result</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let x of history">
+
+                            <td>{{x.fileName}}</td>
+                            <td>{{x.date | date:'medium'}}</td>
+                            <td>{{x.result}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+
+
+    </div>

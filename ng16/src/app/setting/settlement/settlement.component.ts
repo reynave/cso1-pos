@@ -52,10 +52,28 @@ export class SettlementComponent implements OnInit {
       data=>{
         console.log(data); 
         this.httpGet();  
+        this.fnOpenCashDrawer();
         window.open(host+'/#/setting/settlement/print?id='+data['id'], '_blank'); 
       },
       error=>{
         console.log(error);
+      }
+    )
+  }
+
+  fnOpenCashDrawer(){ 
+    const body = {
+      token : '8zrGkEgUfVJM9XfUHuvYBMipLHMBEHES6HKkGqytFYq36h67gE',
+    }
+    this.http.post<any>(environment.api+"settlement/fnOpenCashDrawer", body,{
+      headers : this.configService.headers(),
+    }).subscribe(
+      data=>{
+        console.log(data);  
+      },
+      error=>{
+        console.log(error);
+        alert("Cash drawer connection failed.")
       }
     )
   }

@@ -39,15 +39,34 @@ export class PrintingService {
     
     return data;
   }
+  settlement(data:any){
+    let message = "";
+    data['cso2_settlement'].forEach((el: any) => { 
+      message += "SETTLEMENT ID : "+el['id'] + "\n";
+      message += el['input_date'] + "\n";
+      message += "TOTAL TRANSACTION : "+el['total'] + "\n";
+      message += "RP "+el['amount'] + "\n";
+      
+      message += "\n";  
+    });
 
+    data['cso1_transaction'].forEach((el: any) => {
+      message += el['transaction_date'] +  "  RP "+el['finalPrice'] + "\n";
+      message += el['id'] + "\n";
+      message += "\n";  
+    });
+   
+    console.log(data);
+    return message;
+  }
   template(bill: any) {
     let items = bill['items'];
     let summary = bill['summary'];
     let totalCopy = bill['copy'];
 
     let message = "";
-    console.log(items);
-    console.log("123456789-123456789-123456789-123456789-12345678" + "\n");
+    //console.log(items);
+   // console.log("123456789-123456789-123456789-123456789-12345678" + "\n");
     message += bill['template']['companyName'] + "\n";
     message += bill['template']['companyAddress'] + "\n";
     message += bill['template']['companyPhone'] + "\n";
@@ -110,7 +129,7 @@ export class PrintingService {
     message += bill['template']['footer'].replace("<br>", "\n") + "\n";
     message += "                                               " + "\n"; 
 
-    console.log(message);
+  //  console.log(message);
     return message;
   }
 

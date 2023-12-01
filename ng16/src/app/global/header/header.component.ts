@@ -47,7 +47,7 @@ export class HeaderComponent implements OnInit{
       },
       e=>{
         this.statusServer = 'OFF';
-        console.log(e);
+       // console.log(e);
       }
     )
   }

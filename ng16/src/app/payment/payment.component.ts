@@ -135,9 +135,11 @@ export class PaymentComponent implements OnInit, OnDestroy {
     }).subscribe(
       data => {
         this.paymentMethod = data['items']; 
+        console.log("httpPaymentMethod", data);
       },
       error => {
         console.log(error);
+     
       }
     )
   }

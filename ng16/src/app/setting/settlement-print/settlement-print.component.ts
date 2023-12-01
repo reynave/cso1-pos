@@ -3,6 +3,7 @@ import { ConfigService } from '../../service/config.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute } from '@angular/router';
+import { PrintingService } from 'src/app/service/printing.service';
 
 @Component({
   selector: 'app-settlement-print',
@@ -17,9 +18,10 @@ export class SettlementPrintComponent implements OnInit {
   cso1_transaction : any = [];
   cso2_settlement : any = [];
   cso2_balance : any = [];
-   
+  outputPrint:string = "";
   constructor(
     private configService: ConfigService,
+    private printingService: PrintingService,
     private http: HttpClient,
     private activatedRoute: ActivatedRoute
 
@@ -37,15 +39,36 @@ export class SettlementPrintComponent implements OnInit {
       }
     }).subscribe(
       data => {
-        console.log(data);
+      
         this.cso1_transaction = data['cso1_transaction'];
         this.cso2_settlement = data['cso2_settlement'];
         this.cso2_balance = data['cso2_balance']; 
+        this.outputPrint = this.printingService.settlement(data);
       },
       error => {
         console.log(error);
       }
     )
+  }
+  fnExit(){
+    window.close();
+  }
+  fnPrint(){ 
+    const body = {
+      token : '8zrGkEgUfVJM9XfUHuvYBMipLHMBEHES6HKkGqytFYq36h67gE',
+      outputPrint  : this.outputPrint,
+    }
+    this.http.post<any>(environment.api+"settlement/fnPrint", body,{
+      headers : this.configService.headers(),
+    }).subscribe(
+      data=>{
+        console.log(data);  
+      },
+      error=>{
+        console.log(error);
+        alert("Printer thermal connection failed.")
+      }
+    )  
   }
 
 }

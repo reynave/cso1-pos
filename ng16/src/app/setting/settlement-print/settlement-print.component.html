@@ -1,9 +1,23 @@
-<div class="container my-5">
+<div class="container my-2">
     <div class="row">
-        <div class="col-12">
-            <pre> {{cso1_transaction | json}}  </pre>
+        <div class="col-12 col-md-4">
+            <div class="row">
+                <div class="col-4">
+                    <button class="btn btn-lg btn-light mb-3" (click)="fnExit();">Close</button>
+                </div>
+                <div class="col-8">
+                    <div class="text-end">
+                        <button class="btn btn-lg btn-primary mb-3" (click)="fnPrint();">Print Thermal</button>
+                    </div>
+                </div>
+            </div>
+           
+            <div class="bg-white p-2 cart ">
+                <pre>{{outputPrint}} </pre>
+            </div>
+            <!-- <pre> {{cso1_transaction | json}}  </pre>
             <pre> {{cso2_settlement | json}}  </pre>
-            <pre> {{cso2_balance | json}}  </pre>
+            <pre> {{cso2_balance | json}}  </pre> -->
         </div>
     </div>
 </div>

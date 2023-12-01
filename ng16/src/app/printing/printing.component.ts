@@ -17,15 +17,15 @@ export class PrintingComponent implements OnInit {
   items: any = [];
   outputPrint: string = "";
   copy: number = 0;
-  cashDrawer : number = 0;
-  isCash : number = 0;
+  cashDrawer: number = 0;
+  isCash: number = 0;
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
     private modalService: NgbModal,
     private activatedRoute: ActivatedRoute,
     private printing: PrintingService,
-    private router : Router,
+    private router: Router,
     config: NgbModalConfig,
   ) {
     config.backdrop = 'static';
@@ -33,15 +33,15 @@ export class PrintingComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.id = this.activatedRoute.snapshot.queryParams['id']; 
-    this.httpBill(); 
+    this.id = this.activatedRoute.snapshot.queryParams['id'];
+    this.httpBill();
   }
-  sendReload(){
+  sendReload() {
     const msg = {
       to: 'visitor',
       msg: 'payment method',
-      action : 'cart',
-      transactionId : this.id
+      action: 'cart',
+      transactionId: this.id
     }
     this.configService.sendMessage(msg);
     console.log("sendReload");
@@ -60,12 +60,16 @@ export class PrintingComponent implements OnInit {
         this.isCash = data['isCash'];
         this.items = data['items'];
         this.cashDrawer = data['detail']['cashDrawer'];
-        this.outputPrint = this.printing.template(data); 
-        console.log('httpBill',data,  this.cashDrawer);
+        this.outputPrint = this.printing.template(data);
+        console.log('httpBill', data, this.cashDrawer);
 
 
-        if(data['isCash'] > 0 && data['copy'] === 0){ 
-          this.fnOpenCashDrawerAndPrinting();
+        if (data['detail']['cashDrawer'] == 0) {
+          this.fnOpenCashDrawer();
+        }
+
+        if (data['detail']['printing'] == 0) {
+          this.fnPrinting();
         }
 
         this.sendReload();
@@ -76,25 +80,28 @@ export class PrintingComponent implements OnInit {
     )
   }
 
-  fnOpenCashDrawerAndPrinting(){
-    const body ={
-      outputPrint : this.outputPrint,
+  fnOpenCashDrawer() {
+    const body = {
+      id: this.id,
+      copy: this.copy,
+      outputPrint: this.outputPrint,
+      isCash: this.isCash,
+      cashDrawer: this.cashDrawer,
     }
-    this.http.post<any>(environment.api+"printing/fnOpenCashDrawerAndPrinting",body,{
-      headers:this.configService.headers()
+    this.http.post<any>(environment.api + "printing/fnOpenCashDrawerAndPrinting", body, {
+      headers: this.configService.headers()
     }).subscribe(
-      data=>{
-        console.log(data);
+      data => {
+        console.log("fnOpenCashDrawerAndPrinting", data);
       },
-      error=>{
+      error => {
         console.log(error);
+        alert("Printer and Cash Drawer connection failed.")
       }
     )
-    
-
   }
 
-  fnPrinting() {
+  copyPrinting() {
     this.http.get<any>(environment.api + "printing/copyPrinting", {
       headers: this.configService.headers(),
       params: {
@@ -103,11 +110,15 @@ export class PrintingComponent implements OnInit {
     }).subscribe(
       data => {
         this.copy = data['copy'];
-        //this.printing.dotMetix();
-       // let url = "./#/printf?id="+this.id;
-       // window.open( url, "_blank", "resizable=no, toolbar=no, scrollbars=no, menubar=no, status=no, directories=no, location=no, width=1000, height=600, left=10 top=100 " );
+        // this.fnOpenCashDrawerAndPrinting();
+        // let url = "./#/printf?id="+this.id;
+        // window.open( url, "_blank", "resizable=no, toolbar=no, scrollbars=no, menubar=no, status=no, directories=no, location=no, width=1000, height=600, left=10 top=100 " );
         this.httpBill();
-        print();
+        if( this.copy > 0){
+          this.fnPrinting();
+        }
+       
+
       },
       error => {
         console.log(error);
@@ -115,13 +126,37 @@ export class PrintingComponent implements OnInit {
     )
   }
 
+  fnPrinting(){
+    const body = {
+      id: this.id,
+      copy: this.copy,
+      outputPrint: this.outputPrint,
+      isCash: this.isCash,
+      cashDrawer: this.cashDrawer,
+    }
+    this.http.post<any>(environment.api + "printing/fnPrinting", body, {
+      headers: this.configService.headers()
+    }).subscribe(
+      data => {
+        console.log("fnPrinting", data);
+      },
+      error => {
+        console.log(error);
+        alert("Printer connection failed.")
+      }
+    )
+  }
+
+
+
+
   open(content: any, x: any) {
 
     this.modalService.open(content, { size: 'lg' });
   }
 
 
-  home(){
+  home() {
     this.router.navigate(['home']);
   }
 

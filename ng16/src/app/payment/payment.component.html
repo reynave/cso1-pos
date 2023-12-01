@@ -129,19 +129,17 @@
             <div class="row g-1">
                 <div class="col-12 mb-2">
                     <strong>SELECT PAYMENT METHOD</strong>
-                </div>
-                <div class="col-3" *ngFor="let x of paymentMethod">
+                </div> 
+                <div class="col-4" *ngFor="let x of paymentMethod">
                     <div class="d-grid mb-1 ">
-                        <button type="button" class="btn  btn-warning align-self-center" style="height: 4rem;"
+                        <button type="button" *ngIf="x.id != 'VOUCHER'" class="btn  btn-warning align-self-center" style="height: 5rem;"
                             (click)="open(contentPaymentMethod, x)">{{x.label}}</button>
+
+                            <button type="button" *ngIf="x.id == 'VOUCHER'" class="btn  btn-warning align-self-center" style="height: 5rem;"
+                            (click)="open(contentVoucher, [],'xl')">{{x.label}}</button>
                     </div>
                 </div>
-                <div class="col-3">
-                    <div class="d-grid mb-1">
-                        <button type="button" class="btn  btn-warning align-self-center" style="height: 4rem;"
-                            (click)="open(contentVoucher, [],'xl')">Voucher</button>
-                    </div>
-                </div>
+                 
             </div>
 
 

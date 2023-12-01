@@ -96,7 +96,7 @@ export class PrintingComponent implements OnInit {
       },
       error => {
         console.log(error);
-        alert("Printer and Cash Drawer connection failed.")
+        alert("Cash Drawer connection failed.")
       }
     )
   }

@@ -38,7 +38,48 @@ export class SyncComponent implements OnInit {
 
   onSyncItem(){
     this.loading = true;
+    this.logs = [];
     this.http.get<any>(environment.api+"bulkInsert/items").subscribe(
+      data=>{
+        this.loading = false;
+        console.log(data);
+        this.logs = data;
+        this.httpGet();
+      },
+      error=>{
+        this.loading = false;
+        this.logs = error.message;
+        console.log(error);
+        this.httpGet();
+      }
+    )
+  
+  }
+
+  onSyncVoucher(){
+    this.loading = true;
+    
+    this.http.get<any>(environment.api+"bulkInsert/onSyncVoucher").subscribe(
+      data=>{
+        this.loading = false;
+        console.log(data);
+       // this.logs = data;
+      //  this.httpGet();
+      },
+      error=>{
+      //  this.loading = false;
+        this.logs = error.message;
+        console.log(error);
+       // this.httpGet();
+      }
+    )
+  
+  }
+
+  onSyncPromo(){
+    this.loading = true;
+    this.logs = [];
+    this.http.get<any>(environment.api+"bulkInsert/promo").subscribe(
       data=>{
         this.loading = false;
         console.log(data);

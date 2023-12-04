@@ -7,13 +7,18 @@
         </div>
 
         <div class="col-lg-6 col-12  g-2 mb-3">
-            <div class="row g-2 mb-3">
+            <div class="row g-1 mb-3">
                 <div class="col d-grid">
-                    <button type="button" class="btn btn-lg btn-primary " (click)="onSyncItem();">SYNC
-                        ITEMS</button>
+                    <button type="button" class="btn btn-lg btn-primary " (click)="onSyncItem();">SYNC ITEMS BARCODE</button>
                 </div>
                 <div class="col d-grid">
-                    <button type="button" class="btn btn-lg btn-success">SYNC PROMOS</button>
+                    <button type="button" class="btn btn-lg btn-success" (click)="onSyncPromo();">SYNC PROMOS</button>
+                </div> 
+                <!-- <div class="col d-grid">
+                    <button type="button" class="btn btn-lg btn-danger" >SYNC VOUCHER</button>
+                </div>  -->
+                <div class="col d-grid">
+                    <button type="button" class="btn btn-lg btn-danger" (click)="onSyncVoucher();">SERVER VOUCHER</button>
                 </div> 
             </div>
             <div class="bg-white p-3">

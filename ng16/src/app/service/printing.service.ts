@@ -121,7 +121,7 @@ export class PrintingService {
     message += "\n";
     bill['promo_fixed'].forEach((el: any) => {
       if(el['detail']['shortDesc']){
-        message += el['detail']['shortDesc'] + ". "; 
+        message += el['detail']['shortDesc'] + "\n"; 
       } 
     });
   

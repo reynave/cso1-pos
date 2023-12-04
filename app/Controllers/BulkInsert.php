@@ -188,4 +188,7 @@ class BulkInsert extends BaseController
         );
         return $data;
     }
+
+
+  
 }

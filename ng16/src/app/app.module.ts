@@ -39,6 +39,8 @@ import { VoucherComponent } from './setting/voucher/voucher.component';
 import { PrintfComponent } from './printing/printf/printf.component';
 import { SyncComponent } from './setting/sync/sync.component';
 import { ConfigurationComponent } from './setting/configuration/configuration.component';
+import { PaymentCashComponent } from './payment/payment-cash/payment-cash.component';
+import { PaymentVoucherComponent } from './payment/payment-voucher/payment-voucher.component';
 
 const config: SocketIoConfig = { url: environment.socket_url, options: { transports: ['websocket'] } };
 @NgModule({
@@ -74,7 +76,9 @@ const config: SocketIoConfig = { url: environment.socket_url, options: { transpo
     VoucherComponent,
     PrintfComponent,
     SyncComponent,
-    ConfigurationComponent
+    ConfigurationComponent,
+    PaymentCashComponent,
+    PaymentVoucherComponent
   ],
   imports: [
     BrowserModule,

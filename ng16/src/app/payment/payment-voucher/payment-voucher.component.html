@@ -1,0 +1,44 @@
+<form (ngSubmit)="addVoucher()" #heroForm="ngForm">
+    <div class="modal-header">
+        <strong class="modal-title" id="modal-basic-title">VOUCHER</strong>
+        <button type="button" class="btn btn-warning" (click)="activeModal.dismiss('Cross click')">CANCEL</button>
+    </div>
+
+    <div class="modal-body">
+        <div class="row g-1">
+            <div class="col-12 text-center">
+                <img src="./assets/img/logo.png" width="80%" class="mb-3">
+                <div>
+                    <strong>Please scan voucher barcode</strong>
+                </div>
+            </div>
+            <div class="col-12 mb-3">
+                <input type="text" class="form-control form-control-lg text-end fs-1 text-uppercase"
+                    id="voucherCode" required autofocus #formRow (change)="addVoucher();"
+                    (keyup.enter)="formRow.blur()" [(ngModel)]="voucherCode" name="voucherCode" placeholder="">
+            </div>
+        </div>
+
+        <div class="row g-1">
+
+            <div class="col-12">
+                <div class="row g-1">
+                    
+                    <div class="col">
+                        <div class="d-grid mb-2">
+                            <button type="button" class="btn btn-lg btn-warning fs-4 "
+                                (click)="fnVoucherAC()">AC</button>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="d-grid mb-2">
+                            <button type="submit" class="btn btn-lg fs-4 btn-primary"
+                                [disabled]="payment.amount == 0"><strong>SUBMIT</strong></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>

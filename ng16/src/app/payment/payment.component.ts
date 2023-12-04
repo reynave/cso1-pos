@@ -5,15 +5,16 @@ import { environment } from 'src/environments/environment';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxCurrencyDirective } from "ngx-currency";
+import { PaymentVoucherComponent } from './payment-voucher/payment-voucher.component';
 
-export class Payment { 
+export class Payment {
   constructor(
     public paymentMethodId: string,
     public amount: number,
     public deviceId: string,
     public externalTransId: string,
     public cardId: string,
-  ) { } 
+  ) { }
 }
 @Component({
   selector: 'app-payment',
@@ -21,7 +22,7 @@ export class Payment {
   styleUrls: ['./payment.component.css'],
 })
 export class PaymentComponent implements OnInit, OnDestroy {
-  @ViewChild('formRow') rows: ElementRef | any;
+  // @ViewChild('formRow') rows: ElementRef | any;
   kioskUuid: any;
   note: string = "";
   varkioskUuid: string = "kioskUuid";
@@ -36,75 +37,75 @@ export class PaymentComponent implements OnInit, OnDestroy {
     paid: 0,
     remaining: 0,
   };
-  promo_fixed : any = [];
+  promo_fixed: any = [];
   kioskPaid: any = [];
   close: boolean = false;
-  voucherCode : string = "";
+  voucherCode: string = "";
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
-    private rounter : Router,
+    private rounter: Router,
     config: NgbModalConfig,
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
   }
-  key1 : any = ['Q','W','E','R','T','Y','U','I','O','P'];
-  key2 : any = ['A','S','D','F','G','H','J','K','L',''];
-  key3 : any = ['Z','X','C','V','B','N','M','','',''];
-  
+  key1: any = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'];
+  key2: any = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ''];
+  key3: any = ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '', '', ''];
+
   private _docSub: any;
   ngOnInit() {
-   
+
     this.kioskUuid = this.activatedRoute.snapshot.queryParams['kioskUuid'];
     this.httpCart();
     this.httpPaymentMethod();
-     this.httpPaymentInvoice();
+    this.httpPaymentInvoice();
     this.terminalId = localStorage.getItem("terminalId");
-  
-  }
-  ngOnDestroy() { 
-    
-  }
 
-  addVoucher(){
-    console.log(this.voucherCode);
-    const body = {
-      voucherCode : this.voucherCode,
-      kioskUuid : this.kioskUuid,
-    }
-    this.http.post<any>(environment.api+"voucher/addVoucher",body,{
-      headers : this.configService.headers(),
-    }).subscribe(
-      data=>{
-        console.log(data);
-        if(data['error'] == false){
-          this.voucherCode = "";
-          this.modalService.dismissAll();
-          this.sendReload();
-          this.httpPaymentInvoice();  
-        }else{
-          alert(data['note']);
-        }
-      },
-      error=>{
-        console.log(error);
-      }
-    )
+  }
+  ngOnDestroy() {
 
   }
 
-  fnVoucherAC(){
+  addVoucher() {
+    // console.log(this.voucherCode);
+    // const body = {
+    //   voucherCode: this.voucherCode,
+    //   kioskUuid: this.kioskUuid,
+    // }
+    // this.http.post<any>(environment.api + "voucher/addVoucher", body, {
+    //   headers: this.configService.headers(),
+    // }).subscribe(
+    //   data => {
+    //     console.log(data);
+    //     if (data['error'] == false) {
+    //       this.voucherCode = "";
+    //       this.modalService.dismissAll();
+    //       this.sendReload();
+    //       this.httpPaymentInvoice();
+    //     } else {
+    //       alert(data['note']);
+    //     }
+    //   },
+    //   error => {
+    //     console.log(error);
+    //   }
+    // )
+
+  }
+
+  fnVoucherAC() {
     this.voucherCode = "";
   }
-  sendReload(){
+  sendReload() {
     const msg = {
       to: 'visitor',
       msg: 'payment method',
-      action : 'cart',
-      kioskUuid : this.kioskUuid
+      action: 'cart',
+      kioskUuid: this.kioskUuid
     }
     this.configService.sendMessage(msg);
     console.log("sendReload");
@@ -119,7 +120,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
       }
     }).subscribe(
       data => {
-        console.log('httpCart',data);
+        console.log('httpCart', data);
         this.items = data['items'];
         this.promo_fixed = data['promo_fixed'];
       },
@@ -134,25 +135,25 @@ export class PaymentComponent implements OnInit, OnDestroy {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        this.paymentMethod = data['items']; 
+        this.paymentMethod = data['items'];
         console.log("httpPaymentMethod", data);
       },
       error => {
         console.log(error);
-     
+
       }
     )
   }
 
-  httpPaymentInvoice() { 
+  httpPaymentInvoice() {
     this.http.get<any>(environment.api + "payment/invoice", {
       headers: this.configService.headers(),
       params: {
         kioskUuid: this.kioskUuid
       }
     }).subscribe(
-      data => { 
-        console.log('payment/invoice',data);
+      data => {
+        console.log('payment/invoice', data);
         this.total = data['total'];
         this.kioskPaid = data['kioskPaid'];
         this.close = data['close'];
@@ -164,31 +165,47 @@ export class PaymentComponent implements OnInit, OnDestroy {
       }
     )
   }
- 
-  open(content: any, x: any, _size : string = 'lg') {
+
+  open(content: any, x: any, _size: string = 'lg') {
     this.paymentMethodDetail = x;
     this.modalService.open(content, { size: _size });
-   // this.setCursor();
-  }
-  callCursor :any;
-
-  setCursor() {
-    this.callCursor = setInterval(() => {
-      this.rows.nativeElement.focus();
-    }, 300);
+    // this.setCursor();
   }
 
-  addAmount(val : string){
-    let amount : number = 0;
-    let tempAmount = this.payment.amount.toString();  
-    this.payment.amount = Number.parseInt(tempAmount+val);
+
+  openComponentVoucher() {
+    const modalRef = this.modalService.open(PaymentVoucherComponent, { size: 'md' });
+    modalRef.componentInstance.kioskUuid = this.kioskUuid;
+
+    modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
+      console.log('modalRef. openComponentVoucher', data);
+      this.modalService.dismissAll();
+      this.sendReload();
+      this.httpCart();
+      this.httpPaymentMethod();
+      this.httpPaymentInvoice();
+      //  this.setCursor();
+
+    });
   }
 
-  paymentCutLastOne(){
-    let tempAmount = this.payment.amount.toString().slice(0, -1);  
+  // callCursor :any;
+  // setCursor() {
+  //   this.callCursor = setInterval(() => {
+  //     this.rows.nativeElement.focus();
+  //   }, 300);
+  // }
+
+  addAmount(val: string) {
+    let amount: number = 0;
+    let tempAmount = this.payment.amount.toString();
+    this.payment.amount = Number.parseInt(tempAmount + val);
+  }
+
+  paymentCutLastOne() {
+    let tempAmount = this.payment.amount.toString().slice(0, -1);
     let amount = Number.parseInt(tempAmount);
-
-    this.payment.amount = (Number.isNaN(amount)) ? 0 : amount ;
+    this.payment.amount = (Number.isNaN(amount)) ? 0 : amount;
   }
 
   onSubmitPayment() {
@@ -196,15 +213,15 @@ export class PaymentComponent implements OnInit, OnDestroy {
       payment: this.payment,
       kioskUuid: this.kioskUuid,
       paymentMethodDetail: this.paymentMethodDetail,
-      changes : this.fnChangeBill(),
-      terminalId : this.terminalId,
+      changes: this.fnChangeBill(),
+      terminalId: this.terminalId,
     }
-    console.log(body); 
+    console.log(body);
     this.http.post<any>(environment.api + "payment/onSubmitPayment", body, {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        console.log('onSubmitPayment',data);
+        console.log('onSubmitPayment', data);
         this.httpPaymentInvoice();
         this.modalService.dismissAll();
         this.payment.amount = 0;
@@ -218,7 +235,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
 
   isCloseTransaction() {
     if (this.close == true) {
-      console.log("isCloseTransaction",this.close); 
+      console.log("isCloseTransaction", this.close);
       this.http.get<any>(environment.api + "payment/isCloseTransaction", {
         headers: this.configService.headers(),
         params: {
@@ -226,12 +243,12 @@ export class PaymentComponent implements OnInit, OnDestroy {
           terminalId: this.terminalId,
         }
       }).subscribe(
-        data => { 
-          console.log('isCloseTransaction subscribe',data);
+        data => {
+          console.log('isCloseTransaction subscribe', data);
           this.note = data['note'];
           this.transactionId = data['transactionId'];
-        // http://localhost:4200/#/printing?id=T02.230828.0004
-           this.rounter.navigate(['printing'],{ queryParams:{id : data['transactionId']}} );
+          // http://localhost:4200/#/printing?id=T02.230828.0004
+          this.rounter.navigate(['printing'], { queryParams: { id: data['transactionId'] } });
           this.sendReload();
         },
         error => {
@@ -243,13 +260,13 @@ export class PaymentComponent implements OnInit, OnDestroy {
 
   fnChangeBill() {
     let a = ((this.total.bill - (this.total.paid + this.payment.amount)) < 0 ? (this.total.bill - (this.total.paid + this.payment.amount)) : 0);
-    return a < 0 ? a *-1 : a;
+    return a < 0 ? a * -1 : a;
   }
 
-  paymentAdd(val : number){
+  paymentAdd(val: number) {
     this.payment.amount = this.payment.amount + val;
-  } 
-  paymentAC(){
+  }
+  paymentAC() {
     this.payment.amount = 0;
   }
 }

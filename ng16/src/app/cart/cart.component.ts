@@ -72,7 +72,11 @@ export class CartComponent implements OnInit, OnDestroy {
         }
       }, label: 'Add Qty'
     },
-    { id: 3, value: () => { this.goToPayment(); }, label: 'Payment' },
+    { id: 3, value: () => { 
+      if(this.items.length > 0){
+        this.goToPayment(); 
+      } 
+    }, label: 'Payment' },
     {
       id: 4, value: () => {
         if (this.activeCart['barcode'] !== undefined) {
@@ -141,27 +145,41 @@ export class CartComponent implements OnInit, OnDestroy {
 
   addItem(newItem: string) {
     console.log(newItem);
-    if (newItem == 'BS') {
-      this.barcode = this.barcode.slice(0, -1);
-    }
-    else if (newItem == 'AC') {
-      this.barcode = '';
-    }
-    else if (newItem == 'ENTER') {
-      if (this.barcode != "") {
-        this.addToCart();
+    if (this.setKey == 'BARCODE') {
+      if (newItem == 'BS') {
+        this.barcode = this.barcode.slice(0, -1);
+      }
+      else if (newItem == 'AC') {
         this.barcode = '';
       }
-    }
-    else {
-      this.barcode = this.barcode + newItem.toString();
+      else if (newItem == 'ENTER') {
+        if (this.barcode != "") {
+          this.addToCart();
+          this.barcode = '';
+        }
+      }
+      else {
+        this.barcode = this.barcode + newItem.toString();
+      }
     }
 
+    else if (this.setKey == 'QTY') {
+    
+      if (newItem == 'AC') {
+        this.qtyItem = 1;
+      }
 
+      
+
+      this.qtyItem = parseInt(newItem);
+      if (this.qtyItem  < 1) {
+        this.qtyItem = 1;
+      }
+    }
   }
 
   setFunctionSaved() {
-    let storedData : any = [];
+    let storedData: any = [];
     this.http.get<any>(environment.api + "func/index", {
       headers: this.configService.headers(),
     }).subscribe(
@@ -171,12 +189,12 @@ export class CartComponent implements OnInit, OnDestroy {
         // [1,2,4,3,5,0,0,0,0,0,0,0]
 
         data['items'].forEach((el: { [x: string]: any; }) => {
-          storedData.push( parseInt(el['number'] ) );
+          storedData.push(parseInt(el['number']));
         });
 
-      //  console.log(storedData);
+        //  console.log(storedData);
 
-         this.customFunc = storedData;
+        this.customFunc = storedData;
 
         //const storedDataString = localStorage.getItem("function.pos");
         // const storedDataString = data['saveFunc'];
@@ -206,6 +224,7 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   httpCart() {
+    this.qtyItem = 1;
     this.sendReload();
     this.activeCart = [];
     this.http.get<any>(environment.api + "cart/index", {
@@ -248,7 +267,7 @@ export class CartComponent implements OnInit, OnDestroy {
   setCursor() {
     this.callCursor = setInterval(() => {
       this.rows.nativeElement.focus();
-     // console.log( new Date().getSeconds())
+      // console.log( new Date().getSeconds())
     }, 300);
   }
 
@@ -273,7 +292,7 @@ export class CartComponent implements OnInit, OnDestroy {
     const body = {
       barcode: this.barcode,
       kioskUuid: this.kioskUuid,
-      qty: 1,
+      qty: this.qtyItem,
     }
 
     this.http.post<any>(environment.api + "Cart/addToCart", body, {
@@ -292,7 +311,7 @@ export class CartComponent implements OnInit, OnDestroy {
               },
               (reason) => {
                 this.barcode = "";
-             //   this.setCursor();
+                //   this.setCursor();
               },
             );
 
@@ -405,10 +424,12 @@ export class CartComponent implements OnInit, OnDestroy {
         },
       );
       modalRef.componentInstance.kioskUuid = this.kioskUuid;
+      modalRef.componentInstance.qty = this.qtyItem;
+      
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);
         this.httpCart();
-      //  this.setCursor();
+        //  this.setCursor();
 
       });
     }
@@ -422,7 +443,7 @@ export class CartComponent implements OnInit, OnDestroy {
         },
         (reason) => {
           console.log('CLOSE');
-       //   this.setCursor();
+          //   this.setCursor();
         },
       );
       modalRef.componentInstance.activeCart = this.activeCart;
@@ -433,7 +454,7 @@ export class CartComponent implements OnInit, OnDestroy {
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);
         this.httpCart();
-       // this.setCursor();
+        // this.setCursor();
 
         this.activeCart = [];
       });
@@ -448,7 +469,7 @@ export class CartComponent implements OnInit, OnDestroy {
         },
         (reason) => {
           console.log('CLOSE');
-         // this.setCursor();
+          // this.setCursor();
 
         },
       );
@@ -458,7 +479,7 @@ export class CartComponent implements OnInit, OnDestroy {
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);
         this.httpCart();
-       // this.setCursor();
+        // this.setCursor();
       });
     }
 
@@ -468,7 +489,7 @@ export class CartComponent implements OnInit, OnDestroy {
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('itemTebusMurah', data);
         this.httpCart();
-       // this.setCursor();
+        // this.setCursor();
       });
     }
 
@@ -626,7 +647,7 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
 
-  removeItem(){
+  removeItem() {
     console.log(this.activeCart);
 
     const body = {
@@ -638,12 +659,19 @@ export class CartComponent implements OnInit, OnDestroy {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        console.log(data); 
-        this.httpCart(); 
+        console.log(data);
+        this.httpCart();
       },
       error => {
         console.log(error);
       }
     )
+  }
+
+  qtyItem: number = 1;
+  setKey: string = 'QTY';
+  fnKeyboardSet(val: string) {
+    this.setKey = val;
+    console.log(val);
   }
 }

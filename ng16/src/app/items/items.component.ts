@@ -12,6 +12,7 @@ import { environment } from 'src/environments/environment';
 export class ItemsComponent implements OnInit {
   @Input() kioskUuid : any;
   @Input() exchange : any;
+  @Input() qty : any;
   
   @Output() newItemEvent = new EventEmitter<string>();
   search : string = "";
@@ -32,8 +33,7 @@ export class ItemsComponent implements OnInit {
     // this.fnExchange();
   }
 
-  fnExchange(){
-     
+  fnExchange(){ 
     this.exchange.forEach((el: any) => {
       if(el['checkbox'] == true){
         this.totalExchange += Number(el['price']);
@@ -77,6 +77,7 @@ export class ItemsComponent implements OnInit {
       kioskUuid : this.kioskUuid,
       terminalId : localStorage.getItem("terminalId"),
       totalExchange : this.totalExchange,
+      qty : this.qty,
     }
     console.log(body);
     if(this.kioskUuid == 'exchange'){

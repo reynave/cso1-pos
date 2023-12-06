@@ -64,12 +64,14 @@ export class PrintingComponent implements OnInit {
         console.log('httpBill', data, this.cashDrawer);
 
 
-        if (data['detail']['cashDrawer'] == 0) {
-          this.fnOpenCashDrawer();
-        }
 
         if (data['detail']['printing'] == 0) {
           this.fnPrinting();
+        }
+
+        
+        if (data['detail']['cashDrawer'] == 0) {
+          this.fnOpenCashDrawer();
         }
 
         this.sendReload();
@@ -88,11 +90,11 @@ export class PrintingComponent implements OnInit {
       isCash: this.isCash,
       cashDrawer: this.cashDrawer,
     }
-    this.http.post<any>(environment.api + "printing/fnOpenCashDrawerAndPrinting", body, {
+    this.http.post<any>(environment.api + "printing/fnOpenCashDrawer", body, {
       headers: this.configService.headers()
     }).subscribe(
       data => {
-        console.log("fnOpenCashDrawerAndPrinting", data);
+        console.log("fnOpenCashDrawer", data);
       },
       error => {
         console.log(error);

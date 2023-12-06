@@ -67,12 +67,32 @@ export class BalanceCashInComponent implements OnInit {
           console.log(data);
           this.httpGet();
           this.cashIn = '0';
+          this.fnOpenCashDrawer();
         },
         error => {
           console.log(error);
         }
       );
     }
+  }
+
+  fnOpenCashDrawer(){
+    const body = { 
+      terminalId : localStorage.getItem("terminalId"),
+      token : 'YbgQmalu1sr9LmoOKJmy2BeI3vy70CV2RKg8thPw3I4TxXhlwg'
+    }
+    this.http.post<any>(environment.api + "balance/fnOpenCashDrawer", body, {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => {
+        console.log(data); 
+        this.fnOpenCashDrawer();
+      },
+      error => {
+        console.log(error);
+        alert("ERROR cash drawer : "+error.error.message);
+      }
+    );
   }
 
   back(){

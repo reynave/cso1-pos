@@ -1,0 +1,83 @@
+<div class="container mt-1" *ngIf="action =='cart'">
+    <div class="row g-2">
+        <div class="col-12">
+
+            <div class="row g-2 mb-2">
+                <div class="col-4 align-self-center">
+                    <img src="./assets/img/logo.png" width="100%">
+                </div>
+                <div class="col-8">
+                    <div class="mb-1" *ngIf="kioskUuid">
+                        <div class="form-control form-control-lg text-end px-1 font-cart rounded-0 ">Rp {{bill['total'] | number}} &nbsp;</div>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="kioskUuid">
+                <div class="bg-white  p-2 border cart cart-height " #chatContainer>
+                    <div class="row g-1 py-1" *ngFor="let x of items">
+                        <div class="col-8">
+                            <div>{{x.barcode}} - {{x.description}} <span>{{x.note}}</span> </div>
+                            <div>
+                                {{ x.price | number}} X {{ x.qty }}
+                            </div>
+                            <div *ngIf="x.promotionId !== '0'">*{{x.promotionId}} {{x.promotionDescription}}*</div>
+                        </div>
+                        <div class="col-4 text-end">{{x.total | number}}</div>
+                    </div>
+                    <hr>
+                    <div class="row g-1 mb-1">
+                        <div class="col-8 ">SUB TOTAL</div>
+                        <div class="col-4 text-end">{{bill['originPrice'] | number}} </div>
+                    </div>
+                    <div class="row g-1 mb-1">
+                        <div class="col-8 font-cart">DISCOUNT</div>
+                        <div class="col-4 text-end">{{bill['discount'] | number}}</div>
+
+                    </div>
+                    <div class="row g-1 mb-1">
+                        <div class="col-8 font-cart">TOTAL</div>
+                        <div class="col-4 text-end"><strong>{{bill['total'] | number}}</strong></div>
+
+                    </div>
+                    <div class="text-center my-2" *ngIf="ilock == 1">
+                        CLOSED
+                    </div>
+
+                    <div class="me-2 my-4">
+                        <div *ngFor="let item of promo_fixed" class="mb-1">
+                            <span [innerHTML]=" item['detail']['description'] "></span>
+                        </div>
+                        <div [innerHTML]="tebus_murah" class="mb-1"> </div>
+                    </div>
+                    <div class="me-2 mb-4">
+                        <div *ngFor="let item of promo_fixed" class="mb-2">
+                            {{ item['detail']['reminder'] }}
+                        </div>
+                    </div>
+
+                  
+                </div>
+            </div>
+
+            <div *ngIf="transactionId">
+                <div class="border p-1 bg-white shadow-sm" style="width: 100%; max-height: 85vh; overflow-y: scroll;">
+                    <pre>{{outputPrint}}</pre>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="container" *ngIf="action =='home' || action == ''">
+    <div class="row">
+        <div class="col-12 my-5 text-center">
+            <div>
+                <h1>WELCOME</h1>
+            </div>
+            <img src="./assets/img/4115320.png" width="50%">
+            <code>{{kioskUuid}} {{transactionId}}</code>
+        </div>
+    </div>
+</div>

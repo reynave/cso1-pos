@@ -24,14 +24,14 @@
                 <div class="row g-1 py-1"
                     [ngClass]="{'active-cart': x.barcode == activeCart.barcode && x.price == activeCart.price}"
                     *ngFor="let x of items" (click)="selectItem(x);">
-                    <div class="col-8">
+                    <div class="col-9">
                         <div>{{x.barcode}} - {{x.description}} <span>{{x.note}}</span> </div>
                         <div>
                             {{ x.price | number}} X {{ x.qty }}
                         </div>
                         <div *ngIf="x.promotionId !== '0'">*{{x.promotionId}} {{x.promotionDescription}}*</div>
                     </div>
-                    <div class="col-4 text-end">{{x.total | number}}</div>
+                    <div class="col-3 text-end">{{x.total | number}}</div>
                 </div>
 
                 <!-- <div class="me-2 my-4">

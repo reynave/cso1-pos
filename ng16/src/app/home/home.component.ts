@@ -14,6 +14,8 @@ export class HomeComponent implements OnInit {
   parkingTotal: number = 0;
   env: any = environment;
   cashIn: number = 0;
+  ver : string = environment.ver.toString();
+  prod : string = environment.production ? "Prod":"Dev";
   constructor(
     private configService: ConfigService,
     private http: HttpClient,

@@ -44,7 +44,7 @@
             </a>
         </div>
         <div class="col-4  d-grid"> 
-            <a class="btn  btn-light rounded-0 py-2 border shadow-sm" [routerLink]="[ '/setting/history' ]">
+            <a class="btn  btn-light rounded-0 py-2 border shadow-sm" [routerLink]="[ '/printing/history' ]">
                 <img src="./assets/icon/icons8-history-96.png" width="64" >
                 <div>PRINTING HISTORY</div>
             </a>
@@ -78,7 +78,7 @@
         </div>
       
         <div class="col-4  d-grid">
-            <a class="btn  btn-light rounded-0 py-2 "  >
+            <a class="btn  btn-light rounded-0 py-2 "  (click)="open(content)">
                 <img src="./assets/icon/icons8-printer-96.png" width="64" >
                 <div>PRINTER SETUP</div>
             </a>
@@ -93,3 +93,33 @@
         
     </div>
 </div>
+
+
+
+<ng-template #content let-modal>
+	<div class="modal-header">
+		<strong class="modal-title" id="modal-basic-title">Print Setup</strong>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body"> 
+        <div class="mb-3">
+            <label for="printerName" class="mb-2">Printing Name :</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="printerName" id="printerName" [(ngModel)]="printerName">
+            </div>
+            <div> 
+                <a href="https://github.com/reynave/chandra#2-setup-driver-printer-manual-and-required" target="_blank"><small>No 2. Setup driver Printer (manual and required)</small></a>    
+            </div> 
+        </div>
+        <div class="mb-3">
+            <div class="d-grid">
+                <button type="button" (click)="testPrint();" [disabled]="printerName == '' " class="btn btn-warning py-3 btn-lg">TEST PRINTING</button>
+            </div>
+        </div>
+ 
+	</div>
+	<div class="modal-footer">
+        {{note}} 
+		<button type="button" class="btn btn-outline-dark" (click)="fnSavePrinterName();">Save</button>
+	</div>
+</ng-template>

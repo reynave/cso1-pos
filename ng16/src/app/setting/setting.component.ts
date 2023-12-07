@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { CashierService } from '../service/cashier.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-setting',
@@ -15,10 +16,11 @@ export class SettingComponent implements OnInit{
   settlement : number = 100;
   ver : string = environment.ver.toString();
   prod : string = environment.production ? "Prod":"Dev";
+  printerName : string = "";
   constructor(
     private configService: ConfigService,
     private cashier: CashierService,
-
+    private modalService: NgbModal,
     private http: HttpClient,
     private router: Router
   ) { }
@@ -28,6 +30,7 @@ export class SettingComponent implements OnInit{
     }).subscribe(
       data=>{
         console.log(data);
+        this.printerName = data['printerName'];
         this.settlement = data['total'];
         if(this.settlement <= 0){
           this.isEndOfday = true;
@@ -39,6 +42,45 @@ export class SettingComponent implements OnInit{
     )
   }
 
+  testPrint(){
+    let date = new Date();
+    const body = {
+      outputPrint : date+" TEST PRINTING "+this.printerName,
+      printerName : this.printerName,
+    }
+    console.log(body);
+    this.http.post<any>(environment.api+"printing/test", body,{
+      headers : this.configService.headers(),
+    }).subscribe(
+      data=>{
+        console.log(data);
+      },
+      error=>{
+        alert("ERROR : "+error.error.message);
+        console.log(error);
+      }
+    )
+  }
+  note: string = "";
+  fnSavePrinterName(){ 
+    this.note = "";
+    const body = { 
+      printerName : this.printerName,
+    }
+    console.log(body);
+    this.http.post<any>(environment.api+"printing/fnSavePrinterName", body,{
+      headers : this.configService.headers(),
+    }).subscribe(
+      data=>{
+        console.log(data);
+        this.note = "Save success. ";
+      },
+      error=>{
+        alert("ERROR : "+error.error.message);
+        console.log(error);
+      }
+    )
+  }
   back() {
     history.back();
   }
@@ -70,4 +112,9 @@ export class SettingComponent implements OnInit{
       alert("Tidak bisa End Of Day, masih ada data yang belum di Settlement");
     }
   }
+
+  open(content: any) {
+    this.note = "";
+		this.modalService.open(content, { size: 'md' });
+	}
 }

@@ -1,42 +1,48 @@
 <app-header></app-header>
 
-<div class="content-md my-4">
-
+ 
     <div class="container">
-        <div class="row g-2">
-            <div class="col-12 text-center"> 
-                <small>POS Ver {{env.ver}}</small>
-                <h1> Welcome Back</h1>
+        <div class="row mb-3"> 
+            <div class="col-6">
+                <h1 class="lh-sm mb-0 pb-0">POS HOME</h1> 
             </div>
-            <div class="col">
+            <div class="col-6  text-end">
+                <strong>VER {{ver}} {{prod}}</strong>
+            </div>
+        </div>
+
+        <div class="row g-2">
+            
+            <div class="col-4">
                 <a (click)="getKioskUuid();">
-                    <img src="./assets/img/2123.jpg" class="border shadow-sm rounded" [ngClass]="{'img-disable': this.cashIn <= 0}" width="100%">
-                    <div class="text-center">
+                    <img src="./assets/img/4115320.jpg" class="border shadow-sm rounded" [ngClass]="{'img-disable': this.cashIn <= 0}" width="100%">
+                    <div class="text-center mt-2">
                        <strong> OPEN NEW CART</strong>
                     </div>
                 </a>
             </div>
-            <div class="col" *ngIf="parkingTotal > 0">
-                <a [routerLink]="[ '/parking' ]">
-                    <img src="./assets/img/9000_5_2_07.jpg" class="border shadow-sm rounded" width="100%">
-                    <div class="text-center">
-                        <strong>{{parkingTotal}} PARKING</strong>
+         
+            <div class="col-4">
+                <a target="_blank" [routerLink]="[ '/visitor' ]">
+                    <img src="./assets/img/4023504.jpg" class="border shadow-sm rounded" width="100%">
+                     <div class="text-center mt-2">
+                        <strong> VISITOR MONITOR</strong>
                      </div>
                 </a>
             </div>
-            <div class="col">
-                <a target="_blank" [routerLink]="[ '/visitor' ]">
-                    <img src="./assets/img/6900.jpg" class="border shadow-sm rounded" width="100%">
-                    <div class="text-center">
-                        <strong> VISITOR MONITOR</strong>
+
+            <div class="col-4"> 
+                <a [routerLink]="[ '/parking' ]">
+                    <img src="./assets/img/queue.jpg" [ngClass]="{'img-disable': parkingTotal < 1}" class="border shadow-sm rounded" width="100%">
+                    <div class="text-center mt-2">
+                        <strong>{{parkingTotal < 1 ? "NO" : parkingTotal}} PARKING</strong>
                      </div>
                 </a>
             </div>
          
         </div>
     </div>
-
-</div>
+ 
 
 <!-- <div class="container">
      

@@ -50,13 +50,14 @@ export class SettlementPrintComponent implements OnInit {
       }
     )
   }
-  fnExit(){
-    window.close();
+  back(){
+    history.back();
   }
   fnPrint(){ 
     const body = {
       token : '8zrGkEgUfVJM9XfUHuvYBMipLHMBEHES6HKkGqytFYq36h67gE',
       outputPrint  : this.outputPrint,
+      cashdrawer : 0,
     }
     this.http.post<any>(environment.api+"settlement/fnPrint", body,{
       headers : this.configService.headers(),

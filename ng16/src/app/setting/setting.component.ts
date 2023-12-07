@@ -13,6 +13,8 @@ import { CashierService } from '../service/cashier.service';
 export class SettingComponent implements OnInit{
   isEndOfday: boolean = false;
   settlement : number = 100;
+  ver : string = environment.ver.toString();
+  prod : string = environment.production ? "Prod":"Dev";
   constructor(
     private configService: ConfigService,
     private cashier: CashierService,

@@ -1,13 +1,15 @@
+<app-header></app-header>
+
 <div class="container my-2">
     <div class="row">
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-6">
             <div class="row">
                 <div class="col-4">
-                    <button class="btn btn-lg btn-light mb-3" (click)="fnExit();">Close</button>
+                    <a (click)="back();" class="btn  btn-dark  border">Back</a> 
                 </div>
                 <div class="col-8">
                     <div class="text-end">
-                        <button class="btn btn-lg btn-primary mb-3" (click)="fnPrint();">Print Thermal</button>
+                        <button class="btn btn-lg btn-success mb-3" (click)="fnPrint();">Print Thermal</button>
                     </div>
                 </div>
             </div>

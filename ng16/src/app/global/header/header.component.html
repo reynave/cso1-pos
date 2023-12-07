@@ -1,13 +1,13 @@
 <div class="bg-header py-2 border-bottom  mb-2 text-white">
     <div class="container-fluid">
-        <div class="row g-0">
-            <div class="col-3 align-content-center">
-              Cashier : {{account['account']['name']}}
+        <div class="row g-1">
+            <div class="col-lg-3 col-2 align-content-center">
+             {{account['account']['name']}}
             </div>
-            <div class="col-6 text-center">
-               Terminal : {{terminalId}}  {{item ? " - Cart :"+item:""}}
+            <div class="col-lg-6 col-2 text-center">
+              {{terminalId}}  {{item ? " - Cart :"+item:""}}
             </div>
-            <div class="col-3 text-end align-content-center">
+            <div class="col-lg-3 col-8 text-end align-content-center">
            
                 <span class="mx-3">
                     <span *ngIf="statusServer == 'ON'">

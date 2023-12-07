@@ -51,9 +51,9 @@ export class SettlementComponent implements OnInit {
     }).subscribe(
       data=>{
         console.log(data); 
-        this.httpGet();  
+         
         this.fnOpenCashDrawer();
-        window.open(host+'/#/setting/settlement/print?id='+data['id'], '_blank'); 
+        this.router.navigate(['setting/settlement/print'],{queryParams:{ id:data['id']}});
       },
       error=>{
         console.log(error);
@@ -73,7 +73,7 @@ export class SettlementComponent implements OnInit {
       },
       error=>{
         console.log(error);
-        alert("Cash drawer connection failed.")
+        alert("Printing / Cash drawer connection failed.")
       }
     )
   }

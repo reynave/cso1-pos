@@ -63,6 +63,7 @@ export class PrintingService {
     let items = bill['items'];
     let summary = bill['summary'];
     let totalCopy = bill['copy'];
+    let detail = bill['detail'];
 
     let message = "";
     //console.log(items);
@@ -103,6 +104,10 @@ export class PrintingService {
       this.stringfix(this.numberFormat(summary['dpp']), 11, 'f') + " " +
       this.stringfix(this.numberFormat(summary['nonBkp']), 11, 'f');
     message += "\n\n";
+    if( detail['memberId']){
+      message += "MEMBER                : " + detail['member'] + "\n";
+    }
+   
     message += "BILL                  : " + bill['id'] + "\n";
     message += "DATE                  : " + bill['date'] + "\n";
     message += "UNIT / OUTLET ID      : " + bill['detail']['terminalId'] + "/" + bill['template']['outletId'] + " \n";

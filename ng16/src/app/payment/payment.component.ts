@@ -37,6 +37,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     paid: 0,
     remaining: 0,
   };
+  member : string = "";
   ilock : string = '1';
   promo_fixed: any = [];
   kioskPaid: any = [];
@@ -121,6 +122,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
       }
     }).subscribe(
       data => {
+        this.member = data['member'];
         this.ilock = data['ilock'];
         console.log('httpCart', data);
         this.items = data['items'];

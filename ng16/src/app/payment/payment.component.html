@@ -32,7 +32,11 @@
             </div>
 
             <div class="bg-white p-2 border cart cart-height ">
-
+                <div class="row g-1 py-1" [hidden]="!member">  
+                    <div class="col-12">
+                        MEMBER : {{member | uppercase}}
+                    </div>
+                </div>
                 <div class="row g-1 mb-2" *ngFor="let x of items">
                     <div class="col-8">
                         <div>{{x.barcode}} - {{x.description}} <span>{{x.note}}</span> </div>

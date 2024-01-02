@@ -6,10 +6,8 @@
         <div class="col-5">
 
             <div class="row g-2">
-                <div class="col-4 align-self-center">
-
-                    <img src="./assets/img/logo.png" width="100%">
-
+                <div class="col-4 align-self-center"> 
+                    <img src="./assets/img/logo.png" width="100%"> 
                 </div>
                 <div class="col-8">
                     <div class="mb-1">
@@ -20,7 +18,11 @@
                 </div>
             </div>
             <div class="bg-white  p-2 border cart cart-height " #chatContainer>
-
+                <div class="row g-1 py-1" [hidden]="!member">  
+                    <div class="col-12">
+                        MEMBER : {{member | uppercase}}
+                    </div>
+                </div>
                 <div class="row g-1 py-1"
                     [ngClass]="{'active-cart': x.barcode == activeCart.barcode && x.price == activeCart.price}"
                     *ngFor="let x of items" (click)="selectItem(x);">
@@ -279,9 +281,10 @@
     <div class="content">
         <ngb-toast *ngIf="alert" [header]="'ADD ITEM'" [autohide]="false" (hidden)="close()">
             <div class="cart">
-                <div class="mb-2">{{newItem.barcode}} - {{newItem.description}}</div>
-                <div class="row">
-                    <div class="col-6"><strong></strong></div>
+                <div class="mb-2">{{newItem.description}}</div>
+              
+                <div class="row" [hidden]="newItem.asItem == false ">
+                    <div class="col-6"><strong>{{newItem.barcode}}</strong></div>
                     <div class="col-6 text-end"> <strong>RP {{newItem.price1 | number}}</strong></div>
                 </div>
             </div>

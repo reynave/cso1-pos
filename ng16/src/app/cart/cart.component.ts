@@ -116,6 +116,7 @@ export class CartComponent implements OnInit, OnDestroy {
   activeCart: any = [];
   promo_fixed: any = [];
   freeItem: any = [];
+  member : string = "";
   private _docSub: any;
   constructor(
     private configService: ConfigService,
@@ -235,6 +236,7 @@ export class CartComponent implements OnInit, OnDestroy {
     }).subscribe(
       data => {
         console.log(data);
+        this.member = data['member'];
         this.items = data['items'];
         this.ilock = data['ilock'];
         this.itemsFree = data['itemsFree'];
@@ -321,10 +323,20 @@ export class CartComponent implements OnInit, OnDestroy {
             this.alert = true;
             this.httpCart();
             this.barcode = "";
+          }else if (data['result'] == 'MEMBER') {
+            this.alert = true;
+            this.httpCart();
+            this.barcode = "";
+            this.newItem = {
+              asItem : false,
+              barcode: this.barcode,
+              description: data['member']['id'] != "" ? "SELAMAT DATANG KEMBALI "+data['member']['name'] :"MEMBER ID TIDAK DITEMUKAN",
+            }
           } else {
             this.barcode = "";
             this.alert = true;
             this.newItem = {
+              asItem : true,
               barcode: this.barcode,
               description: "ITEM TIDAK DI TEMUKAN!",
             }

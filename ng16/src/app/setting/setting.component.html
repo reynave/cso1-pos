@@ -1,6 +1,6 @@
 <app-header></app-header>
 
-<div class="container setting">
+<div class="container setting mb-5">
     <div class="row mb-4">
         <div class="col-4">
             <a (click)="back();" class="btn  btn-dark  border">Back</a>
@@ -10,47 +10,47 @@
             <strong>VER {{ver}} {{prod}}</strong>
         </div>
     </div>
-    <div class="row g-2">
-        <div class="col-4 d-grid"> 
+    <div class="row g-2 mb-2">
+        <div class="col-3 d-grid"> 
             <a class="btn  btn-light rounded-0 py-2 border shadow-sm" [routerLink]="[ '/' ]">
                 <img src="./assets/icon/icons8-home-page-96.png" width="64" >
                 <div>HOME</div>
             </a>
         </div>
-        <div class="col-4 d-grid"> 
+        <div class="col-3 d-grid"> 
             <a class="btn  btn-light rounded-0 py-2 border shadow-sm" [routerLink]="[ '/setting/configuration' ]">
                 <img src="./assets/icon/icons8-imac-settings-96.png" width="64" >
                 <div>CONFIGURATION</div>
             </a>
         </div>
-        <div class="col-4 d-grid">  
+        <div class="col-3 d-grid">  
             <a class="btn  btn-light rounded-0 py-2 border shadow-sm" [routerLink]="[ '/setting/sync' ]">
                 <img src="./assets/icon/icons8-sync-96.png" width="64" >
                 <div>SYNC DATA</div>
             </a>
         </div>
-        <div class="col-4 d-grid">
+        <div class="col-3 d-grid">
          
             <a class="btn  btn-light rounded-0 py-2 border shadow-sm" [routerLink]="[ '/setting/function' ]">
                 <img src="./assets/icon/icons8-keyboard-96.png" width="64" >
                 <div>KEYBOARD SHORTCUT</div>
             </a>
         </div>
-        <div class="col-4  d-grid">
+        <div class="col-3  d-grid">
           
             <a class="btn  btn-light rounded-0 py-2 border shadow-sm" [routerLink]="[ '/setting/parking' ]">
                 <img src="./assets/icon/icons8-traffic-jam-96.png" width="64" >
                 <div>PARKING</div>
             </a>
         </div>
-        <div class="col-4  d-grid"> 
+        <div class="col-3  d-grid"> 
             <a class="btn  btn-light rounded-0 py-2 border shadow-sm" [routerLink]="[ '/printing/history' ]">
                 <img src="./assets/icon/icons8-history-96.png" width="64" >
                 <div>PRINTING HISTORY</div>
             </a>
           
         </div>
-        <div class="col-4  d-grid">
+        <div class="col-3  d-grid">
         
             <a class="btn  btn-light rounded-0 py-2 border shadow-sm" [routerLink]="[ '/setting/balance/cashIn' ]">
                 <img src="./assets/icon/icons8-invoice-96.png" width="64" >
@@ -58,39 +58,47 @@
             </a>
           
         </div>
-        <div class="col-4  d-grid">
+        <div class="col-3  d-grid">
             <a class="btn  btn-light rounded-0 py-2 "  [routerLink]="[ '/setting/settlement' ]">
                 <img src="./assets/icon/icons8-upload-96.png" width="64" >
                 <div>SETTLEMENT</div>
             </a>
         </div>
-        <div class="col-4  d-grid">
+        <div class="col-3  d-grid">
              <a class="btn  btn-light rounded-0 py-2 "  [routerLink]="[ '/refund' ]">
                 <img src="./assets/icon/icons8-receive-cash-96.png" width="64" >
                 <div>REFUND & EXCHANGE</div>
             </a> 
         </div>
-        <div class="col-4  d-grid"> 
+        <div class="col-3  d-grid"> 
             <a class="btn  btn-light rounded-0 py-2 "  [routerLink]="[ '/setting/voucher' ]">
                 <img src="./assets/icon/icons8-voucher-96.png" width="64" >
                 <div>VOUCHER</div>
             </a>
         </div>
       
-        <div class="col-4  d-grid">
+        <div class="col-3  d-grid">
             <a class="btn  btn-light rounded-0 py-2 "  (click)="open(content)">
                 <img src="./assets/icon/icons8-printer-96.png" width="64" >
                 <div>PRINTER SETUP</div>
             </a>
         </div>
-        <div class="col-4  d-grid">
+
+        <div class="col-3  d-grid">
+            <a class="btn  btn-light rounded-0 py-2 "  [routerLink]="[ '/setting/promoFixed' ]">
+                <img src="./assets/icon/icons8-gift-96.png" width="64" >
+                <div>PROMO FIXED</div>
+            </a>
+        </div> 
+        
+    </div>
+    <div class="row g-2" >
+        <div class="col-3 offset-9 d-grid">
             <button class="btn  btn-{{isEndOfday ? 'light':'dark'}} rounded-0 py-2 "  [disabled]="!isEndOfday" (click)="endOfDay()">
                 <img src="./assets/icon/icons8-shutdown-96.png" width="64" >
                 <div>END  OF DAY</div>
             </button>
         </div>
-      
-        
     </div>
 </div>
 

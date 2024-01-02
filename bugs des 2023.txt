@@ -1,0 +1,39 @@
+Sebelum payment, bill masih bisa di tambah atau dikurangi [done]
+
+promo dept strore, setiap setelah promo, auto cut di printer
+
+scan member
+
+screen yg menghadap ke customer tidak usah tampil selain bill (saat di main screen sedang di layar selain order screen, muncul logo saja)
+
+bunyi setiap kali cash drawer terbuka [done]
+
+validasi nota (validasi tiap item di order screen, tapi print nya setelah payment, di print dibawah struk)
+
+refund bisa dilakukan di terminal mana saja (connect ke server)
+
+di struk tanggal diganti ID kasir
+
+UI untuk keyboard POS
+
+Reprint struk, search berdasarkan no bill
+
+saat edit harga muncul nya 0 (jangan 1)
+
+ada fungsi update price (untuk barang2 yang harga nya tidak sesuai dengan tag price)--> perlu otorisasi supervisor
+
+Discount manual (tidak ada di GOLD) → disc item dan disc bill → otorisasi supervisor. Nominal bisa setting diisi amount manual atau by system
+
+Discount bill (dengan otorisasi)
+
+ada master discount item dan discount bill (amount bisa fix atau harus isi)
+
+beli 1 disc 30%, beli 2 disc 50%
+
+Voucher
+
+global setting untuk promo fix
+
+disc VIP khusus member, item harga normal kena disc
+
+Data member pakai txt ke lokal terminal

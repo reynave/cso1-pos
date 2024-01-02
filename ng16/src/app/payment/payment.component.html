@@ -6,8 +6,7 @@
             <div class="alert alert-warning text-center">
                 <div> {{note}} </div>
                 <div> <a [routerLink]="[ '/printing' ]" class="btn btn-lg btn-primary"
-                        [queryParams]="{id : transactionId }">Print Receipt
-                        Transaction</a> </div>
+                        [queryParams]="{id : transactionId }">Print Receipt Transaction</a> </div>
             </div>
         </div>
     </div>
@@ -93,7 +92,7 @@
                 <small>Status Paid : {{close}}</small>
             </div>
 
-            <div class="row g-1">
+            <div class="row g-1 mb-3">
                 <div class="col-12 mb-2">
                     <strong>SELECT PAYMENT METHOD</strong>
                 </div>
@@ -117,9 +116,18 @@
 
             </div>
 
+            <div class="row g-1" [hidden]="ilock == '1'">
+                <div class="col-4">
+                    <div class="d-grid mb-1">
+                        <button type="button" (click)="back()" class="btn btn-light align-self-center" style="height: 5rem;">BACK</button>
+                    </div>
+                </div>
+            </div>
+    
 
 
         </div>
+       
 
     </div>
 </div>

@@ -1,40 +1,50 @@
 <app-header></app-header>
 
 <div class="container mb-5">
-    <div class="row">
-        <div class="col-12 mb-4">
-            <div class="d-flex">
-                <div> <a (click)="back();" class="btn  btn-dark  border">Back</a></div>
-                <div class="mx-4"><h4>History</h4></div>
-            </div>
+    <div class="row mb-4">
+        <div class="col-4 ">
+            <a (click)="back();" class="btn btn-dark border">Back</a>
         </div>
-        <div class="col-12">
-            <table class="table table-striped shadow-sm border">
-                <thead>
-                    <tr>
-                        <th>DATE TIME</th>
-                        <th>STRUCK</th>
-                        <th class="text-end">TOTAL</th>
-                        <th>CASHIER</th>
-                        <th></th>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let x of items">
-                        <td>{{x.transaction_date}}</td>
-                        <td>{{x.id}}</td>
-                        <td class="text-end">{{x.total | number}}</td>
-                        <td>
-                            <code>{{x.cashierId}}</code>{{x.name}}
-                        </td>
-                        <td>
-                            <a class="btn btn-sm btn-success" [routerLink]="[ '/printing', ]"
-                                [queryParams]="{id:x.id}">DETAIL</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="col-8 text-end">
+            <h1 class="lh-sm mb-0 pb-0">HISTORY</h1>
+            <strong>TODAY AND TOMORROW</strong>
+        </div>
+
+    </div>
+    <div class="row ">
+        
+        <div class="col-12 mb-2">
+            <input type="text" class="form-control form-control-lg"  autofocus #formRow placeholder="Search by Bill No" [(ngModel)]="keyword"   (ngModelChange)="onSearchChange()">
+        </div>
+             
+        <div class="col-12 mb-2">
+           
+                <table class="table table-striped shadow-sm border">
+                    <thead>
+                        <tr>
+                            <th>DATE TIME</th>
+                            <th>BILL</th>
+                            <th class="text-end">TOTAL</th>
+                            <th>CASHIER</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let x of items">
+                            <td>{{x.transaction_date}}</td>
+                            <td>{{x.id}}</td>
+                            <td class="text-end">{{x.total | number}}</td>
+                            <td>
+                                <code>{{x.cashierId}}</code>{{x.name}}
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-success" [routerLink]="[ '/printing', ]"
+                                    [queryParams]="{id:x.id}">DETAIL</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table> 
         </div>
     </div>
 </div>

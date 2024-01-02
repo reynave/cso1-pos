@@ -1,0 +1,83 @@
+<app-header></app-header>
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-4 ">
+            <a (click)="back();" class="btn  btn-dark  border">Back</a>
+        </div>
+        <div class="col-8 text-end">
+            <h1 class="lh-sm mb-0 pb-0">PROMO FIXED </h1>
+            <strong>TODAY AND TOMORROW</strong>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-12 mb-2" *ngFor="let x of items; let i = index">
+            <div class="bg-white {{x.status == '1' ? '':'alpha1'}} mb-3 p-2">
+                <div class="row g-1">
+                    <div class="col-11">
+                        <h4>{{x.name}}
+
+                            <small *ngIf="x.status=='0'"> (Disable) </small> 
+
+                        </h4>
+                        <div class="mb-2">
+                            <small>Description</small>
+                            <textarea class="form-control" [(ngModel)]="x.description"></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <small>Short description (bill)</small>
+                            <input type="text" class="form-control" [(ngModel)]="x.shortDesc">
+                        </div> 
+
+                        <div class="row">
+                            <div class="col">
+                                <small>Target Amount</small>
+                                <div>
+                                    <input type="text" class="form-control" [(ngModel)]="x.targetAmount" currencyMask> 
+                                </div>
+                            </div>
+                            <div class="col">
+                                <small>Notification (%)</small> 
+                                <div>
+                                    <input type="text" class="form-control" [(ngModel)]="x.ifAmountNearTarget" currencyMask> 
+                                </div>
+                            </div>
+                            <div class="col">
+                                <small>Is Multiple</small> 
+                                <select  class="form-control" [(ngModel)]="x.isMultiple">
+                                    <option [value]="1">TRUE</option>
+                                    <option [value]="0">FALSE</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <small>Voucher Amount</small> 
+                                <div>
+                                    <input type="text" class="form-control" [(ngModel)]="x.voucherAmount" currencyMask> 
+                                </div>
+                            </div>
+                            <div class="col">
+                                <small>Exp Date</small> 
+                                <div>
+                                    <input type="date" class="form-control" [(ngModel)]="x.expDate"> 
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-1 text-center" (click)="fnCheck(x);">
+                       
+                        <span *ngIf="x.status=='0'"> <i class="bi bi-square"></i> </span>
+                        <span *ngIf="x.status=='1'"> <i class="bi bi-check-square-fill"></i> </span>
+
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <div class="col-12 mb-5">
+            <div class="d-grid text-center">
+                <button type="button" (click)="fnSave()" class="btn btn-primary">SAVE</button>
+                <div>{{note}}</div>
+            </div>
+        </div>
+    </div>
+</div>

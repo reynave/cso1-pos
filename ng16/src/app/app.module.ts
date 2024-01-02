@@ -41,6 +41,7 @@ import { SyncComponent } from './setting/sync/sync.component';
 import { ConfigurationComponent } from './setting/configuration/configuration.component';
 import { PaymentCashComponent } from './payment/payment-cash/payment-cash.component';
 import { PaymentVoucherComponent } from './payment/payment-voucher/payment-voucher.component';
+import { PromoFixedComponent } from './setting/promo-fixed/promo-fixed.component';
 
 const config: SocketIoConfig = { url: environment.socket_url, options: { transports: ['websocket'] } };
 @NgModule({
@@ -78,7 +79,8 @@ const config: SocketIoConfig = { url: environment.socket_url, options: { transpo
     SyncComponent,
     ConfigurationComponent,
     PaymentCashComponent,
-    PaymentVoucherComponent
+    PaymentVoucherComponent,
+    PromoFixedComponent
   ],
   imports: [
     BrowserModule,

@@ -85,8 +85,7 @@ export class BalanceCashInComponent implements OnInit {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        console.log(data); 
-        this.fnOpenCashDrawer();
+        console.log(data);  
       },
       error => {
         console.log(error);

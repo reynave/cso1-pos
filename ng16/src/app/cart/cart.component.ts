@@ -553,22 +553,25 @@ export class CartComponent implements OnInit, OnDestroy {
     const body = {
       kioskUuid: this.kioskUuid,
     }
-    this.http.post<any>(environment.api + "cart/goToPayment", body, {
-      headers: this.configService.headers(),
-      params: {
-        kioskUuid: this.kioskUuid,
-      }
-    }).subscribe(
-      data => {
-        console.log(data);
-        this.sendReload();
-        this.router.navigate(['payment'], { queryParams: { kioskUuid: this.kioskUuid } });
-        this.modalService.dismissAll();
-      },
-      error => {
-        console.log(error);
-      }
-    )
+   // this.sendReload();
+    this.router.navigate(['payment'], { queryParams: { kioskUuid: this.kioskUuid } });
+    this.modalService.dismissAll();
+    // this.http.post<any>(environment.api + "cart/goToPayment", body, {
+    //   headers: this.configService.headers(),
+    //   params: {
+    //     kioskUuid: this.kioskUuid,
+    //   }
+    // }).subscribe(
+    //   data => {
+    //     console.log(data);
+    //     this.sendReload();
+    //     this.router.navigate(['payment'], { queryParams: { kioskUuid: this.kioskUuid } });
+    //     this.modalService.dismissAll();
+    //   },
+    //   error => {
+    //     console.log(error);
+    //   }
+    // )
   }
 
   close() {

@@ -25,6 +25,7 @@ import { VoucherComponent } from './setting/voucher/voucher.component';
 import { PrintfComponent } from './printing/printf/printf.component';
 import { SyncComponent } from './setting/sync/sync.component';
 import { ConfigurationComponent } from './setting/configuration/configuration.component';
+import { PromoFixedComponent } from './setting/promo-fixed/promo-fixed.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
@@ -55,6 +56,7 @@ const routes: Routes = [
   { path: "setting/settlement/history", component: SettlementHistoryComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "setting/function", component: SettingFunctionComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "setting/voucher", component: VoucherComponent, data: { active: "" },  canActivate:[authGuard]  }, 
+  { path: "setting/promoFixed", component: PromoFixedComponent, data: { active: "" },  canActivate:[authGuard]  }, 
  
   { path: "setting/balance/cashIn", component: BalanceCashInComponent, data: { active: "" },  canActivate:[authGuard]  }, 
   { path: "themes", component: ThemesComponent, data: { active: "" }  }, 

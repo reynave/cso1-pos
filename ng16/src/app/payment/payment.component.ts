@@ -37,6 +37,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     paid: 0,
     remaining: 0,
   };
+  ilock : string = '1';
   promo_fixed: any = [];
   kioskPaid: any = [];
   close: boolean = false;
@@ -58,7 +59,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
 
   private _docSub: any;
   ngOnInit() {
-
+ 
     this.kioskUuid = this.activatedRoute.snapshot.queryParams['kioskUuid'];
     this.httpCart();
     this.httpPaymentMethod();
@@ -120,6 +121,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
       }
     }).subscribe(
       data => {
+        this.ilock = data['ilock'];
         console.log('httpCart', data);
         this.items = data['items'];
         this.promo_fixed = data['promo_fixed'];
@@ -241,6 +243,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
         params: {
           kioskUuid: this.kioskUuid,
           terminalId: this.terminalId,
+          accountId : this.configService.account()['account']['id'],
         }
       }).subscribe(
         data => {
@@ -266,7 +269,12 @@ export class PaymentComponent implements OnInit, OnDestroy {
   paymentAdd(val: number) {
     this.payment.amount = this.payment.amount + val;
   }
+
   paymentAC() {
     this.payment.amount = 0;
+  }
+
+  back(){
+    history.back();
   }
 }

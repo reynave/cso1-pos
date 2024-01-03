@@ -23,21 +23,19 @@
                         MEMBER : {{member | uppercase}}
                     </div>
                 </div>
-                <div class="row g-1 py-1"
-                    [ngClass]="{'active-cart': x.barcode == activeCart.barcode && x.price == activeCart.price}"
+                <div class="row g-1 p-1"
+                    [ngClass]="{'active-cart': x.barcode == activeCart.barcode && x.price == activeCart.price && x.validationNota == activeCart.validationNota }"
                     *ngFor="let x of items" (click)="selectItem(x);">
                     <div class="col-8">
                         <div>{{x.barcode}} {{x.description}} <span>{{x.note}}</span> </div>
                         <div *ngIf="x.promotionId !== '0'">*{{x.promotionId}} {{x.promotionDescription}}*</div>
                         <div class="ms-2" *ngIf="x.originPrice > 1"> {{ x.originPrice | number}} X {{ x.qty }} </div>
-                        <div class="ms-2" *ngIf="x.originPrice == 1"> CUSTOME PRICE {{ x.price | number}} X {{ x.qty }}
-                        </div>
-
-                        <div class="ms-2" *ngIf="x.memberDiscountAmount > 0"> *DISC {{x.memberDiscountAmount | number}}
-                        </div>
-
+                        <div class="ms-2" *ngIf="x.originPrice == 1"> CUSTOME PRICE {{ x.price | number}} X {{ x.qty }} </div> 
+                        <div class="ms-2" *ngIf="x.memberDiscountAmount > 0"> *DISC {{x.memberDiscountAmount | number}} </div> 
                     </div>
-                    <div class="col-4 text-end">{{x.total | number}}</div>
+                    <div class="col-4 text-end"> {{x.total | number}} 
+                        <span *ngIf="x.validationNota == '1' "><i class="bi bi-check-circle-fill"></i></span>
+                    </div>
                 </div>
 
                 <!-- <div class="me-2 my-4">
@@ -139,6 +137,7 @@
 
                                         <img *ngIf="x=='8'" src="./assets/icon/icons8-percent-96.png" width="100%">
                                         <img *ngIf="x=='9'" src="./assets/icon/icons8-edit-96.png" width="100%">
+                                        <img *ngIf="x=='10'" src="./assets/icon/icons8-note-96.png" width="100%">
                                         
                                         <img *ngIf="x=='12'" src="./assets/icon/icons8-back-96.png" width="100%">
                                     </div>

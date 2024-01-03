@@ -24,13 +24,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   @ViewChild('contentAddQty') contentAddQty: any;
 
-  // save by INDEX, bukan ID
-  customFunc: any = [
-    1, 2, 4, 3,
-    5, 0, 0, 0,
-    0, 0, 0, 0,
-
-  ]; // SAVE LOCALSTORAGE
+ 
 
   @HostListener('document:keypress', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
@@ -55,6 +49,7 @@ export class CartComponent implements OnInit, OnDestroy {
   bill: any = [];
   newItem: any = [];
   alert: boolean = false;
+  customFunc : any = [1,2,10,4,5,6,7,8,9,0,0,12];
   func: MyFunction[] = [
     { id: 0, value: () => { return false; }, label: '&nbsp;' },
     { id: 1, value: () => { this.openComponent('items'); }, label: 'Search Items' },
@@ -103,8 +98,9 @@ export class CartComponent implements OnInit, OnDestroy {
       }, label: 'Update Rp 1'
     },
 
-    { id: 8, value: () => { this.openComponent('itemTebusMurah'); }, label: 'Discount Manual' },
-    { id: 9, value: () => { this.openComponent('itemTebusMurah'); }, label: 'Change Price' },
+    { id: 8, value: () => { this.openComponent('discountManual'); }, label: 'Discount Manual <i class="bi bi-lock-fill"></i>' },
+    { id: 9, value: () => { this.openComponent('changePrice'); }, label: 'Change Price <i class="bi bi-lock-fill"></i>' },
+    { id: 10, value: () => { this.openComponent('validatiNota'); }, label: 'Validasi Nota' },
 
     { id: 12, value: () => { this.supervisorMode = false; }, label: 'Close Admin' },
 
@@ -133,7 +129,7 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.setFunctionSaved();
+    //this.setFunctionSaved();
     this.setCursor();
     this.supervisorMode = false;
     this.newItem = [];
@@ -148,12 +144,15 @@ export class CartComponent implements OnInit, OnDestroy {
 
   addItem(newItem: string) {
     console.log(newItem);
+    if (newItem == 'AC') {
+      this.activeCart = []; 
+    }
     if (this.setKey == 'BARCODE') {
       if (newItem == 'BS') {
         this.barcode = this.barcode.slice(0, -1);
       }
       else if (newItem == 'AC') {
-        this.barcode = '';
+        this.barcode = ''; 
       }
       else if (newItem == 'ENTER') {
         if (this.barcode != "") {
@@ -171,9 +170,7 @@ export class CartComponent implements OnInit, OnDestroy {
       if (newItem == 'AC') {
         this.qtyItem = 1;
       }
-
-      
-
+ 
       this.qtyItem = parseInt(newItem);
       if (this.qtyItem  < 1) {
         this.qtyItem = 1;
@@ -187,27 +184,11 @@ export class CartComponent implements OnInit, OnDestroy {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        console.log(data);
-
-        // [1,2,4,3,5,0,0,0,0,0,0,0]
-
+        console.log(data); 
         data['items'].forEach((el: { [x: string]: any; }) => {
           storedData.push(parseInt(el['number']));
-        });
-
-        //  console.log(storedData);
-
-        this.customFunc = storedData;
-
-        //const storedDataString = localStorage.getItem("function.pos");
-        // const storedDataString = data['saveFunc'];
-        // if (storedDataString) {
-        //   const storedData = JSON.parse(storedDataString);
-        //   this.customFunc = storedData;
-        // } else {
-        //   const storedDataString = localStorage.setItem("function.pos", JSON.stringify(this.customFunc));
-        //   console.log("Data tidak ditemukan di localStorage.");
-        // }
+        }); 
+        this.customFunc = storedData; 
       }
     )
 
@@ -391,6 +372,7 @@ export class CartComponent implements OnInit, OnDestroy {
     if (x.total > 0) {
       this.activeCart = x;
     }
+  
   }
 
   onSubmitQty() {
@@ -506,6 +488,41 @@ export class CartComponent implements OnInit, OnDestroy {
         // this.setCursor();
       });
     }
+
+    if (comp == 'validatiNota') {
+      console.log('validatiNota', this.activeCart,this.activeCart['barcode']);
+      if(this.activeCart['barcode'] != undefined ){ 
+        const body = {
+          item : this.activeCart,
+          kioskUuid : this.kioskUuid,
+        }
+        this.http.post<any>(environment.api + "cart/validationNota", body, {
+          headers: this.configService.headers(), 
+        }).subscribe(
+          data=>{
+            console.log(data);
+            this.httpCart();
+          },
+          error=>{
+            console.log(error);
+          }
+        )
+
+      }else{
+        alert("Please select item first!");
+      }
+      // const modalRef = this.modalService.open(ItemTebusMurahComponent, { size: 'xl' });
+      // modalRef.componentInstance.kioskUuid = this.kioskUuid;
+      // modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
+      //   console.log('discountManual', data);
+      //   this.httpCart();
+      //   // this.setCursor();
+      // });
+    }
+    // { id: 8, value: () => { this.openComponent('discountManual'); }, label: 'Discount Manual' },
+    // { id: 9, value: () => { this.openComponent('changePrice'); }, label: 'Change Price' },
+    // { id: 10, value: () => { this.openComponent('validatiNota'); }, label: 'Validasi Nota' },
+
 
   }
 

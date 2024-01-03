@@ -6,8 +6,8 @@
         <div class="col-5">
 
             <div class="row g-2">
-                <div class="col-4 align-self-center"> 
-                    <img src="./assets/img/logo.png" width="100%"> 
+                <div class="col-4 align-self-center">
+                    <img src="./assets/img/logo.png" width="100%">
                 </div>
                 <div class="col-8">
                     <div class="mb-1">
@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="bg-white  p-2 border cart cart-height " #chatContainer>
-                <div class="row g-1 py-1" [hidden]="!member">  
+                <div class="row g-1 py-1" [hidden]="!member">
                     <div class="col-12">
                         MEMBER : {{member | uppercase}}
                     </div>
@@ -26,14 +26,18 @@
                 <div class="row g-1 py-1"
                     [ngClass]="{'active-cart': x.barcode == activeCart.barcode && x.price == activeCart.price}"
                     *ngFor="let x of items" (click)="selectItem(x);">
-                    <div class="col-9">
-                        <div>{{x.barcode}} - {{x.description}} <span>{{x.note}}</span> </div>
-                        <div>
-                            {{ x.price | number}} X {{ x.qty }}
-                        </div>
+                    <div class="col-8">
+                        <div>{{x.barcode}} {{x.description}} <span>{{x.note}}</span> </div>
                         <div *ngIf="x.promotionId !== '0'">*{{x.promotionId}} {{x.promotionDescription}}*</div>
+                        <div class="ms-2" *ngIf="x.originPrice > 1"> {{ x.originPrice | number}} X {{ x.qty }} </div>
+                        <div class="ms-2" *ngIf="x.originPrice == 1"> CUSTOME PRICE {{ x.price | number}} X {{ x.qty }}
+                        </div>
+
+                        <div class="ms-2" *ngIf="x.memberDiscountAmount > 0"> *DISC {{x.memberDiscountAmount | number}}
+                        </div>
+
                     </div>
-                    <div class="col-3 text-end">{{x.total | number}}</div>
+                    <div class="col-4 text-end">{{x.total | number}}</div>
                 </div>
 
                 <!-- <div class="me-2 my-4">
@@ -88,21 +92,26 @@
                     </div>
                 </div>
                 <div class="row g-1">
-                    <div class="col"> 
-                        <input type="number" class="form-control form-control-lg text-center rounded-0" placeholder="1" [(ngModel)]="qtyItem">
+                    <div class="col">
+                        <input type="number" class="form-control form-control-lg text-center rounded-0" placeholder="1"
+                            [(ngModel)]="qtyItem">
                     </div>
                     <div class="col d-grid">
-                        <button type="button" class="btn  text-center btn-{{setKey == 'QTY' ? 'primary':'light' }}  border py-2"  (click)="fnKeyboardSet('QTY');">
-                            <i class="bi bi-{{setKey == 'QTY' ? 'check2-':'' }}square me-2"></i>  <b>QTY </b>
+                        <button type="button"
+                            class="btn  text-center btn-{{setKey == 'QTY' ? 'primary':'light' }}  border py-2"
+                            (click)="fnKeyboardSet('QTY');">
+                            <i class="bi bi-{{setKey == 'QTY' ? 'check2-':'' }}square me-2"></i> <b>QTY </b>
                         </button>
                     </div>
 
                     <div class="col d-grid">
-                        <button type="button" class="btn  text-center btn-{{setKey == 'BARCODE' ? 'primary':'light' }} border py-2"   (click)="fnKeyboardSet('BARCODE');">
+                        <button type="button"
+                            class="btn  text-center btn-{{setKey == 'BARCODE' ? 'primary':'light' }} border py-2"
+                            (click)="fnKeyboardSet('BARCODE');">
                             <i class="bi bi-{{setKey == 'BARCODE' ? 'check2-':'' }}square me-2"></i> <b>BARCODE</b>
                         </button>
                     </div>
-                   
+
                 </div>
                 <app-key-num (newItemEvent)="addItem($event)"></app-key-num>
 
@@ -123,10 +132,14 @@
                                         <img *ngIf="x=='1'" src="./assets/icon/icons8-search-more-96.png" width="100%">
                                         <img *ngIf="x=='2'" src="./assets/icon/icons8-plus-96.png" width="100%">
                                         <img *ngIf="x=='3'" src="./assets/icon/icons8-card-payment-96.png" width="100%">
-                                        <img *ngIf="x=='4'" src="./assets/icon/icons8-edit-96.png" width="100%">
+                                        <img *ngIf="x=='4'" src="./assets/icon/icons8-minus-96.png" width="100%">
                                         <img *ngIf="x=='5'" src="./assets/icon/icons8-cancel-96.png" width="100%">
                                         <img *ngIf="x=='6'" src="./assets/icon/icons8-bonus-96.png" width="100%">
                                         <img *ngIf="x=='7'" src="./assets/icon/icons8-price-96.png" width="100%">
+
+                                        <img *ngIf="x=='8'" src="./assets/icon/icons8-percent-96.png" width="100%">
+                                        <img *ngIf="x=='9'" src="./assets/icon/icons8-edit-96.png" width="100%">
+                                        
                                         <img *ngIf="x=='12'" src="./assets/icon/icons8-back-96.png" width="100%">
                                     </div>
                                     <div class="col-9 lh-sm text-start  align-self-center">
@@ -230,16 +243,16 @@
 
 
 <ng-template #contentAddQty let-modal let-c="close" let-d="dismiss">
-
+    <div class="modal-header">
+        <strong class="modal-title" id="modal-basic-title">ADD QTY</strong>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
     <div class="modal-body">
-        <div class="row">
-            <div class="col-12">
-                <strong>ADD QTY</strong>
-            </div>
-        </div>
-        <div class="row g-1 mb-3 cart">
 
-            <div class="col-8">
+
+        <div class="row g-2 mb-2 cart">
+
+            <div class="col-9">
                 <div class="border bg-light py-1 px-2">
                     <div>
                         <strong>
@@ -258,18 +271,19 @@
                 </div>
             </div>
             <div class="col-3">
-                <div class="input-group mb-3">
+                <div class="d-grid">
+                    <small>ADD QTY</small>
                     <input type="number" class="form-control form-control-lg text-center" maxlength="4"
                         [(ngModel)]="addQty" placeholder="0">
                 </div>
             </div>
-            <div class="col-1  text-center">
-                <button type="button" class="btn-close" aria-label="Close"
-                    (click)="modal.dismiss('Cross click')"></button>
-            </div>
+
         </div>
-        <div class="row">
-            <app-key-num (newItemEvent)="fnAddQty($event)"></app-key-num>
+
+        <div class="bg-yellow py-1 px-2 border">
+            <div class="row">
+                <app-key-num (newItemEvent)="fnAddQty($event)"></app-key-num>
+            </div>
         </div>
     </div>
 </ng-template>
@@ -282,7 +296,7 @@
         <ngb-toast *ngIf="alert" [header]="'ADD ITEM'" [autohide]="false" (hidden)="close()">
             <div class="cart">
                 <div class="mb-2">{{newItem.description}}</div>
-              
+
                 <div class="row" [hidden]="newItem.asItem == false ">
                     <div class="col-6"><strong>{{newItem.barcode}}</strong></div>
                     <div class="col-6 text-end"> <strong>RP {{newItem.price1 | number}}</strong></div>

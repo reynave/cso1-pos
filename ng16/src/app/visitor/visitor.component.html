@@ -1,8 +1,11 @@
 <div class="container mt-1" *ngIf="action =='cart'">
     <div class="row g-2">
+        <div class="col-12 text-center">
+            <img src="./assets/img/logo.png" width="400">
+        </div>
         <div class="col-12">
 
-            <div class="row  mb-2">
+            <!-- <div class="row  mb-2">
                 <div class="col-4 align-self-center">
                     <img src="./assets/img/logo.png" width="100%">
 
@@ -22,17 +25,17 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div *ngIf="kioskUuid">
                 <div class="bg-white  p-2 border cart cart-height " #chatContainer>
 
                     <div class="row g-1 py-1" *ngFor="let x of items">
                         <div class="col-8">
-                            <div>{{x.barcode}} - {{x.description}} <span>{{x.note}}</span> </div>
-                            <div>
-                                {{ x.price | number}} X {{ x.qty }}
-                            </div>
+                            <div>{{x.barcode}} {{x.description}} <span>{{x.note}}</span> </div>
                             <div *ngIf="x.promotionId !== '0'">*{{x.promotionId}} {{x.promotionDescription}}*</div>
+                            <div class="ms-2" *ngIf="x.originPrice > 1"> {{ x.originPrice | number}} X {{ x.qty }}  </div>
+                            <div class="ms-2" *ngIf="x.originPrice == 1"> CUSTOME PRICE {{ x.price | number}} X {{ x.qty  }} </div> 
+                            <div class="ms-2" *ngIf="x.memberDiscountAmount > 0"> *DISC {{x.memberDiscountAmount |  number}}  </div>
                         </div>
                         <div class="col-4 text-end">{{x.total | number}}</div>
                     </div>
@@ -54,51 +57,56 @@
                     <div class="text-center my-2" *ngIf="ilock == 1">
                         CLOSED
                     </div>
- 
 
-                    <div *ngIf="ilock == 1"> 
+
+                    <div *ngIf="ilock == 1">
                         <div *ngIf="!transactionId">
-         
+
 
                             <div class="mb-2">
                                 <strong class="font-cart">PAYMENT</strong>
                             </div>
 
-                            <div class="row g-1 mb-1"  *ngFor="let x of kioskPaid">
+                            <div class="row g-1 mb-1" *ngFor="let x of kioskPaid">
                                 <div class="col-8 ">{{x.label}} </div>
                                 <div class="col-4 text-end">{{x.paid | number}}</div>
                             </div>
                             <div class="row g-1 mb-1">
                                 <div class="col-8 ">REMAINING </div>
-                                <div class="col-4 text-end text-danger">{{(total.bill - (total.paid))*-1 |  number}}</div>
-                            </div> 
+                                <div class="col-4 text-end text-danger">{{(total.bill - (total.paid))*-1 | number}}
+                                </div>
+                            </div>
                         </div>
                         <div class="border p-3 bg-white" *ngIf="transactionId">
                             <div class="mb-2">
                                 <div class="mb-1">
                                     <strong class="font-cart">SUMMARY</strong>
                                 </div>
-        
+
                                 <table class="table table-sm table-bordered">
                                     <tr>
                                         <td class="font-cart cart-sm"> BKP </td>
-                                        <td class="text-end font-cart cart-sm text-primary">{{summary.bkp | number}}</td>
+                                        <td class="text-end font-cart cart-sm text-primary">{{summary.bkp | number}}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td class="font-cart cart-sm"> PPN </td>
-                                        <td class="text-end font-cart cart-sm text-primary">{{summary.ppn | number}}</td>
+                                        <td class="text-end font-cart cart-sm text-primary">{{summary.ppn | number}}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td class="font-cart cart-sm"> DPP </td>
-                                        <td class="text-end font-cart cart-sm text-primary">{{summary.dpp | number}}</td>
+                                        <td class="text-end font-cart cart-sm text-primary">{{summary.dpp | number}}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td class="font-cart cart-sm"> NON BKP </td>
-                                        <td class="text-end font-cart cart-sm text-primary">{{summary.nonBkp | number}}</td>
+                                        <td class="text-end font-cart cart-sm text-primary">{{summary.nonBkp | number}}
+                                        </td>
                                     </tr>
                                 </table>
                             </div>
-        
+
                             <div class="mb-2">
                                 <div class="mb-1">
                                     <strong class="font-cart">PAYMENT METHOD</strong>
@@ -110,12 +118,12 @@
                                     </tr>
                                 </table>
                             </div>
-        
+
                             <div class="mb-2">
                                 <div class="mb-1">
                                     <strong class="font-cart">BALANCE</strong>
                                 </div>
-        
+
                                 <table class="table table-sm table-bordered" *ngFor="let x of balance">
                                     <tr>
                                         <td class="font-cart cart-sm"> PEMBAYARAN CASH </td>
@@ -126,7 +134,7 @@
                                         <td class="text-end font-cart cart-sm text-primary">{{x.caseOut | number}}</td>
                                     </tr>
                                 </table>
-        
+
                             </div>
                         </div>
                     </div>
@@ -147,7 +155,7 @@
                         </div>
                     </div>
 
-                  
+
                 </div>
             </div>
 
@@ -157,8 +165,8 @@
                 </div>
             </div>
         </div>
-  
-        <div class="col-3" class="d-none" >
+
+        <div class="col-3" class="d-none">
 
 
             <div *ngIf="kioskUuid">
@@ -333,10 +341,9 @@
     <div class="row">
         <div class="col-12 my-5 text-center">
             <div>
-                <h1>WELCOME</h1>
+                <img src="./assets/img/logo.png" width="400">
             </div>
-            <img src="./assets/img/4115320.png" width="50%">
-            <code>{{kioskUuid}} {{transactionId}}</code>
+            <img src="./assets/img/4115320.png" width="500"> 
         </div>
     </div>
 </div>

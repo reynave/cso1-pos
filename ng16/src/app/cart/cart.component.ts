@@ -93,8 +93,7 @@ export class CartComponent implements OnInit, OnDestroy {
     },
     { id: 5, value: () => { this.cancelTrans(); }, label: 'Cancel Trans' },
     { id: 6, value: () => { this.openComponent('itemTebusMurah'); }, label: 'Tebus Murah' },
-    {
-      id: 7, value: () => {
+    { id: 7, value: () => {
         if (this.activeCart.length != 0 && (this.activeCart.price < 2 && this.activeCart.price > 0)) {
           this.openComponent('updatePrice');
         } else {
@@ -103,6 +102,9 @@ export class CartComponent implements OnInit, OnDestroy {
 
       }, label: 'Update Rp 1'
     },
+
+    { id: 8, value: () => { this.openComponent('itemTebusMurah'); }, label: 'Discount Manual' },
+    { id: 9, value: () => { this.openComponent('itemTebusMurah'); }, label: 'Change Price' },
 
     { id: 12, value: () => { this.supervisorMode = false; }, label: 'Close Admin' },
 
@@ -360,7 +362,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   open(content: any, item: any) {
     clearInterval(this.callCursor);
-    this.addQty = '1';
+    this.addQty = '0';
     this.item = item;
     this.modalService.open(content, { size: 'lg' }).result.then(
       (result) => {

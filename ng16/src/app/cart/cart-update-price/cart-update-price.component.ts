@@ -24,6 +24,7 @@ export class CartUpdatePriceComponent implements OnInit {
     public http: HttpClient
   ) { }
   ngOnInit(): void {
+    this.activeCart.price= 0;
     console.log(this.activeCart, this.kioskUuid);
   }
 

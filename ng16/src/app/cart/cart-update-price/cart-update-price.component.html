@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <strong class="modal-title" id="modal-basic-title"> Update Price</strong>
+    <strong class="modal-title" id="modal-basic-title"> UPDATE PRICE</strong>
     <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
 </div>
 <div class="modal-body">
@@ -16,8 +16,8 @@
 
     <div class="row">
         <div class="col-7">
-            <label for="amount">Amount <span [hidden]="amount.valid || amount.pristine"
-                    class="text-danger">*</span></label>
+            <label for="amount">Amount <span [hidden]="amount.valid || amount.pristine"  class="text-danger">*</span></label>
+           
             <input type="text" autofocus class="form-control form-control-lg text-end fs-1" id="amount" required
                 [(ngModel)]="activeCart.price" name="amount" currencyMask #amount="ngModel">
 

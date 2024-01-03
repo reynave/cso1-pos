@@ -39,11 +39,13 @@
                 </div>
                 <div class="row g-1 mb-2" *ngFor="let x of items">
                     <div class="col-8">
-                        <div>{{x.barcode}} - {{x.description}} <span>{{x.note}}</span> </div>
+                        <div>{{x.barcode}} {{x.description}} <span>{{x.note}}</span> </div>
                         <div *ngIf="x.promotionId !== '0'">*{{x.promotionId}} {{x.promotionDescription}}*</div>
-                        <div>
-                            {{ x.price | number}} X {{ x.qty }}
-                        </div>
+                        <div class="ms-2" *ngIf="x.originPrice > 1">  {{ x.originPrice | number}} X {{ x.qty }}  </div>
+                        <div class="ms-2" *ngIf="x.originPrice == 1"> CUSTOME PRICE {{ x.price | number}} X {{ x.qty }}  </div>
+                        
+                        <div class="ms-2" *ngIf="x.memberDiscountAmount > 0"> *DISC  {{x.memberDiscountAmount | number}} </div>
+                        
                     </div>
                     <div class="col-4 text-end">{{x.total | number}}</div>
                 </div>

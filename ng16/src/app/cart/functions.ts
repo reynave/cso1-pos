@@ -8,4 +8,5 @@ export interface MyFunction {
     id: number;
     value: () => void;
     label: string;
+    admin : boolean;
 }

@@ -4,50 +4,69 @@
     <div class="row">
 
 
-        <div class="col-md-5 col-12">
-            <div class="row g-2">
+        <div class="col-md-6 col-12">
+            <div class="row g-1">
                 <div class="col-4 align-self-center">
-
                     <img src="./assets/img/logo.png" width="100%">
                 </div>
-                <div class="col-8">
-                    <div class="mb-1">
-                        <h1>BILL</h1>
-                    </div>
+                <div class="col-3  ">
+                    <h1 class="mb-0 lh-sm">BILL</h1>
+
+                </div>
+                <div class="col-5">
+                    <h1>COPY BILL : {{copy}}</h1>
                 </div>
             </div>
+            <table width="95%">
+                <tr>
+                    <td>
+                        <div class="border p-1 bg-white shadow-sm"
+                            style="width: 400px; height: 80vh; overflow-y: scroll;">
+                            <pre>{{outputPrint}}</pre>
+                        </div>
+                    </td>
+                    <td  width="40%" style="vertical-align: top;">
 
-            <div class="border p-1 bg-white shadow-sm" style="width: 420px; max-height: 80vh; overflow-y: scroll;">
 
-                <pre>{{outputPrint}}</pre>
-            </div>
+                        <div class="d-grid mb-2">
+                            <button type="button" (click)="copyPrinting()"
+                                class="btn btn-lg btn-success rounded-0 py-4">PRINT</button>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="button" (click)="home()"
+                                class="btn btn-lg btn-dark rounded-0 py-4">FINISH</button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
         </div>
 
-        <div class="col-md-7 col-12">
+
+
+        <div class="col-md-6 col-12" *ngIf="outputValidationNota != '' ">
+            
             <div class="row">
                 <div class="col-12">
-                    <div class="mb-1">
-                        <h1>COPY BILL : {{copy}}</h1>
-                    </div>
-                </div>
+                    <h1>Validasi Nota</h1>
+                </div> 
             </div>
-
-            <div class="row g-1">
-                <div class="col-md-7 col-12 mb-3">
-                    <div class="d-grid">
-                        <button type="button" (click)="copyPrinting()"
-                            class="btn btn-lg btn-success rounded-0 py-4">PRINT</button>
+            <div class="row">
+                <div class="col-7">
+                    <div class="border p-1 bg-white shadow-sm" style="width: 400px; height: 80vh; overflow-y: scroll;"> 
+                        <pre>{{outputValidationNota}}</pre>
                     </div>
                 </div>
-                <div class="col-md-7 col-12 ">
+                <div class="col-5">
                     <div class="d-grid">
-                        <button type="button" (click)="home()"
-                            class="btn btn-lg btn-dark rounded-0 py-4">FINISH</button>
+                        <button type="button" (click)="fnPrintingNota()"
+                            class="btn btn-lg btn-primary rounded-0 py-4">PRINT</button>
                     </div>
                 </div>
-
             </div>
         </div>
+       
 
     </div>
 </div>

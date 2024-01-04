@@ -1,0 +1,147 @@
+<div class="modal-header">
+    <strong class="modal-title" id="modal-basic-title"> CHANGES PRICE </strong>
+    <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+</div>
+<div class="modal-body">
+    <div  *ngIf="activeCart.length == 0 "> 
+        <div class="row">
+            <div class="col-12">
+                <div class="text-center my-5">
+                    <h4>Please select item first</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div  *ngIf="activeCart.length != 0 "> 
+        <h5 class="style1 mb-2">
+            {{activeCart.barcode}} - {{activeCart.description}}
+        </h5>
+
+        <div class="row g-1 mb-2">
+            <div class="col-4">
+                <label for="amount">Current Price </label>
+                <div class="form-control form-control-lg text-end fs-1 bg-light">{{activeCart.price | number}}</div>
+            </div>
+            <div class="col-1 align-self-center"><br>
+                <img src="./assets/icon/icons8-advance-96.png" width="100%">
+            </div>
+            <div class="col-4">
+                <label for="amount">Change Price <span [hidden]="amount.valid || amount.pristine"
+                        class="text-danger">*</span></label>
+                <input type="text" autofocus class="form-control form-control-lg text-end fs-1" id="amount" required
+                    [(ngModel)]="newPrice" name="amount" currencyMask #amount="ngModel">
+            </div>
+
+            <div class="col-3">
+                <label>Reset Current Price</label>
+                <div class="d-grid">
+                    <button type="button" class="btn btn-warning btn-lg py-3" (click)="reset();"><i
+                            class="bi bi-arrow-counterclockwise"></i> RESET</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+
+            <div class="col-7">
+
+                <div class="my-2">
+                    <div class="row g-1 ">
+                        <div class="col d-grid">
+                            <button type="button" (click)="addAmount('7')" class="btn btn-lg fs-1 py-3">7</button>
+                        </div>
+                        <div class="col d-grid">
+                            <button type="button" (click)="addAmount('8')" class="btn btn-lg fs-1  py-3">8</button>
+                        </div>
+                        <div class="col d-grid">
+                            <button type="button" (click)="addAmount('9')" class="btn btn-lg fs-1  py-3">9</button>
+                        </div>
+                    </div>
+                    <div class="row g-1 ">
+                        <div class="col d-grid">
+                            <button type="button" (click)="addAmount('4')" class="btn btn-lg fs-1  py-3">4</button>
+                        </div>
+                        <div class="col d-grid">
+                            <button type="button" (click)="addAmount('5')" class="btn btn-lg fs-1  py-3">5</button>
+                        </div>
+                        <div class="col d-grid">
+                            <button type="button" (click)="addAmount('6')" class="btn btn-lg fs-1  py-3">6</button>
+                        </div>
+                    </div>
+                    <div class="row g-1 ">
+                        <div class="col d-grid">
+                            <button type="button" (click)="addAmount('1')" class="btn btn-lg fs-1  py-3">1</button>
+                        </div>
+                        <div class="col d-grid">
+                            <button type="button" (click)="addAmount('2')" class="btn btn-lg fs-1  py-3">2</button>
+                        </div>
+                        <div class="col d-grid">
+                            <button type="button" (click)="addAmount('3')" class="btn btn-lg fs-1  py-3">3</button>
+                        </div>
+                    </div>
+                    <div class="row g-1 ">
+                        <div class="col d-grid">
+                            <button type="button" (click)="addAmount('0')" class="btn btn-lg fs-1  py-3">0</button>
+                        </div>
+                        <div class="col d-grid">
+                            <button type="button" (click)="addAmount('00')" class="btn btn-lg fs-1  py-3">00</button>
+                        </div>
+                        <div class="col d-grid">
+                            <button type="button" (click)="addAmount('000')" class="btn btn-lg fs-1  py-3">000</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="mb-3">
+                    <div class="my-3">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="d-grid mb-2">
+                                    <button type="button" class="  btn  btn-lg btn-warning  "
+                                        (click)="paymentCutLastOne()"><i
+                                            class="bi bi-caret-right-fill fs-2"></i></button>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-grid mb-2">
+                                    <button type="button" class="  btn  btn-lg btn-warning py-3"
+                                        (click)="paymentAC()">AC</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-grid mb-2">
+                            <button type="button" class="me-1 btn btn-lg btn-success py-3"
+                                (click)="paymentAdd(5000)">+Rp
+                                5.000</button>
+                        </div>
+                        <div class="d-grid mb-2">
+                            <button type="button" class="me-1 btn  btn-lg btn-success py-3"
+                                (click)="paymentAdd(10000)">+Rp
+                                10.000</button>
+                        </div>
+                        <div class="d-grid mb-2">
+                            <button type="button" class="me-1 btn  btn-lg btn-success py-3"
+                                (click)="paymentAdd(50000)">+Rp
+                                50.000</button>
+                        </div>
+                        <div class="d-grid mb-2">
+                            <button type="button" class="me-1 btn  btn-lg btn-success py-3"
+                                (click)="paymentAdd(100000)">+Rp
+                                100.000</button>
+                        </div>
+                        <div class="d-grid">
+                            <button type="button" (click)="changePrice()" class="btn btn-lg fs-4 py-3 btn-dark"
+                                [disabled]="activeCart.price < 2"><strong>SUBMIT</strong></button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

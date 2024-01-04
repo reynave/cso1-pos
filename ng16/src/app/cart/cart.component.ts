@@ -9,6 +9,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MyFunction } from './functions';
 import { ItemTebusMurahComponent } from './item-tebus-murah/item-tebus-murah.component';
 import { CartUpdatePriceComponent } from './cart-update-price/cart-update-price.component';
+import { ChangePriceComponent } from './change-price/change-price.component';
+import { DiscountManualComponent } from './discount-manual/discount-manual.component';
 
 @Component({
   selector: 'app-cart',
@@ -24,7 +26,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   @ViewChild('contentAddQty') contentAddQty: any;
 
- 
+
 
   @HostListener('document:keypress', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
@@ -49,10 +51,10 @@ export class CartComponent implements OnInit, OnDestroy {
   bill: any = [];
   newItem: any = [];
   alert: boolean = false;
-  customFunc : any = [1,2,10,4,5,6,7,8,9,0,0,12];
+  customFunc: any = [1, 2, 10, 4, 5, 6, 7, 8, 9, 0, 0, 12];
   func: MyFunction[] = [
-    { id: 0, value: () => { return false; }, label: '&nbsp;' },
-    { id: 1, value: () => { this.openComponent('items'); }, label: 'Search Items' },
+    { id: 0, value: () => { return false; }, label: '&nbsp;', admin: false },
+    { id: 1, value: () => { this.openComponent('items'); }, label: 'Search Items', admin: false },
     {
       id: 2, value: () => {
         if (this.activeCart['barcode'] !== undefined) {
@@ -65,13 +67,15 @@ export class CartComponent implements OnInit, OnDestroy {
           this.alert = true;
           setTimeout(() => (this.alert = false), 2000);
         }
-      }, label: 'Add Qty'
+      }, label: 'Add Qty', admin: false
     },
-    { id: 3, value: () => { 
-      if(this.items.length > 0){
-        this.goToPayment(); 
-      } 
-    }, label: 'Payment' },
+    {
+      id: 3, value: () => {
+        if (this.items.length > 0) {
+          this.goToPayment();
+        }
+      }, label: 'Payment', admin: false
+    },
     {
       id: 4, value: () => {
         if (this.activeCart['barcode'] !== undefined) {
@@ -84,25 +88,26 @@ export class CartComponent implements OnInit, OnDestroy {
           this.alert = true;
           setTimeout(() => (this.alert = false), 2000);
         }
-      }, label: 'Reduce Qty'
+      }, label: 'Reduce Qty', admin: false
     },
-    { id: 5, value: () => { this.cancelTrans(); }, label: 'Cancel Trans' },
-    { id: 6, value: () => { this.openComponent('itemTebusMurah'); }, label: 'Tebus Murah' },
-    { id: 7, value: () => {
+    { id: 5, value: () => { this.cancelTrans(); }, label: 'Cancel Trans', admin: false },
+    { id: 6, value: () => { this.openComponent('itemTebusMurah'); }, label: 'Tebus Murah', admin: false },
+    {
+      id: 7, value: () => {
         if (this.activeCart.length != 0 && (this.activeCart.price < 2 && this.activeCart.price > 0)) {
           this.openComponent('updatePrice');
         } else {
           alert("Item ini tidak bisa update harga");
         }
 
-      }, label: 'Update Rp 1'
+      }, label: 'Update Rp 1', admin: false
     },
 
-    { id: 8, value: () => { this.openComponent('discountManual'); }, label: 'Discount Manual <i class="bi bi-lock-fill"></i>' },
-    { id: 9, value: () => { this.openComponent('changePrice'); }, label: 'Change Price <i class="bi bi-lock-fill"></i>' },
-    { id: 10, value: () => { this.openComponent('validatiNota'); }, label: 'Validasi Nota' },
+    { id: 8, value: () => { this.openComponent('discountManual'); }, label: 'Discount Manual <i class="bi bi-lock-fill"></i>', admin: false },
+    { id: 9, value: () => { this.openComponent('changePrice'); }, label: 'Change Price <i class="bi bi-lock-fill"></i>', admin: false },
+    { id: 10, value: () => { this.openComponent('validatiNota'); }, label: 'Validasi Nota', admin: false },
 
-    { id: 12, value: () => { this.supervisorMode = false; }, label: 'Close Admin' },
+    { id: 12, value: () => { this.supervisorMode = false; }, label: 'Close Admin', admin: false },
 
   ];
 
@@ -114,7 +119,7 @@ export class CartComponent implements OnInit, OnDestroy {
   activeCart: any = [];
   promo_fixed: any = [];
   freeItem: any = [];
-  member : string = "";
+  member: string = "";
   private _docSub: any;
   constructor(
     private configService: ConfigService,
@@ -145,14 +150,14 @@ export class CartComponent implements OnInit, OnDestroy {
   addItem(newItem: string) {
     console.log(newItem);
     if (newItem == 'AC') {
-      this.activeCart = []; 
+      this.activeCart = [];
     }
     if (this.setKey == 'BARCODE') {
       if (newItem == 'BS') {
         this.barcode = this.barcode.slice(0, -1);
       }
       else if (newItem == 'AC') {
-        this.barcode = ''; 
+        this.barcode = '';
       }
       else if (newItem == 'ENTER') {
         if (this.barcode != "") {
@@ -166,13 +171,13 @@ export class CartComponent implements OnInit, OnDestroy {
     }
 
     else if (this.setKey == 'QTY') {
-    
+
       if (newItem == 'AC') {
         this.qtyItem = 1;
       }
- 
+
       this.qtyItem = parseInt(newItem);
-      if (this.qtyItem  < 1) {
+      if (this.qtyItem < 1) {
         this.qtyItem = 1;
       }
     }
@@ -184,11 +189,11 @@ export class CartComponent implements OnInit, OnDestroy {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        console.log(data); 
+        console.log(data);
         data['items'].forEach((el: { [x: string]: any; }) => {
           storedData.push(parseInt(el['number']));
-        }); 
-        this.customFunc = storedData; 
+        });
+        this.customFunc = storedData;
       }
     )
 
@@ -198,7 +203,19 @@ export class CartComponent implements OnInit, OnDestroy {
     const item = this.func.find((x: { id: number; }) => x.id === id);
     console.log(id, item)
     if (item && item.value && typeof item.value === 'function') {
-      item.value(); // Panggil fungsi
+
+      if (item.admin == false) {
+        item.value(); // Panggil fungsi
+      } else {
+        if (this.supervisorMode == true) {
+          item.value(); // Panggil fungsi
+        } else {
+          alert("SUPERVISOR REQUIRED!");
+        }
+
+      }
+
+      //supervisorMode
     }
   }
 
@@ -306,20 +323,20 @@ export class CartComponent implements OnInit, OnDestroy {
             this.alert = true;
             this.httpCart();
             this.barcode = "";
-          }else if (data['result'] == 'MEMBER') {
+          } else if (data['result'] == 'MEMBER') {
             this.alert = true;
             this.httpCart();
             this.barcode = "";
             this.newItem = {
-              asItem : false,
+              asItem: false,
               barcode: this.barcode,
-              description: data['member']['id'] != "" ? "SELAMAT DATANG KEMBALI "+data['member']['name'] :"MEMBER ID TIDAK DITEMUKAN",
+              description: data['member']['id'] != "" ? "SELAMAT DATANG KEMBALI " + data['member']['name'] : "MEMBER ID TIDAK DITEMUKAN",
             }
           } else {
             this.barcode = "";
             this.alert = true;
             this.newItem = {
-              asItem : true,
+              asItem: true,
               barcode: this.barcode,
               description: "ITEM TIDAK DI TEMUKAN!",
             }
@@ -358,11 +375,9 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   checkNumber() {
-
     // if (this.addQty < 1) {
     //   this.addQty = 1;
-    // }
-
+    // } 
   }
 
 
@@ -372,7 +387,6 @@ export class CartComponent implements OnInit, OnDestroy {
     if (x.total > 0) {
       this.activeCart = x;
     }
-  
   }
 
   onSubmitQty() {
@@ -421,7 +435,7 @@ export class CartComponent implements OnInit, OnDestroy {
       );
       modalRef.componentInstance.kioskUuid = this.kioskUuid;
       modalRef.componentInstance.qty = this.qtyItem;
-      
+
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);
         this.httpCart();
@@ -465,7 +479,7 @@ export class CartComponent implements OnInit, OnDestroy {
         },
         (reason) => {
           console.log('CLOSE');
-          // this.setCursor();
+          this.setCursor();
 
         },
       );
@@ -490,25 +504,26 @@ export class CartComponent implements OnInit, OnDestroy {
     }
 
     if (comp == 'validatiNota') {
-      console.log('validatiNota', this.activeCart,this.activeCart['barcode']);
-      if(this.activeCart['barcode'] != undefined ){ 
+      console.log('validatiNota', this.activeCart, this.activeCart['barcode']);
+      if (this.activeCart['barcode'] != undefined) {
         const body = {
-          item : this.activeCart,
-          kioskUuid : this.kioskUuid,
+          item: this.activeCart,
+          kioskUuid: this.kioskUuid,
         }
         this.http.post<any>(environment.api + "cart/validationNota", body, {
-          headers: this.configService.headers(), 
+          headers: this.configService.headers(),
         }).subscribe(
-          data=>{
+          data => {
             console.log(data);
             this.httpCart();
+            this.setCursor();
           },
-          error=>{
+          error => {
             console.log(error);
           }
         )
 
-      }else{
+      } else {
         alert("Please select item first!");
       }
       // const modalRef = this.modalService.open(ItemTebusMurahComponent, { size: 'xl' });
@@ -519,9 +534,51 @@ export class CartComponent implements OnInit, OnDestroy {
       //   // this.setCursor();
       // });
     }
-    // { id: 8, value: () => { this.openComponent('discountManual'); }, label: 'Discount Manual' },
-    // { id: 9, value: () => { this.openComponent('changePrice'); }, label: 'Change Price' },
-    // { id: 10, value: () => { this.openComponent('validatiNota'); }, label: 'Validasi Nota' },
+
+
+    if (comp == 'discountManual') {
+      const modalRef = this.modalService.open(DiscountManualComponent, { size: 'lg' });
+      modalRef.result.then(
+        (result) => {
+          //clearInterval(this.callCursor);
+          console.log('   clearInterval(this.callCursor); ');
+        },
+        (reason) => {
+          console.log('CLOSE');
+          this.setCursor();
+        },
+      );
+      modalRef.componentInstance.activeCart = this.activeCart;
+      modalRef.componentInstance.kioskUuid = this.kioskUuid;
+
+      modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
+        console.log('modalRef.componentInstance.newItemEvent', data);
+        this.httpCart();
+        // this.setCursor();
+      });
+    }
+
+    if (comp == 'changePrice') {
+      const modalRef = this.modalService.open(ChangePriceComponent, { size: 'lg' });
+      modalRef.result.then(
+        (result) => {
+          //clearInterval(this.callCursor);
+          console.log('   clearInterval(this.callCursor); ');
+        },
+        (reason) => {
+          console.log('CLOSE');
+          this.setCursor();
+        },
+      );
+      modalRef.componentInstance.activeCart = this.activeCart;
+      modalRef.componentInstance.kioskUuid = this.kioskUuid;
+
+      modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
+        console.log('modalRef.componentInstance.newItemEvent', data);
+        this.httpCart();
+        // this.setCursor();
+      });
+    }
 
 
   }
@@ -584,7 +641,7 @@ export class CartComponent implements OnInit, OnDestroy {
     const body = {
       kioskUuid: this.kioskUuid,
     }
-   // this.sendReload();
+    // this.sendReload();
     this.router.navigate(['payment'], { queryParams: { kioskUuid: this.kioskUuid } });
     this.modalService.dismissAll();
     // this.http.post<any>(environment.api + "cart/goToPayment", body, {

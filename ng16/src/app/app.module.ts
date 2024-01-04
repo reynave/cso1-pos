@@ -42,6 +42,8 @@ import { ConfigurationComponent } from './setting/configuration/configuration.co
 import { PaymentCashComponent } from './payment/payment-cash/payment-cash.component';
 import { PaymentVoucherComponent } from './payment/payment-voucher/payment-voucher.component';
 import { PromoFixedComponent } from './setting/promo-fixed/promo-fixed.component';
+import { ChangePriceComponent } from './cart/change-price/change-price.component';
+import { DiscountManualComponent } from './cart/discount-manual/discount-manual.component';
 
 const config: SocketIoConfig = { url: environment.socket_url, options: { transports: ['websocket'] } };
 @NgModule({
@@ -80,7 +82,9 @@ const config: SocketIoConfig = { url: environment.socket_url, options: { transpo
     ConfigurationComponent,
     PaymentCashComponent,
     PaymentVoucherComponent,
-    PromoFixedComponent
+    PromoFixedComponent,
+    ChangePriceComponent,
+    DiscountManualComponent
   ],
   imports: [
     BrowserModule,

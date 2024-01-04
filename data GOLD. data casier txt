@@ -1,0 +1,13 @@
+1. data casier txt
+format : 
+id, name, password (encription md5)
+
+
+2. data member
+format : 
+id, name, discount
+
+3. data item, barcode
+sama dengan CSO
+
+4. Promo

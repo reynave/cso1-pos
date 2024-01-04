@@ -47,7 +47,7 @@ export class PrintingComponent implements OnInit {
     console.log("sendReload");
   }
 
-
+  outputValidationNota : string = "";
   httpBill() {
     this.http.get<any>(environment.api + "printing/detail", {
       headers: this.configService.headers(),
@@ -61,15 +61,14 @@ export class PrintingComponent implements OnInit {
         this.items = data['items'];
         this.cashDrawer = data['detail']['cashDrawer'];
         this.outputPrint = this.printing.template(data);
+        this.outputValidationNota = this.printing.templateValidationNota(data);
+        
         console.log('httpBill', data, this.cashDrawer);
-
-
-
+ 
         if (data['detail']['printing'] == 0) {
           this.fnPrinting();
         }
-
-        
+ 
         if (data['detail']['cashDrawer'] == 0) {
           this.fnOpenCashDrawer();
         }
@@ -112,15 +111,10 @@ export class PrintingComponent implements OnInit {
     }).subscribe(
       data => {
         this.copy = data['copy'];
-        // this.fnOpenCashDrawerAndPrinting();
-        // let url = "./#/printf?id="+this.id;
-        // window.open( url, "_blank", "resizable=no, toolbar=no, scrollbars=no, menubar=no, status=no, directories=no, location=no, width=1000, height=600, left=10 top=100 " );
-        this.httpBill();
+           this.httpBill();
         if( this.copy > 0){
           this.fnPrinting();
-        }
-       
-
+        } 
       },
       error => {
         console.log(error);
@@ -149,6 +143,23 @@ export class PrintingComponent implements OnInit {
     )
   }
 
+
+  fnPrintingNota(){
+    const body = { 
+      outputPrint: this.outputValidationNota, 
+    }
+    this.http.post<any>(environment.api + "printing/fnPrintingNota", body, {
+      headers: this.configService.headers()
+    }).subscribe(
+      data => {
+        console.log("fnPrinting", data);
+      },
+      error => {
+        console.log(error);
+        alert("Printer validation nota connection failed.")
+      }
+    )
+  }
 
 
 

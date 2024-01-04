@@ -30,19 +30,18 @@
                         <div>{{x.barcode}} {{x.description}} <span>{{x.note}}</span> </div>
                         <div *ngIf="x.promotionId !== '0'">*{{x.promotionId}} {{x.promotionDescription}}*</div>
                         <div class="ms-2" *ngIf="x.originPrice > 1"> {{ x.originPrice | number}} X {{ x.qty }} </div>
-                        <div class="ms-2" *ngIf="x.originPrice == 1"> CUSTOME PRICE {{ x.price | number}} X {{ x.qty }} </div> 
-                        <div class="ms-2" *ngIf="x.memberDiscountAmount > 0"> *DISC {{x.memberDiscountAmount | number}} </div> 
+                        <div class="ms-2" *ngIf="x.originPrice == 1"> CUSTOME PRICE {{ x.price | number}} X {{ x.qty }} </div>
+                        <div class="ms-2" *ngIf="x.discount > 0"> *DISC {{x.discount | number}} </div>
+                        <div class="ms-2" *ngIf="x.memberDiscountAmount > 0"> *MEMBER DISC {{x.memberDiscountAmount |
+                            number}} </div>
                     </div>
-                    <div class="col-4 text-end"> {{x.total | number}} 
+                    <div class="col-4 text-end">
+                        <span *ngIf="x.totalPriceEdit > 0"><i class="bi bi-pencil-square"></i></span>
+                        {{x.total | number}}
                         <span *ngIf="x.validationNota == '1' "><i class="bi bi-check-circle-fill"></i></span>
                     </div>
                 </div>
 
-                <!-- <div class="me-2 my-4">
-                    <div *ngFor="let item of promo_fixed" class="mb-2">
-                        <span [innerHTML]="item['detail']['reminder']"></span> 
-                    </div>
-                </div> -->
 
                 <div class="me-2 my-4">
                     <div *ngFor="let item of promo_fixed" class="mb-1">
@@ -56,16 +55,6 @@
                     </div>
                 </div>
 
-
-                <!-- <div class="bg-warning p-2">
-                    <p>
-                        Demo Version
-                    </p>
-                    <p>
-                        ID supervisor : 123456789<br>
-                        password : 123213
-                    </p>
-                </div> -->
             </div>
 
 
@@ -120,6 +109,12 @@
         <div class="col-3">
             <div class="mb-2">
 
+                <div class="d-grid" *ngIf="ilock != 1">
+                    <button type="button" *ngIf="supervisorMode == true" (click)="supervisorMode = false;"
+                        class="btn btn-lg  btn-danger text-center fs-6 py-3 mb-2 text-white">
+                        CLOSE SUPERVISOR
+                    </button>
+                </div>
                 <div class="row g-1 mb-2">
                     <div class="col-6" *ngFor="let x of customFunc; let i = index">
                         <div class="d-grid">
@@ -138,7 +133,7 @@
                                         <img *ngIf="x=='8'" src="./assets/icon/icons8-percent-96.png" width="100%">
                                         <img *ngIf="x=='9'" src="./assets/icon/icons8-edit-96.png" width="100%">
                                         <img *ngIf="x=='10'" src="./assets/icon/icons8-note-96.png" width="100%">
-                                        
+
                                         <img *ngIf="x=='12'" src="./assets/icon/icons8-back-96.png" width="100%">
                                     </div>
                                     <div class="col-9 lh-sm text-start  align-self-center">
@@ -152,12 +147,6 @@
 
                 </div>
 
-                <div class="d-grid" *ngIf="ilock != 1">
-                    <button type="button" *ngIf="supervisorMode == true" (click)="supervisorMode = false;"
-                        class="btn btn-lg  btn-danger text-center fs-6 py-3 mb-2 text-white">
-                        CLOSE SUPERVISOR
-                    </button>
-                </div>
                 <div class="row g-1 ">
                     <div class="col-6">
                         <div class="d-grid">

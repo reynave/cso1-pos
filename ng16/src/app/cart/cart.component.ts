@@ -289,13 +289,15 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   addToCart() {
-    this.activeCart = [];
+   
     this.alert = false;
     const body = {
       barcode: this.barcode,
       kioskUuid: this.kioskUuid,
       qty: this.qtyItem,
+      activeCart : this.activeCart,
     }
+    console.log(body);
 
     this.http.post<any>(environment.api + "Cart/addToCart", body, {
       headers: this.configService.headers(),
@@ -355,7 +357,7 @@ export class CartComponent implements OnInit, OnDestroy {
         console.log(error);
       }
     )
-
+    this.activeCart = [];
   }
 
   open(content: any, item: any) {
@@ -415,8 +417,7 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   openComponent(comp: any, item: any = []) {
-
-
+ 
     clearInterval(this.callCursor);
 
 

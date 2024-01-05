@@ -110,6 +110,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
           this.httpCart();
           this.httpPaymentMethod();
           this.httpPaymentInvoice();
+        
         }
 
         if (data['action'] == 'openPassword') {
@@ -156,6 +157,10 @@ export class PaymentComponent implements OnInit, OnDestroy {
           });
         }
 
+        if (data['error'] == true) {
+          alert(data['note']);
+        }
+        this.barcode = "";
       },
       error => {
         console.log(error);

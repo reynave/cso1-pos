@@ -4,16 +4,17 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfigService } from 'src/app/service/config.service';
 import { environment } from 'src/environments/environment';
 @Component({
-  selector: 'app-discount-manual',
-  templateUrl: './discount-manual.component.html',
-  styleUrls: ['./discount-manual.component.css']
+  selector: 'app-discount-bill',
+  templateUrl: './discount-bill.component.html',
+  styleUrls: ['./discount-bill.component.css']
 })
-export class DiscountManualComponent implements OnInit {
+export class DiscountBillComponent implements OnInit {
   @Input() activeCart: any;
   @Input() kioskUuid: any;
+  @Input() discountBill: any;
 
   @Output() newItemEvent = new EventEmitter<string>();
-
+  lock : boolean = true;
   isSearch: boolean = false;
   loading: boolean = false;
   newPrice: number = 0;
@@ -45,6 +46,8 @@ export class DiscountManualComponent implements OnInit {
 
   reset() {
     this.newDiscount = 0;
+    
+    this.fnCheckInputDisc();
   }
 
 
@@ -61,6 +64,8 @@ export class DiscountManualComponent implements OnInit {
     let amount = Number.parseInt(tempAmount);
 
     this.newDiscount = (Number.isNaN(amount)) ? 0 : amount;
+    
+    this.fnCheckInputDisc();
   }
   paymentAdd(val: number) {
     this.newDiscount = this.newDiscount + val;
@@ -82,23 +87,23 @@ export class DiscountManualComponent implements OnInit {
       d = this.newDiscount;
     }
 
-    this.newPrice = this.activeCart.price - d;
+    this.newPrice =   d;
   }
 
 
   paymentAC() {
     this.newDiscount = 0;
+    
+    this.fnCheckInputDisc();
   }
   changePrice() {
+
     const body = {
-      activeCart: this.activeCart,
       kioskUuid: this.kioskUuid,
-      newPrice: this.newPrice,
-      typeOfDisc: this.typeOfDisc,
-      discountAmount: this.activeCart.price - this.newPrice,
+      amount:  this.newPrice,
     }
     console.log(body);
-    this.http.post<any>(environment.api + "cart/discountManual", body, {
+    this.http.post<any>(environment.api + "payment/onSubmitDiscountBill", body, {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
@@ -110,6 +115,5 @@ export class DiscountManualComponent implements OnInit {
         console.log(error);
       }
     )
-
   }
-} 
+}  

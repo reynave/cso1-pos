@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <div class="row g-1">
             <div class="col-lg-3 col-2 align-content-center">
-             {{account['account']['name']}}
+                <button type="button" class="btn btn-primary py-0 mx-1" [routerLink]="[ '/' ]">HOME</button>  {{account['account']['name']}}
             </div>
             <div class="col-lg-6 col-2 text-center">
               {{terminalId}}  {{item ? " - Cart :"+item:""}}

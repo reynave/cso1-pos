@@ -6,6 +6,8 @@ import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxCurrencyDirective } from "ngx-currency";
 import { PaymentVoucherComponent } from './payment-voucher/payment-voucher.component';
+import { DiscountBillComponent } from './discount-bill/discount-bill.component';
+import { ModalPasswordComponent } from '../global/modal-password/modal-password.component';
 
 export class Payment {
   constructor(
@@ -22,8 +24,10 @@ export class Payment {
   styleUrls: ['./payment.component.css'],
 })
 export class PaymentComponent implements OnInit, OnDestroy {
-  // @ViewChild('formRow') rows: ElementRef | any;
+  @ViewChild('formRow') rows: ElementRef | any;
   kioskUuid: any;
+  password: string = "";
+  barcode: string = "";
   note: string = "";
   varkioskUuid: string = "kioskUuid";
   items: any = [];
@@ -31,14 +35,21 @@ export class PaymentComponent implements OnInit, OnDestroy {
   transactionId: string = "";
   paymentMethodDetail: any = [];
   paymentMethod: any = [];
+  lock: boolean = true;
   payment: any = new Payment("", 0, "", "", "");
   total: any = {
     bill: 0,
     paid: 0,
     remaining: 0,
   };
-  member : string = "";
-  ilock : string = '1';
+  user: any = {
+    id: '',
+    password: '',
+    terminalId : '',
+  }
+  callCursor: any;
+  member: string = "";
+  ilock: string = '1';
   promo_fixed: any = [];
   kioskPaid: any = [];
   close: boolean = false;
@@ -58,20 +69,102 @@ export class PaymentComponent implements OnInit, OnDestroy {
   key2: any = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ''];
   key3: any = ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '', '', ''];
 
-  private _docSub: any;
+
   ngOnInit() {
- 
+    this.setCursor();
     this.kioskUuid = this.activatedRoute.snapshot.queryParams['kioskUuid'];
     this.httpCart();
     this.httpPaymentMethod();
     this.httpPaymentInvoice();
     this.terminalId = localStorage.getItem("terminalId");
-
+    this.user.terminalId = localStorage.getItem("terminalId"); 
   }
+
+  setCursor() {
+    this.callCursor = setInterval(() => {
+      this.rows.nativeElement.focus();
+      // console.log( new Date().getSeconds())
+    }, 300);
+  }
+
   ngOnDestroy() {
-
+    clearInterval(this.callCursor);
   }
 
+  backSpace() {
+    this.barcode = this.barcode.slice(0, -1); // Remove the last character
+  }
+
+  addBarcode() {
+    console.log(this.barcode);
+    const body = {
+      barcode: this.barcode,
+      kioskUuid: this.kioskUuid
+    }
+    this.http.post<any>(environment.api + "payment/addBarcode", body, {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => {
+        console.log(data);
+        if (data['reload'] == true) {
+          this.httpCart();
+          this.httpPaymentMethod();
+          this.httpPaymentInvoice();
+        }
+
+        if (data['action'] == 'openPassword') {
+          this.barcode = "";
+          clearInterval(this.callCursor);
+          this.user.id = data['post']['barcode'];
+          console.log(this.user);
+          const modalRef = this.modalService.open(ModalPasswordComponent);
+          modalRef.result.then(
+            (result) => {
+              //clearInterval(this.callCursor);
+              console.log('   clearInterval(this.callCursor); ');
+            },
+            (reason) => {
+              console.log('CLOSE 1001'); 
+              this.setCursor();
+            },
+          );
+          modalRef.componentInstance.kioskUuid = this.kioskUuid;
+
+          modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
+            console.log('modalRef.componentInstance.newItemEvent', data);
+            this.user.password = data['md5'];
+
+            console.log(this.user);
+
+            this.http.post<any>(environment.api+"login/authorization",this.user,{
+              headers:this.configService.headers(),
+            }).subscribe(
+              data=>{
+                console.log(data);
+                if(data['id'] != ""){
+                  this.lock = false;
+                }else{
+                  alert("WRONG PASSWORD!");
+                }
+                
+              },
+              error=>{
+                console.log(error);
+              }
+            )
+
+          });
+        }
+
+      },
+      error => {
+        console.log(error);
+      }
+    )
+  }
+  closeAdmin(){
+    this.lock = true;
+  }
   addVoucher() {
     // console.log(this.voucherCode);
     // const body = {
@@ -102,6 +195,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
   fnVoucherAC() {
     this.voucherCode = "";
   }
+
   sendReload() {
     const msg = {
       to: 'visitor',
@@ -188,17 +282,43 @@ export class PaymentComponent implements OnInit, OnDestroy {
       this.httpCart();
       this.httpPaymentMethod();
       this.httpPaymentInvoice();
-      //  this.setCursor();
-
+      //  this.setCursor(); 
     });
   }
 
-  // callCursor :any;
-  // setCursor() {
-  //   this.callCursor = setInterval(() => {
-  //     this.rows.nativeElement.focus();
-  //   }, 300);
-  // }
+
+  openDiscountBill() {
+    if (this.lock == false) {
+
+
+      const modalRef = this.modalService.open(DiscountBillComponent, { size: 'lg' });
+      modalRef.result.then(
+        (result) => {
+          //clearInterval(this.callCursor);
+          console.log('   clearInterval(this.callCursor); ');
+        },
+        (reason) => {
+          console.log('CLOSE');
+        },
+      );
+      modalRef.componentInstance.activeCart = {
+        price: this.total.bill - this.total.paid,
+      };
+      modalRef.componentInstance.kioskUuid = this.kioskUuid;
+      modalRef.componentInstance.discountBill = true;
+
+      modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
+        console.log('modalRef.componentInstance.newItemEvent', data);
+        this.sendReload();
+        this.httpCart();
+        this.httpPaymentMethod();
+        this.httpPaymentInvoice();
+      });
+    }else{
+      alert("SUPERVISOR REQUIRED");
+    }
+  }
+
 
   addAmount(val: string) {
     let amount: number = 0;
@@ -245,7 +365,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
         params: {
           kioskUuid: this.kioskUuid,
           terminalId: this.terminalId,
-          accountId : this.configService.account()['account']['id'],
+          accountId: this.configService.account()['account']['id'],
         }
       }).subscribe(
         data => {
@@ -276,7 +396,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     this.payment.amount = 0;
   }
 
-  back(){
+  back() {
     history.back();
   }
 }

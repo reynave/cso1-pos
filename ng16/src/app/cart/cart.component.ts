@@ -103,8 +103,8 @@ export class CartComponent implements OnInit, OnDestroy {
       }, label: 'Update Rp 1', admin: false
     },
 
-    { id: 8, value: () => { this.openComponent('discountManual'); }, label: 'Discount Manual <i class="bi bi-lock-fill"></i>', admin: false },
-    { id: 9, value: () => { this.openComponent('changePrice'); }, label: 'Change Price <i class="bi bi-lock-fill"></i>', admin: false },
+    { id: 8, value: () => { this.openComponent('discountManual'); }, label: 'Discount Manual <i class="bi bi-lock-fill"></i>', admin: true },
+    { id: 9, value: () => { this.openComponent('changePrice'); }, label: 'Change Price <i class="bi bi-lock-fill"></i>', admin: true },
     { id: 10, value: () => { this.openComponent('validatiNota'); }, label: 'Validasi Nota', admin: false },
 
     { id: 12, value: () => { this.supervisorMode = false; }, label: 'Close Admin', admin: false },

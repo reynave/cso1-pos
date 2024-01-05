@@ -14,25 +14,20 @@
 </div>
 
 <div class="container-fluid" *ngIf="close !== true">
-    <div class="row ">
-
-        <div class="col-lg-5 col-12">
-
+    <div class="row "> 
+        <div class="col-lg-5 col-12"> 
             <div class="row g-2">
                 <div class="col-4 align-self-center">
-
                     <img src="./assets/img/logo.png" width="100%">
-
                 </div>
                 <div class="col-8 text-end">
                     <div class="mb-1">
                         <h1>PAYMENT</h1>
                     </div>
                 </div>
-            </div>
-
+            </div> 
             <div class="bg-white p-2 border cart cart-height ">
-                <div class="row g-1 py-1" [hidden]="!member">  
+                <div class="row g-1 py-1" [hidden]="!member">
                     <div class="col-12">
                         MEMBER : {{member | uppercase}}
                     </div>
@@ -42,11 +37,13 @@
                         <div>{{x.barcode}} {{x.description}} <span>{{x.note}}</span> </div>
                         <div *ngIf="x.promotionId !== '0'">*{{x.promotionId}} {{x.promotionDescription}}*</div>
                         <div class="ms-2" *ngIf="x.originPrice > 1"> {{ x.originPrice | number}} X {{ x.qty }} </div>
-                        <div class="ms-2" *ngIf="x.originPrice == 1"> CUSTOME PRICE {{ x.price | number}} X {{ x.qty }} </div>
+                        <div class="ms-2" *ngIf="x.originPrice == 1"> CUSTOME PRICE {{ x.price | number}} X {{ x.qty }}
+                        </div>
                         <div class="ms-2" *ngIf="x.discount > 0"> *DISC {{x.discount | number}} </div>
-                        <div class="ms-2" *ngIf="x.memberDiscountAmount > 0"> *MEMBER DISC {{x.memberDiscountAmount |  number}} </div>
+                        <div class="ms-2" *ngIf="x.memberDiscountAmount > 0"> *MEMBER DISC {{x.memberDiscountAmount |
+                            number}} </div>
                     </div>
-                    <div class="col-4 text-end">  
+                    <div class="col-4 text-end">
                         <span *ngIf="x.totalPriceEdit > 0"><i class="bi bi-pencil-square"></i></span>
                         {{x.total | number}}
                         <span *ngIf="x.validationNota == '1' "><i class="bi bi-check-circle-fill"></i></span>
@@ -60,83 +57,109 @@
                 </div>
 
                 <div *ngIf="kioskPaid.length > 0">
+
+                    <div class="mb-2">
+                        <div class="row g-1 mb-2">
+                            <div class="col-7"> <b>BILL</b></div>
+                            <div class="col-5 text-end "> <b>{{total.bill | number}}</b> </div>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="row g-1 mb-2">
+                            <div class="col-7"> <b>REMAINING</b></div>
+                            <div class="col-5 text-end text-danger"> ({{total.bill - (total.paid) | number}}) </div>
+                        </div>
+                    </div>
                     <div class="mb-2">
                         <b>PAID</b>
                     </div>
                     <div class="mb-2">
                         <div class="row g-1 mb-2" *ngFor="let x of kioskPaid">
-                            <div class="col-7"> {{x.label}} {{x.note}} {{x.voucherNumber}}</div>
+                            <div class="col-7">
+                                <div class="ms-2">{{x.label}} {{x.note}} {{x.voucherNumber}}</div>
+                            </div>
                             <div class="col-5 text-end "> {{x.paid | number}} </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
+                    <div class="mb-2">
+                        <div class="row g-1 mb-2">
+                            <div class="col-7"><b>TOTAL PAID</b></div>
+                            <div class="col-5 text-end "> <b>{{total.paid | number}}</b> </div>
+                        </div>
+                    </div>
+                  
+                  
+                    <div class="mb-2">
+                        <small>Status Paid : {{close}}</small>
+                    </div>
+                </div>
+            </div>  
         </div>
-
-
+ 
         <div class="col-lg-7 col-12">
-            <div class="mb-2">
-                <div class="row g-1">
-                    <div class="col-md-4 col-12">
-                        <div class="mb-1   bg-white px-2 py-1 text-end font-cart">
-                            <small>BILL</small>
-                            <h5>{{total.bill | number}}</h5>
-                        </div>
-                    </div>
-                    <div class="col-md-4  col-12">
-                        <div class="mb-1   bg-white px-2 py-1 text-end font-cart">
-                            <small> PAID</small>
-                            <h5>{{total.paid | number}}</h5>
-                        </div>
-                    </div>
-                    <div class="col-md-4  col-12">
-                        <div class="mb-1   bg-white px-2 py-1 text-end font-cart">
-                            <small> REMAINING</small>
-                            <h5>{{total.bill - (total.paid) | number}}</h5>
-                        </div>
-                    </div>
-                </div>
-
-                <small>Status Paid : {{close}}</small>
-            </div>
-
+            
             <div class="row g-1 mb-3">
-                <div class="col-12 mb-2">
-                    <strong>SELECT PAYMENT METHOD</strong>
+                <div class="col-8">
+                    <input type="text" class="form-control form-control-lg text-end px-4 font-cart rounded-0 "
+                            placeholder="INPUT BARCODE" [(ngModel)]="barcode" autofocus #formRow (change)="addBarcode();"
+                            (keyup.enter)="formRow.blur()">
                 </div>
+                <div class="col-2">
+                    <div class="d-grid"> 
+                        <button type="button" class="btn  btn-warning align-self-center" (click)="backSpace()"style="height: 3rem;"> R </button>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="d-grid"> 
+                        <button type="button" class="btn  btn-warning align-self-center"   style="height: 3rem;">ENTER</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-1 mb-3">
+ 
 
                 <div class="col-4" *ngFor="let x of paymentMethod">
                     <div class="d-grid mb-1 ">
-                        <button type="button" *ngIf="x.id != 'VOUCHER'" class="btn  btn-warning align-self-center"
-                            style="height: 5rem;" (click)="open(contentPaymentMethod, x)">{{x.label}}</button>
+                        <button type="button" class="btn  btn-warning align-self-center" style="height: 5rem;"
+                            (click)="open(contentPaymentMethod, x)">{{x.label}}</button>
 
-                        <!-- <button type="button" *ngIf="x.id == 'VOUCHER'" class="btn  btn-warning align-self-center"
-                            style="height: 5rem;" (click)="open(contentVoucher, [],'md');setCursor();">{{x.label}}</button> -->
                     </div>
                 </div>
 
-                <div class="col-4">
+                <!-- <div class="col-4">
                     <div class="d-grid mb-1 ">
                         <button type="button" class="btn btn-warning align-self-center" style="height: 5rem;"
                             (click)="openComponentVoucher()">Voucher Open</button>
                     </div>
+                </div> -->
+
+                <div class="col-4">
+                    <div class="d-grid mb-1 ">
+                        <button type="button" class="btn btn-{{lock == true ? 'success':'warning'}} align-self-center" style="height: 5rem;"
+                            (click)="openDiscountBill()">Discount Bill <i class="bi bi-{{lock == true ? '':'un'}}lock-fill"></i></button>
+                    </div>
                 </div>
 
             </div>
 
-            <div class="row g-1" [hidden]="ilock == '1'">
-                <div class="col-4">
+            <div class="row g-1" >
+                <div class="col-4" [hidden]="ilock == '1'">
                     <div class="d-grid mb-1">
-                        <button type="button" (click)="back()" class="btn btn-light align-self-center" style="height: 5rem;">BACK</button>
+                        <button type="button" (click)="back()" class="btn btn-light align-self-center"  style="height: 5rem;">BACK</button>
+                    </div>
+                </div>
+                <div class="col-4" [hidden]="lock">
+                    <div class="d-grid mb-1">
+                        <button type="button" (click)="closeAdmin()" class="btn btn-danger align-self-center"  style="height: 5rem;">CLOSE SUPERVISOR</button>
                     </div>
                 </div>
             </div>
-    
+
 
 
         </div>
-       
+
 
     </div>
 </div>
@@ -167,9 +190,8 @@
                     <div class="col">
                         <div class="border p-2 font-cart bg-danger text-end">
                             <small>REMAINING</small>
-                            <h4> {{ ((total.bill - (total.paid +payment.amount) ) > 0 ? (total.bill - (total.paid
-                                +payment.amount) )
-                                : 0 )| number}}</h4>
+                            <h4> ({{ ((total.bill - (total.paid +payment.amount) ) > 0 ? (total.bill - (total.paid
+                                +payment.amount) )  : 0 )| number}})</h4>
                         </div>
                     </div>
                     <div class="col">

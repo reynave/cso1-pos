@@ -9,94 +9,113 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./sync.component.css']
 })
 export class SyncComponent implements OnInit {
-  logs : any;
-  loading : boolean = false;
-  history : any = [];
+  logs: any;
+  loading: boolean = false;
+  history: any = [];
   constructor(
-    private http:HttpClient,
-    private configService : ConfigService,
-  ){}
+    private http: HttpClient,
+    private configService: ConfigService,
+  ) { }
 
 
   ngOnInit(): void {
-      this.httpGet();
+    this.httpGet();
   }
 
-  httpGet(){
-    this.http.get<any>(environment.api+'bulkInsert').subscribe(
-      data=>{
+  httpGet() {
+    this.http.get<any>(environment.api + 'bulkInsert').subscribe(
+      data => {
         this.loading = false;
         console.log(data);
         this.history = data['items'];
       },
-      error=>{
+      error => {
         this.loading = false;
         console.log(error);
       }
     )
   }
-
-  onSyncItem(){
+  onSyncMember() {
     this.loading = true;
     this.logs = [];
-    this.http.get<any>(environment.api+"bulkInsert/items").subscribe(
-      data=>{
+    this.http.get<any>(environment.api + "bulkInsert/member").subscribe(
+      data => {
         this.loading = false;
         console.log(data);
         this.logs = data;
         this.httpGet();
       },
-      error=>{
+      error => {
         this.loading = false;
         this.logs = error.message;
         console.log(error);
         this.httpGet();
       }
     )
-  
+
   }
 
-  onSyncVoucher(){
-    this.loading = true;
-    
-    this.http.get<any>(environment.api+"bulkInsert/onSyncVoucher").subscribe(
-      data=>{
-        this.loading = false;
-        console.log(data);
-       // this.logs = data;
-      //  this.httpGet();
-      },
-      error=>{
-      //  this.loading = false;
-        this.logs = error.message;
-        console.log(error);
-       // this.httpGet();
-      }
-    )
-  
-  }
-
-  onSyncPromo(){
+  onSyncItem() {
     this.loading = true;
     this.logs = [];
-    this.http.get<any>(environment.api+"bulkInsert/promo").subscribe(
-      data=>{
+    this.http.get<any>(environment.api + "bulkInsert/items").subscribe(
+      data => {
         this.loading = false;
         console.log(data);
         this.logs = data;
         this.httpGet();
       },
-      error=>{
+      error => {
         this.loading = false;
         this.logs = error.message;
         console.log(error);
         this.httpGet();
       }
     )
-  
+
   }
 
-  back(){
+  onSyncVoucher() {
+    this.loading = true;
+
+    this.http.get<any>(environment.api + "bulkInsert/onSyncVoucher").subscribe(
+      data => {
+        this.loading = false;
+        console.log(data);
+        // this.logs = data;
+        //  this.httpGet();
+      },
+      error => {
+        //  this.loading = false;
+        this.logs = error.message;
+        console.log(error);
+        // this.httpGet();
+      }
+    )
+
+  }
+
+  onSyncPromo() {
+    this.loading = true;
+    this.logs = [];
+    this.http.get<any>(environment.api + "bulkInsert/promo").subscribe(
+      data => {
+        this.loading = false;
+        console.log(data);
+        this.logs = data;
+        this.httpGet();
+      },
+      error => {
+        this.loading = false;
+        this.logs = error.message;
+        console.log(error);
+        this.httpGet();
+      }
+    )
+
+  }
+
+  back() {
     history.back();
   }
 }

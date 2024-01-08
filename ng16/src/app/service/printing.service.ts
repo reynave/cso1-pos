@@ -41,21 +41,24 @@ export class PrintingService {
   }
   settlement(data: any) {
     let message = "";
-    data['cso2_settlement'].forEach((el: any) => {
-      message += "SETTLEMENT ID : " + el['id'] + "\n";
-      message += el['input_date'] + "\n";
-      message += "TOTAL TRANSACTION : " + el['total'] + "\n";
-      message += "RP " + el['amount'] + "\n";
 
-      message += "\n";
+    message += data['template']['companyName'] + "\n";
+    message += data['template']['companyAddress'] + "\n";
+    message += data['template']['companyPhone'] + "\n";
+    message += "────────────────────────────────────────────────"+ "\n";
+    message += "\n"; 
+    message += "Pc : "+data['template']['outletId']+"                  "+data['settlement']['input_date'];
+    message += "\n";
+    message += "Finantial Reports"+ "\n";
+    message += "────────────────────────────────────────────────"+ "\n";
+
+    message += "\n";
+    data['payment'].forEach((el: any) => {
+      message += el['paymentTypeId'] + " " + (el['name'] !== null ?el['name'] : '') + ": \n";
+      message += el['total'] +" " +   el['amount'] + "\n";
     });
-
-    data['cso1_transaction'].forEach((el: any) => {
-      message += el['transaction_date'] + "  RP " + el['finalPrice'] + "\n";
-      message += el['id'] + "\n";
-      message += "\n";
-    });
-
+    message += "\n";
+    message += "                    <=  END =>                  "+ "\n";
     console.log(data);
     return message;
   }
@@ -78,12 +81,12 @@ export class PrintingService {
 
     message += "================================================" + "\n";
     items.forEach((el: any) => {
-      
-      let  isEdit = parseInt(el['totalPriceEdit']);
-      
-      message += el['barcode'] + " " + el['shortDesc'] + ' '+(isEdit > 0 ? '*':'') + this.numberFormat(el['originPrice'])+
+
+      let isEdit = parseInt(el['totalPriceEdit']);
+
+      message += el['barcode'] + " " + el['shortDesc'] + ' ' + (isEdit > 0 ? '*' : '') + this.numberFormat(el['originPrice']) +
         ((el['promotionId'] == 'EXCHANGES' || el['promotionId'] == 'REFUND') ? el['promotionId'] : '') + "\n";
-      
+
       if (el['memberDiscountAmount'] > 0) {
         message += "  DISC MEMBER " + this.numberFormat(el['memberDiscountAmount']) + "\n";
       }
@@ -169,7 +172,7 @@ export class PrintingService {
           message += "  DISC MEMBER " + this.numberFormat(el['memberDiscountAmount']) + "\n";
         }
 
-        
+
         message += "  " +
           this.stringfix(el['qty'], 4) + "X" +
           this.stringfix(this.numberFormat(el['price']), 10, 'f') + " " + this.stringfix(" ", 14, 'f') +

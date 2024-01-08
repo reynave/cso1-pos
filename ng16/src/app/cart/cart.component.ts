@@ -150,7 +150,7 @@ export class CartComponent implements OnInit, OnDestroy {
   addItem(newItem: string) {
     console.log(newItem);
     if (newItem == 'AC') {
-      this.activeCart = [];
+      this.activeCart = false;
     }
     if (this.setKey == 'BARCODE') {
       if (newItem == 'BS') {
@@ -227,7 +227,7 @@ export class CartComponent implements OnInit, OnDestroy {
   httpCart() {
     this.qtyItem = 1;
     this.sendReload();
-    this.activeCart = [];
+    this.activeCart = false;
     this.http.get<any>(environment.api + "cart/index", {
       headers: this.configService.headers(),
       params: {
@@ -295,7 +295,7 @@ export class CartComponent implements OnInit, OnDestroy {
       barcode: this.barcode,
       kioskUuid: this.kioskUuid,
       qty: this.qtyItem,
-      activeCart : this.activeCart,
+      activeCart : this.activeCart
     }
     console.log(body);
 
@@ -357,7 +357,7 @@ export class CartComponent implements OnInit, OnDestroy {
         console.log(error);
       }
     )
-    this.activeCart = [];
+    this.activeCart = false;
   }
 
   open(content: any, item: any) {
@@ -385,7 +385,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   selectItem(x: any) {
     console.log(x);
-    this.activeCart = []
+    this.activeCart = false
     if (x.total > 0) {
       this.activeCart = x;
     }
@@ -436,6 +436,7 @@ export class CartComponent implements OnInit, OnDestroy {
       );
       modalRef.componentInstance.kioskUuid = this.kioskUuid;
       modalRef.componentInstance.qty = this.qtyItem;
+      modalRef.componentInstance.activeCart = this.activeCart;
 
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('modalRef.componentInstance.newItemEvent', data);
@@ -467,7 +468,7 @@ export class CartComponent implements OnInit, OnDestroy {
         this.httpCart();
         // this.setCursor();
 
-        this.activeCart = [];
+        this.activeCart = false;
       });
     }
 
@@ -535,8 +536,7 @@ export class CartComponent implements OnInit, OnDestroy {
       //   // this.setCursor();
       // });
     }
-
-
+ 
     if (comp == 'discountManual') {
       const modalRef = this.modalService.open(DiscountManualComponent, { size: 'lg' });
       modalRef.result.then(

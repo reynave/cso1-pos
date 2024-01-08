@@ -13,6 +13,7 @@ export class ItemsComponent implements OnInit {
   @Input() kioskUuid : any;
   @Input() exchange : any;
   @Input() qty : any;
+  @Input() activeCart : any;
   
   @Output() newItemEvent = new EventEmitter<string>();
   search : string = "";
@@ -78,6 +79,7 @@ export class ItemsComponent implements OnInit {
       terminalId : localStorage.getItem("terminalId"),
       totalExchange : this.totalExchange,
       qty : this.qty,
+      activeCart : this.activeCart,
     }
     console.log(body);
     if(this.kioskUuid == 'exchange'){

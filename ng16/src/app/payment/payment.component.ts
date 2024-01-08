@@ -52,7 +52,9 @@ export class PaymentComponent implements OnInit, OnDestroy {
   ilock: string = '1';
   promo_fixed: any = [];
   kioskPaid: any = [];
+  paymentName: any = [];
   close: boolean = false;
+
   voucherCode: string = "";
   constructor(
     private configService: ConfigService,
@@ -65,11 +67,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     config.backdrop = 'static';
     config.keyboard = false;
   }
-  key1: any = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'];
-  key2: any = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ''];
-  key3: any = ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '', '', ''];
-
-
+ 
   ngOnInit() {
     this.setCursor();
     this.kioskUuid = this.activatedRoute.snapshot.queryParams['kioskUuid'];
@@ -109,8 +107,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
         if (data['reload'] == true) {
           this.httpCart();
           this.httpPaymentMethod();
-          this.httpPaymentInvoice();
-        
+          this.httpPaymentInvoice(); 
         }
 
         if (data['action'] == 'openPassword') {
@@ -239,6 +236,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     }).subscribe(
       data => {
         this.paymentMethod = data['items'];
+        this.paymentName = data['paymentName']
         console.log("httpPaymentMethod", data);
       },
       error => {
@@ -269,9 +267,32 @@ export class PaymentComponent implements OnInit, OnDestroy {
     )
   }
 
-  open(content: any, x: any, _size: string = 'lg') {
-    this.paymentMethodDetail = x;
+  selectPaymentName : any = false;
+  fnSelectPaymentName(item: any){
+    console.log(item);
+    this.selectPaymentName = item;
+  }
+
+  // open(content: any, x: any, _size: string = 'lg') {
+  //   this.paymentMethodDetail = x;
+    
+  //   this.modalService.open(content, { size: _size });
+  //   // this.setCursor();
+  // }
+
+  open(content: any, string: any, _size: string = 'lg') { 
+    this.selectPaymentName = false;
+    this.showApprovedCode = false;
+    this.approvedCode = "";
+    this.payment.amount = 0;
+    let index = this.paymentMethod.findIndex((x: { id: string; }) => x.id === string); 
+    this.paymentMethodDetail = this.paymentMethod[index]; 
     this.modalService.open(content, { size: _size });
+    // this.setCursor();
+  }
+
+  openPaymentStatic() {
+   // this.modalService.open(content, { size: _size });
     // this.setCursor();
   }
 
@@ -331,12 +352,25 @@ export class PaymentComponent implements OnInit, OnDestroy {
     this.payment.amount = Number.parseInt(tempAmount + val);
   }
 
+  addvalueApproveCode(val: string) { 
+    
+    let tempAmount = this.approvedCode;
+    this.approvedCode = tempAmount + val;
+    console.log(this.approvedCode );
+  }
+  paymentCutLastOne2(){
+    let tempAmount = this.approvedCode.slice(0, -1); 
+    this.approvedCode = tempAmount;
+    console.log(this.approvedCode );
+  }
+
   paymentCutLastOne() {
     let tempAmount = this.payment.amount.toString().slice(0, -1);
     let amount = Number.parseInt(tempAmount);
     this.payment.amount = (Number.isNaN(amount)) ? 0 : amount;
   }
-
+  showApprovedCode : boolean = false;
+  approvedCode : string = "";
   onSubmitPayment() {
     const body = {
       payment: this.payment,
@@ -344,6 +378,9 @@ export class PaymentComponent implements OnInit, OnDestroy {
       paymentMethodDetail: this.paymentMethodDetail,
       changes: this.fnChangeBill(),
       terminalId: this.terminalId,
+      paymentNameId : this.selectPaymentName.id,
+      approvedCode : this.approvedCode,
+
     }
     console.log(body);
     this.http.post<any>(environment.api + "payment/onSubmitPayment", body, {
@@ -399,6 +436,9 @@ export class PaymentComponent implements OnInit, OnDestroy {
 
   paymentAC() {
     this.payment.amount = 0;
+  }
+  paymentAC2() {
+    this.approvedCode = '';
   }
 
   back() {

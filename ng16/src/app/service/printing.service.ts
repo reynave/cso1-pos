@@ -41,26 +41,42 @@ export class PrintingService {
   }
   settlement(data: any) {
     let message = "";
-
+    let line = 40;
     message += data['template']['companyName'] + "\n";
     message += data['template']['companyAddress'] + "\n";
     message += data['template']['companyPhone'] + "\n";
-    message += "────────────────────────────────────────────────"+ "\n";
-    message += "\n"; 
-    message += "Pc : "+data['template']['outletId']+"                  "+data['settlement']['input_date'];
+    message += "────────────────────────────────────────────────"+ "\n"; 
+    message += this.fixLeftRight("Pc : "+data['template']['outletId'],data['settlement']['input_date'],line);
     message += "\n";
     message += "Finantial Reports"+ "\n";
-    message += "────────────────────────────────────────────────"+ "\n";
+    message += "────────────────────────────────────────────────"+ "\n"; 
+    message += "Gross Sales :"+ "\n";
+    message += this.fixLeftRight(data['transaction']['total'],this.numberFormat(data['transaction']['amount']),line)+ "\n";
 
-    message += "\n";
+    message += "discount :"+ "\n";
+    message += this.fixLeftRight(data['transaction']['totalDiscount'],this.numberFormat(data['transaction']['discount']),line)+ "\n";
+   
+    message += "Net Sales :"+ "\n";
+     message += this.fixLeftRight(data['transaction']['total'],this.numberFormat(data['transaction']['finalPrice']),line)+ "\n";
+
+
     data['payment'].forEach((el: any) => {
-      message += el['paymentTypeId'] + " " + (el['name'] !== null ?el['name'] : '') + ": \n";
-      message += el['total'] +" " +   el['amount'] + "\n";
+      message += el['paymentTypeId'] + " " + (el['name'] !== null ?el['name'] : '') + " \n";
+      message += this.fixLeftRight(el['total'],this.numberFormat(el['amount']),line)+ "\n";
     });
     message += "\n";
     message += "                    <=  END =>                  "+ "\n";
     console.log(data);
     return message;
+  }
+  fixLeftRight(str1 : string , str2 : string, line : number){
+    let n = line - (str1.length + str2.length);
+    let val = "";
+    for(let i = 0 ; i< n ; i++){
+      val +=  " ";
+    }
+
+    return str1+val+str2;
   }
   template(bill: any) {
     let items = bill['items'];

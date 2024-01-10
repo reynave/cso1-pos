@@ -46,6 +46,8 @@ import { ChangePriceComponent } from './cart/change-price/change-price.component
 import { DiscountManualComponent } from './cart/discount-manual/discount-manual.component';
 import { DiscountBillComponent } from './payment/discount-bill/discount-bill.component';
 import { ModalPasswordComponent } from './global/modal-password/modal-password.component';
+import { EdcComponent } from './setting/edc/edc.component';
+import { EdcDetailComponent } from './setting/edc/edc-detail/edc-detail.component';
 
 const config: SocketIoConfig = { url: environment.socket_url, options: { transports: ['websocket'] } };
 @NgModule({
@@ -88,7 +90,9 @@ const config: SocketIoConfig = { url: environment.socket_url, options: { transpo
     ChangePriceComponent,
     DiscountManualComponent,
     DiscountBillComponent,
-    ModalPasswordComponent
+    ModalPasswordComponent,
+    EdcComponent,
+    EdcDetailComponent
   ],
   imports: [
     BrowserModule,

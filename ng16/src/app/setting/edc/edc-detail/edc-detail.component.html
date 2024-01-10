@@ -1,0 +1,65 @@
+<div class="modal-header">
+    <strong class="modal-title" id="modal-basic-title">{{item['name']}}</strong>
+    <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+</div>
+<div class="modal-body">
+    {{item | json}}
+
+    <div class="row mb-1">
+        <div class="col-12 text-center">
+            <img [src]="item.image" width="200">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-3 ">
+            <label>Select COM :</label>
+        </div>
+        <div class="col-8">
+            <select class="form-control form-control-lg" [(ngModel)]="item.com" name="com" id="com">
+                <option [value]=""></option>
+                <option *ngFor="let i of selectComNumber" [value]="i">{{i}}</option>
+            </select>
+            <div>
+                <small>Location : Control Panel >> Device Manager >> Ports (COM & LPT)</small>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-3">status : </div>
+        <div class="col-8"> 
+          <a (click)="status();">
+            <i *ngIf="item.status == '0'" class="bi bi-square"></i> 
+            <i *ngIf="item.status == '1'" class="bi bi-check-square-fill"></i> 
+            {{item.status == '1' ? 'ENABLE':'DISABLE'}}
+          </a>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-3  ">ECHO TEST : </div>
+        <div class="col-8"> 
+            <button type="button" class="btn btn-lg btn-warning px-5" (click)="echoTest();" [disabled]="item.com == '' ">SEND</button>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-3  ">Test Payment  : </div>
+        <div class="col-8"> 
+            <button type="button" class="btn btn-lg btn-primary px-5" [disabled]="item.com == '' ">Rp 20,-</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+           <div class="alert alert-light" [hidden]="note == '' ">
+            {{note}}
+           </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+   
+    <button type="button" class="btn btn-lg btn-outline-dark mx-2" (click)="close()">Close</button>
+    <button type="button" class="btn btn-lg  btn-dark" (click)="save()">Save</button>
+
+</div>

@@ -90,16 +90,22 @@
                 <div>PROMO FIXED</div>
             </a>
         </div> 
-        
-    </div>
-    <div class="row g-2" >
-        <div class="col-3 offset-9 d-grid">
+
+        <div class="col-3  d-grid">
+            <a class="btn  btn-light rounded-0 py-2 "  [routerLink]="[ '/setting/edc' ]">
+                <img src="./assets/icon/icons8-billing-machine-96.png" width="64" >
+                <div>EDC SETUP</div>
+            </a>
+        </div> 
+        <div class="col-3  d-grid">
             <button class="btn  btn-{{isEndOfday ? 'light':'dark'}} rounded-0 py-2 "  [disabled]="!isEndOfday" (click)="endOfDay()">
                 <img src="./assets/icon/icons8-shutdown-96.png" width="64" >
                 <div>END  OF DAY</div>
             </button>
         </div>
+        
     </div>
+     
 </div>
 
 

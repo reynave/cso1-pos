@@ -1,0 +1,22 @@
+<app-header></app-header>
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-4 ">
+            <a (click)="back();" class="btn  btn-dark  border">Back</a>
+        </div>
+        <div class="col-8 text-end">
+            <h1 class="lh-sm mb-0 pb-0">EDC SETUP </h1>
+            <strong>EDC MECHINE WITH COM PORT</strong>
+        </div>
+    </div>
+    <div class="row g-2">
+
+        <div class="col-3 d-grid" *ngFor="let x of items"> 
+            <button type="button" class="btn btn-lg btn-light border shadow-sm" (click)="open(x)" [ngClass]="{'disable': x.status == '0'}">
+                <img [hidden]="x.image == '' " [src]="x.image" width="100%">
+                <small>{{x.label}}</small> 
+            </button>
+        </div> 
+    </div>
+</div>

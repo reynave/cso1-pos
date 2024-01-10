@@ -2,8 +2,7 @@
     <strong class="modal-title" id="modal-basic-title">{{item['name']}}</strong>
     <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
 </div>
-<div class="modal-body">
-    {{item | json}}
+<div class="modal-body"> 
 
     <div class="row mb-1">
         <div class="col-12 text-center">
@@ -45,14 +44,14 @@
     <div class="row mb-4">
         <div class="col-3  ">Test Payment  : </div>
         <div class="col-8"> 
-            <button type="button" class="btn btn-lg btn-primary px-5" [disabled]="item.com == '' ">Rp 20,-</button>
+            <button type="button" class="btn btn-lg btn-primary px-5" (click)="testPayment();" [disabled]="item.com == '' ">Rp 2x,-</button>
         </div>
     </div>
 
     <div class="row">
         <div class="col-12">
-           <div class="alert alert-light" [hidden]="note == '' ">
-            {{note}}
+           <div [hidden]="note == '' ">
+            <textarea class="form-control" readonly>{{note}}</textarea> 
            </div>
         </div>
     </div>

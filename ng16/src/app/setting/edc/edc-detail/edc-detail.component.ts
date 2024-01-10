@@ -52,11 +52,25 @@ export class EdcDetailComponent implements OnInit, OnDestroy {
     const msg = {
       to: 'ERC',
       msg: null,
+      com : this.item['com'],
       action: 'echoTest', 
     }
     this.configService.sendMessage(msg);
   }
 
+  testPayment(){
+    let randomNumber = Math.floor(Math.random() * 9) + 1; 
+    let amount = '00000000002'+randomNumber.toString();
+    const msg = {
+      to: 'ERC',
+      msg: null,
+      amount: amount,
+      com : this.item['com'],
+      action: 'writeECR', 
+    }
+    
+    this.configService.sendMessage(msg);
+  }
    
 
   save(){

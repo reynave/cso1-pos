@@ -120,17 +120,9 @@
                     </div>
                 </div>
             </div>
-            <div class="row g-1 mb-3">
-
-
-                <!-- <div class="col-4" *ngFor="let x of paymentMethod">
-                    <div class="d-grid mb-1 ">
-                        <button type="button" class="btn  btn-warning align-self-center" style="height: 5rem;"
-                            (click)="open(contentPaymentMethod, x)">{{x.label}}</button> 
-                    </div>
-                </div> -->
-
-
+            
+            <div class="row g-1">
+ 
                 <div class="col-4">
                     <div class="d-grid mb-1 ">
                         <button type="button" class="btn  btn-warning align-self-center" style="height: 4rem;"
@@ -161,7 +153,17 @@
                 </div>
 
             </div>
+            <div class="row g-1 mb-3">
+                <div class="col-4" *ngFor="let x of edc">
+                    <div class="d-grid mb-1 ">
+                        <button type="button" class="btn shadow-md border btn-light align-self-center" style="min-height: 5rem;" >
+                            <img [src]="x.image" width="100%">
+                            <small>{{x.label}}</small>
+                        </button> 
+                    </div>
+                </div>  
 
+            </div>
             <div class="row g-1">
                 <div class="col-4" [hidden]="ilock == '1'">
                     <div class="d-grid mb-1">

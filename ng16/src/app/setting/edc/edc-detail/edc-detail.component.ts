@@ -51,7 +51,7 @@ export class EdcDetailComponent implements OnInit, OnDestroy {
   echoTest(){
     const msg = {
       to: 'ERC',
-      msg: null,
+      msg: this.item['id'],
       com : this.item['com'],
       action: 'echoTest', 
     }
@@ -63,7 +63,7 @@ export class EdcDetailComponent implements OnInit, OnDestroy {
     let amount = '00000000002'+randomNumber.toString();
     const msg = {
       to: 'ERC',
-      msg: null,
+      msg: this.item['id'],
       amount: amount,
       com : this.item['com'],
       action: 'writeECR', 

@@ -54,7 +54,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
   kioskPaid: any = [];
   paymentName: any = [];
   close: boolean = false;
-
+  edc : any = [];
   voucherCode: string = "";
   constructor(
     private configService: ConfigService,
@@ -236,7 +236,8 @@ export class PaymentComponent implements OnInit, OnDestroy {
     }).subscribe(
       data => {
         this.paymentMethod = data['items'];
-        this.paymentName = data['paymentName']
+        this.paymentName = data['paymentName'];
+        this.edc = data['edc'];
         console.log("httpPaymentMethod", data);
       },
       error => {

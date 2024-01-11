@@ -1,0 +1,203 @@
+<form (ngSubmit)="onSubmitPayment()" #heroForm="ngForm">
+     <div class="modal-header">
+        <strong class="modal-title" id="modal-basic-title">  {{paymentMethodDetail.label}}  </strong>
+        <button type="button" class="btn btn-warning" (click)="close()">CANCEL</button>
+    </div>   
+
+    <div class="modal-body"> 
+        <div class="row g-2" *ngIf="selectPaymentName == false">
+            <div class="col-12 text-center">
+                <img [src]="paymentMethodDetail.image" width="200"> 
+               
+            </div>
+            <div class="col-4" *ngFor="let x of paymentName">
+                <div class="d-grid">
+                    <a href="javascript:;"
+                        class="btn py-3 btn-{{selectPaymentName.id == x.id ? 'primary':'light' }} border mb-1 "
+                        (click)="fnSelectPaymentName(x);">{{x.name}}</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="selectPaymentName != false && showApprovedCode == false">
+            <div class="col-12 mb-2">
+                <strong>{{selectPaymentName.name}}</strong> <button type="button"
+                    class="btn btn-sm btn-danger py-0 ms-3" (click)="selectPaymentName=false">Change Type of Card</button>
+            </div>
+            <div class="mb-2">
+                <div class="row g-1">
+                    <div class="col">
+                        <div class="border p-2 font-cart bg-warning text-end">
+                            <small>BILL</small>
+                            <h4>{{total.bill | number}}</h4>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="border  p-2 font-cart bg-success text-end">
+                            <small>PAID</small>
+                            <h4>{{total.paid | number}}</h4>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="border p-2 font-cart bg-danger text-end">
+                            <small>REMAINING</small>
+                            <h4> ({{ ((total.bill - (total.paid +payment.amount) ) > 0 ? (total.bill - (total.paid
+                                +payment.amount) ) : 0 )| number}})</h4>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="border p-2 font-cart bg-light text-end">
+                            <small>CHANGE</small>
+                            <h4>{{ fnChangeBill() | number}}</h4>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-7">
+                    <input type="text" autofocus class="form-control form-control-lg text-end fs-1" id="amount"
+                        required [(ngModel)]="payment.amount" name="amount" currencyMask #amount="ngModel">
+
+                    <div class="">
+                        <div class="row g-1 ">
+                            <div class="col d-grid">
+                                <button type="button" (click)="addAmount('7')"
+                                    class="btn btn-lg fs-1 py-3">7</button>
+                            </div>
+                            <div class="col d-grid">
+                                <button type="button" (click)="addAmount('8')"
+                                    class="btn btn-lg fs-1  py-3">8</button>
+                            </div>
+                            <div class="col d-grid">
+                                <button type="button" (click)="addAmount('9')"
+                                    class="btn btn-lg fs-1  py-3">9</button>
+                            </div>
+                        </div>
+                        <div class="row g-1 ">
+                            <div class="col d-grid">
+                                <button type="button" (click)="addAmount('4')"
+                                    class="btn btn-lg fs-1  py-3">4</button>
+                            </div>
+                            <div class="col d-grid">
+                                <button type="button" (click)="addAmount('5')"
+                                    class="btn btn-lg fs-1  py-3">5</button>
+                            </div>
+                            <div class="col d-grid">
+                                <button type="button" (click)="addAmount('6')"
+                                    class="btn btn-lg fs-1  py-3">6</button>
+                            </div>
+                        </div>
+                        <div class="row g-1 ">
+                            <div class="col d-grid">
+                                <button type="button" (click)="addAmount('1')"
+                                    class="btn btn-lg fs-1  py-3">1</button>
+                            </div>
+                            <div class="col d-grid">
+                                <button type="button" (click)="addAmount('2')"
+                                    class="btn btn-lg fs-1  py-3">2</button>
+                            </div>
+                            <div class="col d-grid">
+                                <button type="button" (click)="addAmount('3')"
+                                    class="btn btn-lg fs-1  py-3">3</button>
+                            </div>
+                        </div>
+                        <div class="row g-1 ">
+                            <div class="col d-grid">
+                                <button type="button" (click)="addAmount('0')"
+                                    class="btn btn-lg fs-1  py-3">0</button>
+                            </div>
+                            <div class="col d-grid">
+                                <button type="button" (click)="addAmount('00')"
+                                    class="btn btn-lg fs-1  py-3">00</button>
+                            </div>
+                            <div class="col d-grid">
+                                <button type="button" (click)="addAmount('000')"
+                                    class="btn btn-lg fs-1  py-3">000</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-5">
+                    <div class="mb-3">
+
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="d-grid mb-2">
+                                    <button type="button" class="  btn  btn-lg btn-warning  "
+                                        (click)="paymentCutLastOne()"><i
+                                            class="bi bi-caret-right-fill fs-2"></i></button>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-grid mb-2">
+                                    <button type="button" class="  btn  btn-lg btn-warning py-3"
+                                        (click)="paymentAC()">AC</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mb-2">
+                            <button type="button" class="me-1 btn btn-lg btn-success py-3"
+                                (click)="paymentAdd(5000)">+Rp
+                                5.000</button>
+                        </div>
+
+                        <div class="d-grid mb-2">
+                            <button type="button" class="me-1 btn  btn-lg btn-success py-3"
+                                (click)="paymentAdd(10000)">+Rp 10.000</button>
+                        </div>
+
+                        <div class="d-grid mb-2">
+                            <button type="button" class="me-1 btn  btn-lg btn-success py-3"
+                                (click)="paymentAdd(50000)">+Rp 50.000</button>
+                        </div>
+
+                        <div class="d-grid mb-2">
+                            <button type="button" class="me-1 btn  btn-lg btn-success py-3"
+                                (click)="paymentAdd(100000)">+Rp 100.000</button>
+                        </div>
+
+                        <div class="d-grid mb-2">
+                            <button type="button" class="me-1 btn  btn-lg btn-dark py-3" (click)="sendToEDC();"
+                                [disabled]="payment.amount == 0"><strong>SUBMIT</strong></button>
+                        </div>
+
+                        <!-- <div class="mb-3" [hidden]="paymentMethodDetail.paymentTypeId == 'CASH'">
+                                <label>Card Id </label>
+                                <input type="text" class="form-control" id="cardId" [(ngModel)]="payment.cardId"
+                                    name="cardId" #cardId="ngModel">
+                        </div> -->
+
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+      
+        <div class="row" *ngIf="showApprovedCode == true">
+          
+            <div class="col-12  text-center">
+                <strong>APPROVED CODE</strong>   <img [hidden]="approvedCode != '' " src="./assets/gif/Spin-1s-200px.gif" width="40">
+                <div class="form-control form-control-lg fs-2 text-center bg-light my-2">{{approvedCode}}</div>
+            </div>
+            <div class="col-12 mb-4">
+                <small>EDC Logs</small>
+               <textarea class="form-control bg-light" rows="8" readonly>{{note}}</textarea>
+            </div>
+
+            
+
+        </div>
+
+
+
+    </div>
+</form>

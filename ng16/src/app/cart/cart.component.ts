@@ -239,6 +239,9 @@ export class CartComponent implements OnInit, OnDestroy {
         this.member = data['member'];
         this.items = data['items'];
         this.ilock = data['ilock'];
+        if(this.ilock == 1){
+          clearInterval(this.callCursor);
+        }
         this.itemsFree = data['itemsFree'];
         this.bill = data['bill'];
         this.promo_fixed = data['promo_fixed'];

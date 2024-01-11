@@ -48,6 +48,7 @@ import { DiscountBillComponent } from './payment/discount-bill/discount-bill.com
 import { ModalPasswordComponent } from './global/modal-password/modal-password.component';
 import { EdcComponent } from './setting/edc/edc.component';
 import { EdcDetailComponent } from './setting/edc/edc-detail/edc-detail.component';
+import { EdcMandiriComponent } from './payment/edc-mandiri/edc-mandiri.component';
 
 const config: SocketIoConfig = { url: environment.socket_url, options: { transports: ['websocket'] } };
 @NgModule({
@@ -92,7 +93,8 @@ const config: SocketIoConfig = { url: environment.socket_url, options: { transpo
     DiscountBillComponent,
     ModalPasswordComponent,
     EdcComponent,
-    EdcDetailComponent
+    EdcDetailComponent,
+    EdcMandiriComponent
   ],
   imports: [
     BrowserModule,

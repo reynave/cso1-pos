@@ -8,6 +8,7 @@ import { NgxCurrencyDirective } from "ngx-currency";
 import { PaymentVoucherComponent } from './payment-voucher/payment-voucher.component';
 import { DiscountBillComponent } from './discount-bill/discount-bill.component';
 import { ModalPasswordComponent } from '../global/modal-password/modal-password.component';
+import { EdcMandiriComponent } from './edc-mandiri/edc-mandiri.component';
 
 export class Payment {
   constructor(
@@ -47,6 +48,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     password: '',
     terminalId : '',
   }
+  selectPaymentName : any = false;
   callCursor: any;
   member: string = "";
   ilock: string = '1';
@@ -268,7 +270,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     )
   }
 
-  selectPaymentName : any = false;
+
   fnSelectPaymentName(item: any){
     console.log(item);
     this.selectPaymentName = item;
@@ -280,6 +282,37 @@ export class PaymentComponent implements OnInit, OnDestroy {
   //   this.modalService.open(content, { size: _size });
   //   // this.setCursor();
   // }
+
+  openComponentEdc(item:any){
+      console.log(item, this.total, this.kioskUuid); 
+      if(item['id'] =="EDC_MANDIRI"){
+        clearInterval(this.callCursor);
+        const modalRef = this.modalService.open(EdcMandiriComponent, {size:'lg'});
+        modalRef.componentInstance.paymentMethodDetail = item;
+        modalRef.componentInstance.total = this.total;
+        modalRef.componentInstance.kioskUuid = this.kioskUuid; 
+        modalRef.result.then(
+          (result) => {
+            //clearInterval(this.callCursor);
+            console.log('   clearInterval(this.callCursor); ');
+          },
+          (reason) => {
+            console.log('CLOSE 1001'); 
+            this.setCursor();
+            
+          },
+        );
+
+        modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
+          console.log(data);
+          this.httpCart();
+          this.httpPaymentMethod();
+          this.httpPaymentInvoice(); 
+        });
+      }
+
+      
+  }
 
   open(content: any, string: any, _size: string = 'lg') { 
     this.selectPaymentName = false;

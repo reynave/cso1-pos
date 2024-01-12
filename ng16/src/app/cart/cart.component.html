@@ -29,7 +29,7 @@
                     <div class="col-8">
                         <div>{{x.barcode}} {{x.description}} <span>{{x.note}}</span> </div>
                         <div *ngIf="x.promotionId !== '0'">*{{x.promotionId}} {{x.promotionDescription}}*</div>
-                        <div class="ms-2" *ngIf="x.originPrice > 1"> {{ x.originPrice | number}} X {{ x.qty }} </div>
+                        <div class="ms-2" *ngIf="x.qty > 1"> {{ x.originPrice | number}} X {{ x.qty }} </div>
                         <div class="ms-2" *ngIf="x.originPrice == 1"> CUSTOME PRICE {{ x.price | number}} X {{ x.qty }} </div>
                         <div class="ms-2" *ngIf="x.discount > 0"> *DISC {{x.discount | number}} </div>
                         <div class="ms-2" *ngIf="x.memberDiscountAmount > 0"> *MEMBER DISC {{x.memberDiscountAmount |

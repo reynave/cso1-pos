@@ -34,7 +34,26 @@ export class ParkingComponent implements OnInit {
       }
     );
   }
-
+  remove(item : any){
+    if( confirm("DELETE THIS CARD ? ") ){
+        const body = {
+          kioskUuid : item['kioskUuid'],
+        }
+        this.http.post<any>(environment.api + "parking/remove",body, {
+          headers: this.configService.headers(), 
+        }).subscribe(
+          data => {
+            console.log(data); 
+            this.items = data['items'];
+            this.httpGet();
+          },
+          error => {
+            console.log(error);
+          }
+        );
+     
+    }
+  }
   setCart(x : any){
     console.log(x); 
   }

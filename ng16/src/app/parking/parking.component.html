@@ -12,12 +12,25 @@
         
 
         <div class="col-4" *ngFor="let x of items; let i = index">
-            <a [routerLink]="[ '/cart' ]" [queryParams]="{kioskUuid:x.kioskUuid}">
-                <div class="border p-2 text-center alert alert-primary pointer">
-                    <h4>Parking {{i+1}}</h4>
+           
+                <div class="border p-2 text-center shadow-sm bg-white  ">
+                    <h4>PARKING {{i+1}}</h4>
                     <div><code>{{x.kioskUuid}}</code></div>
+
+                    <div class="row g-1 mt-2"> 
+                        <div class="col-6 d-grid">
+                            <a [routerLink]="[ '/cart' ]" class="btn btn-lg btn-primary" [queryParams]="{kioskUuid:x.kioskUuid}">
+                                SELECT
+                            </a>
+                        </div>
+                        <div class="col-6  d-grid">
+                            <a  (click)="remove(x);" class="btn btn-lg btn-danger">
+                                DELETE
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            </a>
+             
         </div>
 
     </div>

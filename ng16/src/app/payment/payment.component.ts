@@ -58,6 +58,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
   close: boolean = false;
   edc : any = [];
   voucherCode: string = "";
+  freeItem : any = [];
   constructor(
     private configService: ConfigService,
     private http: HttpClient,
@@ -222,6 +223,8 @@ export class PaymentComponent implements OnInit, OnDestroy {
       data => {
         this.member = data['member'];
         this.ilock = data['ilock'];
+        this.freeItem = data['freeItem'];
+        
         console.log('httpCart', data);
         this.items = data['items'];
         this.promo_fixed = data['promo_fixed'];

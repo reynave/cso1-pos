@@ -83,6 +83,7 @@ export class PrintingService {
     let summary = bill['summary'];
     let totalCopy = bill['copy'];
     let detail = bill['detail'];
+ let freeItem = bill['freeItem'];
 
     let message = "";
     //console.log(items);
@@ -96,24 +97,31 @@ export class PrintingService {
     }
 
     message += "================================================" + "\n";
-    items.forEach((el: any) => {
-
-      let isEdit = parseInt(el['totalPriceEdit']);
-
+    items.forEach((el: any) => { 
+      let isEdit = parseInt(el['totalPriceEdit']); 
       message += el['barcode'] + " " + el['shortDesc'] + ' ' + (isEdit > 0 ? '*' : '') + this.numberFormat(el['originPrice']) +
-        ((el['promotionId'] == 'EXCHANGES' || el['promotionId'] == 'REFUND') ? el['promotionId'] : '') + "\n";
-
+        ((el['promotionId'] == 'EXCHANGES' || el['promotionId'] == 'REFUND') ? el['promotionId'] : '') + "\n"; 
       if (el['memberDiscountAmount'] > 0) {
         message += "  DISC MEMBER " + this.numberFormat(el['memberDiscountAmount']) + "\n";
       }
       if (el['totalDiscount'] > 0) {
         message += "  DISC " + this.numberFormat(el['totalDiscount']) + "\n";
       }
+      if (el['promotionDescription'] !==  null ) {
+        message += "*"+el['promotionDescription'] + "* \n";
+      }
       message += "  " +
         this.stringfix(el['qty'], 4) + "X" +
         this.stringfix(this.numberFormat(el['price']), 10, 'f') + " " + this.stringfix(" ", 14, 'f') +
         this.stringfix(this.numberFormat(el['totalPrice']), 15, 'f') +
         "\n";
+    });
+
+    freeItem.forEach((el: any) => { 
+    
+      message += el['barcode'] + " " + el['shortDesc'] + " X "+ this.stringfix(el['qty'], 4)+"\n";
+      message += "*FREE ITEMS*                                  0\n";
+      
     });
     message += "================================================" + "\n";
 

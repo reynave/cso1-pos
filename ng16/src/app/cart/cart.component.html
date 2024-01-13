@@ -30,7 +30,8 @@
                         <div>{{x.barcode}} {{x.description}} <span>{{x.note}}</span> </div>
                         <div *ngIf="x.promotionId !== '0'">*{{x.promotionId}} {{x.promotionDescription}}*</div>
                         <div class="ms-2" *ngIf="x.qty > 1"> {{ x.originPrice | number}} X {{ x.qty }} </div>
-                        <div class="ms-2" *ngIf="x.originPrice == 1"> CUSTOME PRICE {{ x.price | number}} X {{ x.qty }} </div>
+                        <div class="ms-2" *ngIf="x.originPrice == 1"> CUSTOME PRICE {{ x.price | number}} X {{ x.qty }}
+                        </div>
                         <div class="ms-2" *ngIf="x.discount > 0"> *DISC {{x.discount | number}} </div>
                         <div class="ms-2" *ngIf="x.memberDiscountAmount > 0"> *MEMBER DISC {{x.memberDiscountAmount |
                             number}} </div>
@@ -40,6 +41,15 @@
                         {{x.total | number}}
                         <span *ngIf="x.validationNota == '1' "><i class="bi bi-check-circle-fill"></i></span>
                     </div>
+                </div>
+
+
+                <div class="ms-1 mt-2" [hidden]="freeItem.length <= 0">FREE ITEM </div>
+                <div class="row g-1 p-1" *ngFor="let x of freeItem">
+                    <div class="col-8">
+                        <div>{{x.barcode}} {{x.description}} <span>{{x.note}}</span>  X {{ x.getFreeItem | number}} </div>  
+                    </div>
+                    <div class="col-4 text-end"> 0 </div>
                 </div>
 
 
@@ -80,8 +90,8 @@
                 </div>
                 <div class="row g-1">
                     <div class="col">
-                        <input type="number" class="form-control form-control-lg text-center rounded-0" readonly placeholder="1"
-                            [(ngModel)]="qtyItem">
+                        <input type="number" class="form-control form-control-lg text-center rounded-0" readonly
+                            placeholder="1" [(ngModel)]="qtyItem">
                     </div>
                     <div class="col d-grid">
                         <button type="button"

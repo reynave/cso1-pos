@@ -50,9 +50,8 @@ export class DiscountManualComponent implements OnInit {
 
   addAmount(val: string) {
     let amount: number = 0;
-    let tempAmount = this.newDiscount.toString();
-    this.newDiscount = Number.parseInt(tempAmount + val);
-
+    let tempAmount = this.newDiscount;
+    this.newDiscount = Number.parseInt(tempAmount + val); 
     this.fnCheckInputDisc();
   }
 
